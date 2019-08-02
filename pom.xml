@@ -22,8 +22,8 @@
     <groupId>com.laiye.wulai.javasdk</groupId>
     <artifactId>wulaiSDK</artifactId>
     <version>1.0</version>
-    <description>The official Java SDK of wulai platform</description>
-    <url>http://www.laiye.cn</url>
+    <description>The official Java SDK of Wulai Platform</description>
+    <url>http://www.laiye.com</url>
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
