@@ -6,4 +6,5 @@ branches: # build only on these branches
   only:
     #- master
     - develop
-
+script:
+  - mvn package
