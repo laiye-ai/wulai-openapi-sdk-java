@@ -12,39 +12,40 @@ import java.util.HashMap;
 
 public class HelloWulai {
     private static WulaiClient client;
-    HashMap<String, Object> params=null;
-    private HashMap getClearMap(){
-        if (params==null){
-            synchronized (HelloWulai.class){
-                params =new HashMap<String,Object>();
+    HashMap<String, Object> params = null;
+
+    private HashMap getClearMap() {
+        if (params == null) {
+            synchronized (HelloWulai.class) {
+                params = new HashMap<String, Object>();
             }
         }
         params.clear();
         return params;
     }
+
     @Test
     public void Test() throws Client_Exception, IOException {
-        String pubkey=System.getenv( "pubkey" );
-        String secret=System.getenv( "secret" );
+        String pubkey = System.getenv("pubkey");
+        String secret = System.getenv("secret");
         client = WulaiClient.create(pubkey,
                 secret, "https://openapi.wul.ai", "v2");
         Long timestamp;
-        for (int i=0;i<2000;i++){
-            timestamp=System.currentTimeMillis();
+        for (int i = 0; i < 5; i++) {
+            timestamp = System.currentTimeMillis();
             testUserCreate();
-            Long timestamp2=System.currentTimeMillis();
-            Long time1=timestamp2-timestamp;
+            Long timestamp2 = System.currentTimeMillis();
+            Long time1 = timestamp2 - timestamp;
             testGetRobotRes();
-            Long time2=System.currentTimeMillis()-timestamp2;
-            System.out.println("t1:"+time1);
-            System.out.println("t2:"+time2);
+            Long time2 = System.currentTimeMillis() - timestamp2;
+            System.out.println("t1:" + time1);
+            System.out.println("t2:" + time2);
         }
 
     }
 
     public void testUserCreate() throws Client_Exception {
-        //HashMap<String,Object> params=new HashMap<String,Object>();
-        params= getClearMap();
+        params = getClearMap();
         params.put("user_id", "zhangtao@test");
         params.put("nickname", "tom");
         params.put("avatar_url", "sb");
@@ -59,7 +60,6 @@ public class HelloWulai {
 
     public void testGetRobotRes() throws Client_Exception, IOException {
         params = getClearMap();
-        //HashMap<String,Object> params=new HashMap<String,Object>();
         params.put("user_id", "zhangtao@test");
         HashMap<String, Object> msgBody = new HashMap<String, Object>();
         HashMap<String, Object> text = new HashMap<String, Object>();
@@ -69,7 +69,7 @@ public class HelloWulai {
         HttpPost request = (HttpPost) Common_Request.getRequest(params, "/msg/bot-response", "post");
         HttpResponse response = client.process_common_request(request);
         Header[] headers = response.getAllHeaders();
-        for(Header head :headers){
+        for (Header head : headers) {
             System.out.println(head.toString());
         }
 
