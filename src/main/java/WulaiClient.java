@@ -9,14 +9,15 @@ import java.util.UUID;
 
 public class WulaiClient {
     private final static String CONTENT_TYPE = "content-type";
-    private final static String CONNECTION = "Connection";
-    private static String API_VERSION;
-    private static URI ENDPOINT;
-    private static String PUBKEY;
-    private static String SECRET;
-    private static String nonce;
-    private static Long timestamp;
-    private static MessageDigest md;
+    private final static String CONNECTION = "Keep-Alive";
+
+    private static String API_VERSION = null;
+    private static URI ENDPOINT = null;
+    private static String PUBKEY = null;
+    private static String SECRET = null;
+    private static String nonce = null;
+    private static Long timestamp = null;
+    private static MessageDigest md = null;
 
     private static volatile WulaiClient client;
 
@@ -74,7 +75,7 @@ public class WulaiClient {
         request.setHeader("Api-Auth-timestamp", String.valueOf(timestamp));
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("content-type", CONTENT_TYPE);
-        request.setHeader("Connection", CONNECTION);
+        //request.setHeader("Connection", CONNECTION);
         request.setHeader("Api-Auth-pubkey", PUBKEY);
         request.setURI(ENDPOINT.resolve(API_VERSION + request.getURI()));
         try {
