@@ -1,10 +1,11 @@
 language: java
 sudo: false # faster builds
 jdk:
-  - openjdk8
+  - oraclejdk8
 branches: # build only on these branches
   only:
-    - master
+    #- master
     - develop
 
 install:
+  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
