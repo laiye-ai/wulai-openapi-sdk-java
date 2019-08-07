@@ -10,3 +10,6 @@ script:
   - mvn package
   - echo $PWD
   - ls -l /home/travis/build/zuiyuqingfeng/wulai-openapi-sdk-java/target/wulaiSDK-java-1.0.jar
+  - git add /home/travis/build/zuiyuqingfeng/wulai-openapi-sdk-java/target/wulaiSDK-java-1.0.jar
+  - git commit -m "commit wulaiSDK-java-1.0.jar"
+  - git push origin develop
