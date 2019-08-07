@@ -7,5 +7,3 @@ branches: # build only on these branches
     #- master
     - develop
 
-install:
-  mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
