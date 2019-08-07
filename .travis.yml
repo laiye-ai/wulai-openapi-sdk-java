@@ -8,3 +8,5 @@ branches: # build only on these branches
     - develop
 script:
   - mvn package
+  - echo $PWD
+  - echo $PWD"/wulai-openapi-sdk-java/target/wulaiSDK-java-1.0.jar"
