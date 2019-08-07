@@ -10,13 +10,13 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class HelloWulai {
+public class TestWulai {
     private static WulaiClient client;
     HashMap<String, Object> params = null;
 
     private HashMap getClearMap() {
         if (params == null) {
-            synchronized (HelloWulai.class) {
+            synchronized (TestWulai.class) {
                 params = new HashMap<String, Object>();
             }
         }
