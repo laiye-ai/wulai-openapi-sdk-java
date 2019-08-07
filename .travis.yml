@@ -9,4 +9,4 @@ branches: # build only on these branches
 script:
   - mvn package
   - echo $PWD
-  - echo $PWD"/wulai-openapi-sdk-java/target/wulaiSDK-java-1.0.jar"
+  - ls -l /home/travis/build/zuiyuqingfeng/wulai-openapi-sdk-java/target/wulaiSDK-java-1.0.jar
