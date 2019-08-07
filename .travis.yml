@@ -8,3 +8,4 @@ branches: # build only on these branches
     - develop
 script:
   - mvn package
+  - echo $PWD
