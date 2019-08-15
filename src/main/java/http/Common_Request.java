@@ -26,15 +26,6 @@ public class Common_Request {
         return (HttpPost) request;
     }
 
-//    private static HttpGet getGetInstance() {
-//        if (!(request instanceof HttpGet)) {
-//            synchronized (Common_Request.class) {
-//                request = new HttpGet();
-//            }
-//        }
-//        return (HttpGet) request;
-//    }
-
     public static HttpRequestBase getRequest(HashMap<String, Object> params, String action, String opts) throws Client_Exception {
         if (opts.toUpperCase().equals("POST")) {
             synchronized (HttpRequest.class) {
@@ -46,17 +37,6 @@ public class Common_Request {
             }
         } else if (opts.toUpperCase().equals("GET")) {
             throw new Client_Exception("1", "请使用POST方法");
-//            synchronized (Common_Request.class){
-//                HttpGet request_get=getGetInstance();
-//                action=action+"?";
-//                for (Map.Entry<String, Object> entry : params.entrySet()) {
-//                    if (!entry.getValue().equals("")) {
-//                        action = action + entry.getKey() + "=" + entry.getValue() + "&";
-//                    }
-//                }
-//                request_get.setURI(URI.create(action));
-//                request=request_get;
-//            }
         } else {
             throw new Client_Exception("1", "请使用POST方法");
         }
