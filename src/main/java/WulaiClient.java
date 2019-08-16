@@ -196,17 +196,18 @@ public class WulaiClient {
             e.printStackTrace();
             logger.error("execute post request exception, url:" + ENDPOINT + ", exception:" + e.toString()
                     + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
-        } finally {
-            if (httpEntity != null) {
-                try {
-                    EntityUtils.consumeQuietly(httpEntity);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error("close response exception, url:" + ENDPOINT + ", exception:" + e.toString()
-                            + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
-                }
-            }
         }
+//        finally {
+//            if (httpEntity != null) {
+//                try {
+//                    EntityUtils.consumeQuietly(httpEntity);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    logger.error("close response exception, url:" + ENDPOINT + ", exception:" + e.toString()
+//                            + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
+//                }
+//            }
+//        }
         logger.info(responseBody.toString());
         return responseBody;
     }
