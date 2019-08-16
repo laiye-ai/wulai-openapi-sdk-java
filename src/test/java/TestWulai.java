@@ -1,85 +1,48 @@
 import exceptions.Client_Exception;
-import exceptions.Server_Exception;
-import http.Common_Request;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.util.EntityUtils;
+import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestWulai {
-    private static WulaiClient client;
-    HashMap<String, Object> params = null;
+    final static Logger logger = LoggerFactory.getLogger(TestWulai.class);
+    private static WulaiClient clientv1;
+    private static WulaiClient clientv2;
+    private static WulaiClient clientv3;
+    private static String name = "zhangtao@test";
 
-    private HashMap getClearMap() {
-        if (params == null) {
-            synchronized (TestWulai.class) {
-                params = new HashMap<String, Object>();
-            }
+    @Before
+    public void setup() {
+        try {
+            clientv1 = WulaiClient.create(System.getenv("pubkey"), System.getenv("secret"), "v1");
+            clientv2 = WulaiClient.create(System.getenv("pubkey"), System.getenv("secret"), "v2");
+            clientv3 = WulaiClient.create(System.getenv("pubkey"), System.getenv("secret"), "v3");
+        } catch (Client_Exception e) {
+            e.printStackTrace();
         }
-        params.clear();
-        return params;
     }
 
     @Test
-    public void Test() throws Client_Exception, IOException {
-        String pubkey = System.getenv("pubkey");
-        String secret = System.getenv("secret");
-        client = WulaiClient.create(pubkey,
-                secret, "https://openapi.wul.ai", "v2");
-        Long timestamp;
-        for (int i = 0; i < 5; i++) {
-            timestamp = System.currentTimeMillis();
-            testUserCreate();
-            Long timestamp2 = System.currentTimeMillis();
-            Long time1 = timestamp2 - timestamp;
-            testGetRobotRes();
-            Long time2 = System.currentTimeMillis() - timestamp2;
-            System.out.println("t1:" + time1);
-            System.out.println("t2:" + time2);
-        }
-
-    }
-
     public void testUserCreate() throws Client_Exception {
-        params = getClearMap();
-        params.put("user_id", "zhangtao@test");
-        params.put("nickname", "tom");
-        params.put("avatar_url", "sb");
-        HttpPost request = (HttpPost) Common_Request.getRequest(params, "/user/create", "post");
-
-        HttpResponse response = client.process_common_request(request);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            System.out.println(response.getStatusLine().getStatusCode());
-            throw new Server_Exception("", "", response.getStatusLine().getStatusCode());
+        String data = String.format("{\"user_id\":\"%s\",\"avatar_url\":\"%s\",\"nikename\":\"%s\"}", name, "sb", "tom");
+        try {
+            clientv1.processCommonRequest("/user/create", data, "post");
+            clientv2.processCommonRequest("/user/create", data, "post");
+            clientv3.processCommonRequest("/user/create", data, "get");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void testGetRobotRes() throws Client_Exception, IOException {
-        params = getClearMap();
-        params.put("user_id", "zhangtao@test");
-        HashMap<String, Object> msgBody = new HashMap<String, Object>();
-        HashMap<String, Object> text = new HashMap<String, Object>();
-        text.put("content", "你是谁");
-        msgBody.put("text", text);
-        params.put("msg_body", msgBody);
-        HttpPost request = (HttpPost) Common_Request.getRequest(params, "/msg/bot-response", "post");
-        HttpResponse response = client.process_common_request(request);
-        Header[] headers = response.getAllHeaders();
-        for (Header head : headers) {
-            System.out.println(head.toString());
-        }
-
-
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new Server_Exception("1", "服务端错误", response.getStatusLine().getStatusCode());
-        } else {
-            System.out.println(EntityUtils.toString(response.getEntity(), "UTF-8"));
-        }
+    @Test
+    public void testGetRobotRes() {
+        String data = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
+        clientv1.processCommonRequest("/msg/bot-response", data, "get");
+        clientv1.processCommonRequest("/msg/bot-response", data, "post");
+        clientv2.processCommonRequest("/msg/bot-response", data, "get");
+        clientv2.processCommonRequest("/msg/bot-response", data, "post");
 
     }
+
 
 }
