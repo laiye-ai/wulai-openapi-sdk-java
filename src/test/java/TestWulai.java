@@ -28,7 +28,7 @@ public class TestWulai {
         try {
             clientv1.processCommonRequest("/user/create", data, "post");
             clientv2.processCommonRequest("/user/create", data, "post");
-            clientv3.processCommonRequest("/user/create", data, "get");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
