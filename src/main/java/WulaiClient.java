@@ -1,4 +1,4 @@
-import exceptions.Client_Exception;
+import exceptions.ClientException;
 import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -32,7 +32,6 @@ public class WulaiClient {
     private static PoolingHttpClientConnectionManager cm = null;
     private static CloseableHttpClient httpClient = null;
     private static URI ENDPOINT = URI.create("https://openapi.wul.ai");
-//    private static URI ENDPOINT = URI.create("https://ifconfig.me");
     private static MessageDigest md = null;
     private static WulaiClient wulaiClientV1 = null;
     private static WulaiClient wulaiClientV2 = null;
@@ -71,39 +70,39 @@ public class WulaiClient {
     private WulaiClient() {
     }
 
-    private WulaiClient(String pubkey, String secret, String api_version) {
+    private WulaiClient(String pubkey, String secret, String apiVersion) {
         this.PUBKEY = pubkey;
         this.SECRET = secret;
-        this.ApiVersion = api_version;
+        this.ApiVersion = apiVersion;
     }
 
-    public static WulaiClient getInstance(String pubkey, String secret, String api_version, boolean debug) throws Client_Exception {
+    public static WulaiClient getInstance(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
         initPools();
-        if ("v1".equals(api_version)) {
+        if ("v1".equalsIgnoreCase(apiVersion)) {
             if (wulaiClientV1 == null) {
-                wulaiClientV1=getSingleton(wulaiClientV1,pubkey, secret, api_version,debug);
+                wulaiClientV1=getSingleton(wulaiClientV1,pubkey, secret, apiVersion,debug);
             }
             return wulaiClientV1;
-        } else if ("v2".equals(api_version)) {
+        } else if ("v2".equalsIgnoreCase(apiVersion)) {
             if (wulaiClientV2 == null) {
-                wulaiClientV2=getSingleton(wulaiClientV2,pubkey, secret, api_version,debug);
+                wulaiClientV2=getSingleton(wulaiClientV2,pubkey, secret, apiVersion,debug);
             }
             return wulaiClientV2;
         } else {
-            throw new Client_Exception("", "api_version error,please use v1 or v2");
+            throw new ClientException("", "api_version error,please use v1 or v2");
         }
     }
 
-    private synchronized static WulaiClient getSingleton(WulaiClient client,String pubkey,String secret,String api_version,boolean debug){
+    private synchronized static WulaiClient getSingleton(WulaiClient client,String pubkey,String secret,String apiVersion,boolean debug){
                 if (client==null){
-                    client=new WulaiClient(pubkey, secret, api_version);
+                    client=new WulaiClient(pubkey, secret, apiVersion);
                     client.log=new Log();
                     client.log.setDEBUG(debug);
                 }
                 return client;
     }
 
-    private static String getSign(String nonce, Long timeStamp, String secret) throws Client_Exception {
+    private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
         String source = nonce + timeStamp + secret;
         StringBuilder buffer = new StringBuilder();
         try {
@@ -115,7 +114,7 @@ public class WulaiClient {
             return buffer.toString().toLowerCase();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
-            throw new Client_Exception("", "getSign方法错误");
+            throw new ClientException("", "getSign方法错误");
         }
     }
 
@@ -139,7 +138,7 @@ public class WulaiClient {
     }
 
 
-    public HttpRequestBase getRequest(String uri, String opts, int timeout) throws Client_Exception {
+    public HttpRequestBase getRequest(String uri, String opts, int timeout) throws ClientException {
         if (httpClient == null) {
             initPools();
         }
@@ -152,16 +151,15 @@ public class WulaiClient {
                 .setExpectContinueEnabled(false).build();
         if (HttpPost.METHOD_NAME.equalsIgnoreCase(opts)) {
             method = new HttpPost(ENDPOINT.resolve("/" + ApiVersion + uri));
-            //method = new HttpPost(ENDPOINT.resolve(uri));
         } else {
             log.error("{0}", "SDK目前只支持POST方法");
-            throw new Client_Exception("", "opts参数需为POST");
+            throw new ClientException("", "opts参数需为POST");
         }
         method.setConfig(requestConfig);
         return method;
     }
 
-    public HttpEntityEnclosingRequestBase setRequestParams(HttpEntityEnclosingRequestBase request) throws Client_Exception {
+    public HttpEntityEnclosingRequestBase setRequestParams(HttpEntityEnclosingRequestBase request) throws ClientException {
         String nonce = UUID.randomUUID().toString().replace("-", "");
         Long timestamp = System.currentTimeMillis() / 1000;
         request.setHeader("Api-Auth-pubkey", PUBKEY);
@@ -205,11 +203,7 @@ public class WulaiClient {
             e.printStackTrace();
             log.error("execute post request exception, url:" + ENDPOINT + ", exception:" + e.toString()
                     + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
-        }finally {
-
-
         }
-
         log.debug("responseBody:{0}", responseBody.toString());
         return responseBody;
     }
