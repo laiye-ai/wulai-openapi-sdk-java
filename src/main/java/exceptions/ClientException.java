@@ -1,6 +1,6 @@
 package exceptions;
 
-public class Client_Exception extends Exception {
+public class ClientException extends Exception {
 
     private static final long serialVersionUID = -7312075709491291437L;
 
@@ -8,7 +8,7 @@ public class Client_Exception extends Exception {
     private String errMsg;
     private ErrorType errorType;
 
-    public Client_Exception(String errCode, String errMsg) {
+    public ClientException(String errCode, String errMsg) {
         this.errCode = errCode;
         this.errMsg = errMsg;
         this.setErrorType(ErrorType.Client);
