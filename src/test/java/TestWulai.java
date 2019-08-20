@@ -9,13 +9,6 @@ public class TestWulai  {
     final static Logger logger = LoggerFactory.getLogger(TestWulai.class);
     private static String name = "zhangtao@test";
     static WulaiClient client;
-//    public void setup() {
-//        try {
-//            WulaiClient client2 = WulaiClient.getInstance(, , "v2", false);
-//        } catch (Client_Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Test
     public void testwulai() throws ClientException, IOException {
