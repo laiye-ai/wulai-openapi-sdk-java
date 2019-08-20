@@ -9,17 +9,15 @@ public class TestWulai  {
     final static Logger logger = LoggerFactory.getLogger(TestWulai.class);
     private static String name = "zhangtao@test";
     static WulaiClient client;
-//    public void setup() {
-//        try {
-//            WulaiClient client2 = WulaiClient.getInstance(, , "v2", false);
-//        } catch (Client_Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+
 
     @Test
     public void testwulai() throws ClientException, IOException {
-        WulaiClient client1 = WulaiClient.getInstance(System.getenv("pubkeyv1"), System.getenv("secretvv1"), "v1", false);
+
+        WulaiClient client1 = WulaiClient.getInstance(System.getenv("pubkeyv1"), System.getenv("secretv1"), "v1", false);
+
+        WulaiClient client1 = WulaiClient.getInstance(System.getenv("pubkeyv1"), System.getenv("secretv1"), "v1", false);
+
 
         String data = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
         Long time1=System.currentTimeMillis();
