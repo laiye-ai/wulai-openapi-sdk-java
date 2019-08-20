@@ -1,16 +1,9 @@
-import exceptions.Client_Exception;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import exceptions.ClientException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
 
 public class TestWulai  {
     final static Logger logger = LoggerFactory.getLogger(TestWulai.class);
@@ -25,7 +18,7 @@ public class TestWulai  {
 //    }
 
     @Test
-    public void testwulai() throws Client_Exception, IOException {
+    public void testwulai() throws ClientException, IOException {
         WulaiClient client1 = WulaiClient.getInstance("NMZXkOobOmLBbZdPoeERyQ53qXWyySRt006e1805f2230492a8", "U0xdSUh9PbW5jx8Qf1vk", "v1", false);
 
         String data = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
