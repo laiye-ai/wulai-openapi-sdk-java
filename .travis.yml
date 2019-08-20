@@ -1,0 +1,11 @@
+language: java
+sudo: false # faster builds
+jdk:
+  - openjdk8
+branches: # build only on these branches
+  only:
+    #- master
+    - develop
+script:
+  - mvn package
+
