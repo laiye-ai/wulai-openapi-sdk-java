@@ -1,4 +1,8 @@
+import com.alibaba.fastjson.JSONObject;
+import entity.requestentity.msg.BotResponse;
+import entity.requestentity.user.UserCreate;
 import exceptions.ClientException;
+import exceptions.ServerException;
 import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
@@ -8,17 +12,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicHeaderElementIterator;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import util.Log;
-
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
@@ -26,43 +26,19 @@ import java.io.InterruptedIOException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.UUID;
-
 
 
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static String CONNECTION = "keep-alive";
-    private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private static final int DEFAUL_TIME_OUT = 15000;
-
     private static PoolingHttpClientConnectionManager cm = null;
     private static CloseableHttpClient httpClient = null;
     private static URI ENDPOINT = URI.create("https://openapi.wul.ai/");
     private static MessageDigest md = null;
-    private static WulaiClient wulaiClientV1 = null;
-    private static WulaiClient wulaiClientV2 = null;
-    private static PoolingHttpClientConnectionManager cm1=null;
-    private static PoolingHttpClientConnectionManager cm2=null;
-//    private static final int Http_Default_Keep_Time = 15000;
-//    private static ConnectionKeepAliveStrategy defaultStrategy = new ConnectionKeepAliveStrategy() {
-//        public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-//            HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-//            while (it.hasNext()) {
-//                HeaderElement he = it.nextElement();
-//                String param = he.getName();
-//                String value = he.getValue();
-//                if (value != null && param.equalsIgnoreCase("timeout")) {
-//                    try {
-//                        return Long.parseLong(value) * 1000;
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            return Http_Default_Keep_Time * 1000;
-//        }
-//    };
+    private static WulaiClient wulaiClient;
 
     static {
         try {
@@ -86,32 +62,27 @@ public class WulaiClient {
         this.ApiVersion = apiVersion;
     }
 
-    public static WulaiClient getInstance(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
-        initPools();
-        if ("v1".equalsIgnoreCase(apiVersion)) {
-            if (wulaiClientV1 == null) {
-                wulaiClientV1=getSingleton(wulaiClientV1,pubkey, secret, apiVersion,debug);
-                // cm1=new PoolingHttpClientConnectionManager();
+    public static WulaiClient init(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
+        if (null== wulaiClient) {
+            synchronized (WulaiClient.class){
+                if (wulaiClient ==null){
+                    wulaiClient =new WulaiClient(pubkey,secret,apiVersion);
+                    wulaiClient.log=new Log();
+                    wulaiClient.log.setDEBUG(debug);
+                }
             }
-            return wulaiClientV1;
-        } else if ("v2".equalsIgnoreCase(apiVersion)) {
-            if (wulaiClientV2 == null) {
-                wulaiClientV2=getSingleton(wulaiClientV2,pubkey, secret, apiVersion,debug);
-            }
-            return wulaiClientV2;
-        } else {
-            throw new ClientException("", "api_version error,please use v1 or v2");
+        }
+        return wulaiClient;
+    }
+
+    public static WulaiClient getInstance() throws ClientException {
+        if (wulaiClient !=null){
+            return wulaiClient;
+        }else {
+            throw new ClientException("","SDK 未初始化");
         }
     }
 
-    private synchronized static WulaiClient getSingleton(WulaiClient client,String pubkey,String secret,String apiVersion,boolean debug){
-        if (client==null){
-            client=new WulaiClient(pubkey, secret, apiVersion);
-            client.log=new Log();
-            client.log.setDEBUG(debug);
-        }
-        return client;
-    }
 
     private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
         String source = nonce + timeStamp + secret;
@@ -132,15 +103,15 @@ public class WulaiClient {
     public static synchronized void initPools() {
         if (httpClient == null) {
             cm = new PoolingHttpClientConnectionManager();
-            int count = 200;
+            int count = 20;
             cm.setDefaultMaxPerRoute(count);
-            int totalCount=1000;
+            int totalCount=20;
             cm.setMaxTotal(totalCount);
             httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(5)).build();
         }
     }
 
-    public static HttpRequestRetryHandler retryHandler(final int tryTimes) {
+    private static HttpRequestRetryHandler retryHandler(final int tryTimes) {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException e, int executionCount, HttpContext httpContext) {
                 if (executionCount > tryTimes) {
@@ -174,15 +145,6 @@ public class WulaiClient {
         };
         return httpRequestRetryHandler;
     }
-
-    public static CloseableHttpClient getHttpClient() {
-        return httpClient;
-    }
-
-    public static PoolingHttpClientConnectionManager getHttpConnectionManager() {
-        return cm;
-    }
-
 
     private HttpRequestBase getRequest(String uri, String opts, int timeout) throws ClientException {
         if (httpClient == null) {
@@ -223,12 +185,12 @@ public class WulaiClient {
         return request;
     }
 
-    public synchronized String processCommonRequest(String action, String data, String opts) throws IOException {
+    public synchronized String processCommonRequest(String action, String data, String opts) throws ServerException {
         long startTime = System.currentTimeMillis();
-
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
+        CloseableHttpResponse httpResponse =null;
         try {
             if (httpClient == null) {
                 initPools();
@@ -237,7 +199,7 @@ public class WulaiClient {
             postrequest.setEntity(new StringEntity(data));
             postrequest = setRequestParams(postrequest);
             HttpContext context = HttpClientContext.create();
-            CloseableHttpResponse httpResponse = httpClient.execute(postrequest, context);
+            httpResponse =httpClient.execute(postrequest, context);
             httpEntity = httpResponse.getEntity();
             if (httpEntity != null) {
                 responseBody = EntityUtils.toString(httpEntity, "UTF-8");
@@ -249,8 +211,40 @@ public class WulaiClient {
             e.printStackTrace();
             log.error("execute post request exception, url:" + ENDPOINT + ", exception:" + e.toString()
                     + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
+            throw new ServerException("",e.getMessage(),httpResponse.getStatusLine().getStatusCode());
         }
         log.debug("responseBody:{0}", responseBody.toString());
         return responseBody;
     }
+
+
+
+
+    public void userCreate(UserCreate userCreate) throws ServerException {
+
+        HashMap<String,Object> params=new HashMap<String,Object>();
+        params.put("nickname",userCreate.getNikename());
+        params.put("avatar_url",userCreate.getAvatar_url());
+        params.put("user_id",userCreate.getUser_id());
+        Object body=JSONObject.toJSON(params);
+        processCommonRequest("/user/create",body.toString(),"post");
+    }
+
+    public void botResponse(BotResponse botResponse) throws ServerException {
+        HashMap<String,Object> params=new HashMap<String ,Object>();
+        params.put("extra",botResponse.getExtra());
+        params.put("user_id",botResponse.getUserId());
+        HashMap<String,Object> msg=new HashMap<String,Object>();
+        HashMap<String,Object> text=new HashMap<String,Object>();
+        text.put("content",botResponse.getMsgBody().getText().getContent());
+        msg.put("text",text);
+        params.put("msg_body",msg);
+        Object body=JSONObject.toJSON(params);
+        processCommonRequest("/msg/bot-response",body.toString(),"post");
+    }
+
+
 }
+
+
+
