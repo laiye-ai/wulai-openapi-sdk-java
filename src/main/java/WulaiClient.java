@@ -1,13 +1,8 @@
 import com.alibaba.fastjson.JSONObject;
-import entity.requestentity.msg.BotResponse;
-import entity.requestentity.user.UserCreate;
 import exceptions.ClientException;
+import exceptions.ClientExceptionConstant;
 import exceptions.ServerException;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.NoHttpResponseException;
+import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,16 +24,17 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
-    private final static String CONNECTION = "keep-alive";
     private static final int DEFAUL_TIME_OUT = 15000;
     private static PoolingHttpClientConnectionManager cm = null;
     private static CloseableHttpClient httpClient = null;
@@ -61,37 +57,14 @@ public class WulaiClient {
     private WulaiClient() {
     }
 
-    public WulaiClient(String pubkey, String secret, String apiVersion,boolean debug) throws ClientException {
+    public WulaiClient(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
         ParamsCheck.checkApiVersion(apiVersion);
         this.PUBKEY = pubkey;
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
-        log=new Log();
+        log = new Log();
         log.setDEBUG(debug);
     }
-
-
-//    public static WulaiClient init(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
-//        if (null == wulaiClient) {
-//            synchronized (WulaiClient.class) {
-//                if (wulaiClient == null) {
-//                    wulaiClient = new WulaiClient(pubkey, secret, apiVersion);
-//                    wulaiClient.log = new Log();
-//                    wulaiClient.log.setDEBUG(debug);
-//                }
-//            }
-//        }
-//        return wulaiClient;
-//    }
-
-//    public static WulaiClient getInstance() throws ClientException {
-//        if (wulaiClient != null) {
-//            return wulaiClient;
-//        } else {
-//            throw new ClientException("SDK_NOT_SUPPORT", "SDK 未初始化");
-//        }
-//    }
-
 
     private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
         String source = nonce + timeStamp + secret;
@@ -105,7 +78,7 @@ public class WulaiClient {
             return buffer.toString().toLowerCase();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
-            throw new ClientException("SDK_INVALID_CREDENTIAL", "getSign方法错误");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
         }
     }
 
@@ -170,7 +143,7 @@ public class WulaiClient {
             request = new HttpPost(ENDPOINT.resolve(ApiVersion + uri));
         } else {
             log.error("{0}", "SDK目前只支持POST方法");
-            throw new ClientException("", "opts参数需为POST");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, "opts参数需为POST");
         }
         request.setConfig(requestConfig);
         return request;
@@ -184,7 +157,6 @@ public class WulaiClient {
         request.setHeader("Api-Auth-timestamp", String.valueOf(timestamp));
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("Content-Type", CONTENT_TYPE);
-        request.setHeader("Connection", CONNECTION);
         if (log.getDEBUG()) {
             for (Header header : request.getAllHeaders()) {
                 log.info("{0}:{1}", header.getName(), header.getValue());
@@ -195,34 +167,69 @@ public class WulaiClient {
     }
 
     public synchronized String processCommonRequest(String action, String data, String opts) throws ClientException {
+        //校验入参
         ParamsCheck.checkOpts(opts);
+
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
         CloseableHttpResponse httpResponse = null;
-        try {
-            if (httpClient == null) {
-                initPools();
-            }
-            postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, opts, 0);
-            postrequest.setEntity(new StringEntity(data));
-            postrequest = setRequestParams(postrequest);
-            HttpContext context = HttpClientContext.create();
-            httpResponse = httpClient.execute(postrequest, context);
-            httpEntity = httpResponse.getEntity();
-            if (httpEntity != null) {
-                responseBody = EntityUtils.toString(httpEntity, "UTF-8");
-            }
-        } catch (Exception e) {
-            if (postrequest != null) {
-                postrequest.abort();
-            }
-            e.printStackTrace();
-            log.error("execute post request exception, url:" + ENDPOINT + ", exception:" + e.toString()
-                    + ", cost time(ms):" + (System.currentTimeMillis() ));
-            throw new ServerException("", e.getMessage(), httpResponse.getStatusLine().getStatusCode());
+        if (httpClient == null) {
+            initPools();
         }
-        log.debug("responseBody:{0}", responseBody.toString());
+
+        //获取request 对象，设置参数
+        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, opts, 0);
+
+        try {
+            log.debug("data:" + data, true);
+            postrequest.setEntity(new StringEntity(data));
+        } catch (UnsupportedEncodingException e) {
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"request setEntity exception,please check data");
+        }
+        postrequest = setRequestParams(postrequest);
+        HttpContext context = HttpClientContext.create();
+        try {
+            httpResponse = httpClient.execute(postrequest, context);
+        } catch (UnknownHostException e) {
+            ClientException clientException = new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE, "UnknownHostException,Please check the endpoint");
+            throw clientException;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        httpEntity = httpResponse.getEntity();
+        if (httpEntity != null) {
+            try {
+                responseBody = EntityUtils.toString(httpEntity, "UTF-8");
+                log.debug("HttpEntity" + responseBody, true);
+                Map map = (Map) JSONObject.parseObject(responseBody, Map.class);
+                ArrayList list = new ArrayList();
+                log.debug("HTTP ENTITY INFO");
+                for (Object obj : map.keySet()) {
+                    log.debug(obj.toString() + ":" + map.get(obj), true);
+                    list.add(map.get(obj));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        log.debug(responseBody, true);
+        int httpCode = httpResponse.getStatusLine().getStatusCode();
+        if (log.getDEBUG()) {
+            for (Header header : httpResponse.getAllHeaders()) {
+                log.info("{0}:{1}", header.getName(), header.getValue());
+            }
+        }
+        log.debug("httpcode:{0},responseBody:{1}", httpCode, responseBody.toString());
+        if (httpCode == 500) {
+            System.out.println(httpResponse.toString());
+            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
+        } else if (httpCode == 400) {
+            System.out.println(httpResponse.toString());
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, httpResponse.toString());
+        } else if (httpCode == 401) {
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "验证信息错误，请检查公钥和密钥");
+        }
         return responseBody;
     }
 

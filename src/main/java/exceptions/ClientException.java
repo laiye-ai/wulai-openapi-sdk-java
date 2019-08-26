@@ -5,14 +5,14 @@ public class ClientException extends Exception {
     private static final long serialVersionUID = -7312075709491291437L;
 
     private String errCode;
-    private String errMsg;
     private ErrorType errorType;
 
     public ClientException(String errCode, String errMsg) {
+        super(errMsg);
         this.errCode = errCode;
-        this.errMsg = errMsg;
         this.setErrorType(ErrorType.Client);
     }
+
 
     public ErrorType getErrorType() {
         return errorType;
@@ -26,16 +26,6 @@ public class ClientException extends Exception {
         return errCode;
     }
 
-    public void setErrCode(String errCode) {
-        this.errCode = errCode;
-    }
 
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
 
 }

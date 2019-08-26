@@ -24,6 +24,12 @@ public class Log {
         }
     }
 
+    public void debug(String log,boolean flag){
+        if (DEBUG){
+            System.out.println(log);
+        }
+    }
+
     public void info(String s, Object... obj) {
             System.out.println(MessageFormat.format(s, obj));
     }
@@ -32,6 +38,11 @@ public class Log {
     public void error(String s, Object... obj) {
         if (ERROR) {
             System.err.println(MessageFormat.format(s, obj));
+        }
+    }
+    public void error(String s,boolean flag) {
+        if (ERROR) {
+            System.err.println(s);
         }
     }
 

@@ -8,20 +8,20 @@ public class ParamsCheck {
     public static void checkUserId(String param) throws ClientException {
         if (null!=param){
             if (param.length()<1||param.length()>128){
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"userId长度须小于128位且不为0");
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"must be [1..1024] characters");
             }
         }else {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"userId 不能为空");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"userId can not be null");
         }
     }
 
     public static void checkMsgId(String param) throws ClientException {
         if (null!=param){
             if (param.length()>18){
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"msgId长度须小于18位");
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"msgId must be less than or equal 18 characters");
             }
         }else {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"msgId 参数不能为空");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"msgId can not be null");
         }
     }
 
@@ -52,7 +52,9 @@ public class ParamsCheck {
                 throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"direction need be  FORWARD or BACKWARD ");
             }
         }else {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "direction must be not null");
+           // ClientException e=new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS);
+           throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "direction must be not null");
+            //throw e ;
         }
     }
 
@@ -76,6 +78,10 @@ public class ParamsCheck {
         if (!"post".equalsIgnoreCase(method)){
             throw new ClientException(ClientExceptionConstant.SDK_NOT_SUPPORT,"Wulai openApi is only support POST method");
         }
+    }
+
+    public static void checkEndPoint(String endpoint){
+        endpoint.trim().matches("https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
     }
 
 
