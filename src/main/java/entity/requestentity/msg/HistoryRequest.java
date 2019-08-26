@@ -2,7 +2,7 @@ package entity.msg;
 
 import java.io.Serializable;
 
-public class History implements Serializable {
+public class HistoryRequest implements Serializable {
 
     private static final long serialVersionUID = -2407514230544187319L;
 

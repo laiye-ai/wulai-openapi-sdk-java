@@ -2,19 +2,21 @@ package entity.msg;
 
 import java.io.Serializable;
 
-public class BotResponseQa implements Serializable {
+public abstract class BotBase implements Serializable {
 
-    private static final long serialVersionUID = -7291915530803933028L;
-    private Object msgBody;
+    private static final long serialVersionUID = -6175041688453020736L;
+
+    private MsgBody msgBody;
     private String userId;
     private String extra;
 
-    public Object getMsgBody() {
+
+    public MsgBody getMsgBody() {
         return msgBody;
     }
 
-    public void setMsgBody(Object msgBody) {
-        this.msgBody = msgBody;
+    public void setMsgBody(String content) {
+        msgBody = new MsgBody(content);
     }
 
     public String getUserId() {
@@ -32,4 +34,7 @@ public class BotResponseQa implements Serializable {
     public void setExtra(String extra) {
         this.extra = extra;
     }
+
+
+
 }
