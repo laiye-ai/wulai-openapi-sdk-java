@@ -1,4 +1,7 @@
+import entity.requestentity.msg.BotResponse;
+import entity.requestentity.user.UserCreate;
 import exceptions.ClientException;
+import exceptions.ServerException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,26 +12,64 @@ public class TestWulai  {
     final static Logger logger = LoggerFactory.getLogger(TestWulai.class);
     private static String name = "zhangtao@test";
     static WulaiClient client;
+    static int num;
 
-    @Test
-    public void testwulai() throws ClientException, IOException {
-        WulaiClient client1 = WulaiClient.getInstance(System.getenv("pubkeyv1"), System.getenv("secretv1"), "v1", false);
 
-        String data = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
-        Long time1=System.currentTimeMillis();
-
-        for (int i=0;i<3;i++){
-            WulaiClient client2 = WulaiClient.getInstance(System.getenv("pubkey"),
-                    System.getenv("secret"), "v2", true);
-            client2.processCommonRequest("/msg/bot-response", data, "post");
-            System.err.println(i);
+    public static void main(String[] args) throws ClientException, InterruptedException {
+        WulaiClient.init(System.getenv("pubkey"),
+                System.getenv("secret"), "v2", true);
+        for(int i=0;i<15;i++){
+            new TestCreateUser().start();
+            new TestBotResponse().start();
         }
-
-        System.out.println((System.currentTimeMillis()-time1)/20);
 
     }
 
 
+}
+class TestCreateUser extends Thread{
+    WulaiClient wulaiClient=WulaiClient.getInstance();
+    int num=0;
+    TestCreateUser() throws ClientException {
+    }
+
+    public void run() {
+        UserCreate userCreate=new UserCreate();
+        try {
+            userCreate.setUser_id("zhangtao@test");
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        try {
+            while (true) {
+                wulaiClient.userCreate(userCreate);
+
+            }
+        } catch (ServerException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class TestBotResponse  extends Thread{
+    WulaiClient wulaiClient=WulaiClient.getInstance();
+
+    TestBotResponse() throws ClientException {
+    }
+
+    public void run() {
+        BotResponse botResponse =new BotResponse();
+        botResponse.setUserId("zhangtao@test");
+        botResponse.setMsgBody("你是谁");
+        botResponse.setExtra("");
+        try {
+            while (true) {
+                wulaiClient.botResponse(botResponse);
+            }
+        } catch (ServerException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
