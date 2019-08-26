@@ -1,6 +1,7 @@
 package entity.requestentity.knowledge;
 
-public class qaKnowledgeItemsList {
+public class QaKnowledgeItemsList {
+    private int page;
+    private int pageSize;
 
-    
 }

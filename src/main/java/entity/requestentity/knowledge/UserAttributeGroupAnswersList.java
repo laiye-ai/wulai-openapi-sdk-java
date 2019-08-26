@@ -1,4 +1,9 @@
 package entity.requestentity.knowledge;
 
-public class userAttributeGroupAnswersList {
+public class UserAttributeGroupAnswersList {
+
+    private Object filter;
+    private int page;
+    private int pageSize;
+
 }

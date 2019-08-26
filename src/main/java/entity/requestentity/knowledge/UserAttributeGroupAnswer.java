@@ -1,8 +1,7 @@
 package entity.requestentity.knowledge;
 
-public class QaUserAttributeGroupAnswerCreate {
-
-    private String user_attribute_group_id;
+public class UserAttributeGroupAnswer {
+    private String userAttributeGroupId;
     private Object answer;
 
 

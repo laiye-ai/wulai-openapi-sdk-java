@@ -1,4 +1,11 @@
 package entity.requestentity.knowledge;
 
-public class knowledge_tag_knowledge {
+public class KnowledgeTagKnowledge {
+    private String knowledgeTagId;
+    private Object knowledge;
+
+
+
+
+
 }

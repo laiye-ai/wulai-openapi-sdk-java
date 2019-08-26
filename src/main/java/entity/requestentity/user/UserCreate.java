@@ -1,4 +1,6 @@
-package entity.user;
+package entity.requestentity.user;
+
+import exceptions.ClientException;
 
 import java.io.Serializable;
 
@@ -10,8 +12,12 @@ public class UserCreate implements Serializable {
     private String nikename;
     private String avatar_url;
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUser_id(String user_id) throws ClientException {
+        if (user_id.length()<128&&user_id.length()>0) {
+            this.user_id = user_id;
+        }else {
+            throw new ClientException("","user_id length  must be between 1 and 128 runes");
+        }
     }
 
     public void setNikename(String nikename) {

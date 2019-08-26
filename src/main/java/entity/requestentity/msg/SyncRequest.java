@@ -1,4 +1,4 @@
-package entity.msg;
+package entity.requestentity.msg;
 
 import java.io.Serializable;
 

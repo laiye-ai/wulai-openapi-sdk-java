@@ -1,4 +1,4 @@
-package entity.user;
+package entity.requestentity.user;
 
 import java.io.Serializable;
 
