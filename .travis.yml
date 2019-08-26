@@ -9,3 +9,6 @@ branches: # build only on these branches
 script:
   - mvn package
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
