@@ -3,7 +3,11 @@ import entity.requestentity.msg.BotResponse;
 import entity.requestentity.user.UserCreate;
 import exceptions.ClientException;
 import exceptions.ServerException;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,6 +23,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import util.Log;
+import util.ParamsCheck;
+
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
@@ -38,7 +44,6 @@ public class WulaiClient {
     private static CloseableHttpClient httpClient = null;
     private static URI ENDPOINT = URI.create("https://openapi.wul.ai/");
     private static MessageDigest md = null;
-    private static WulaiClient wulaiClient;
 
     static {
         try {
@@ -56,32 +61,36 @@ public class WulaiClient {
     private WulaiClient() {
     }
 
-    private WulaiClient(String pubkey, String secret, String apiVersion) {
+    public WulaiClient(String pubkey, String secret, String apiVersion,boolean debug) throws ClientException {
+        ParamsCheck.checkApiVersion(apiVersion);
         this.PUBKEY = pubkey;
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
+        log=new Log();
+        log.setDEBUG(debug);
     }
 
-    public static WulaiClient init(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
-        if (null== wulaiClient) {
-            synchronized (WulaiClient.class){
-                if (wulaiClient ==null){
-                    wulaiClient =new WulaiClient(pubkey,secret,apiVersion);
-                    wulaiClient.log=new Log();
-                    wulaiClient.log.setDEBUG(debug);
-                }
-            }
-        }
-        return wulaiClient;
-    }
 
-    public static WulaiClient getInstance() throws ClientException {
-        if (wulaiClient !=null){
-            return wulaiClient;
-        }else {
-            throw new ClientException("","SDK 未初始化");
-        }
-    }
+//    public static WulaiClient init(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
+//        if (null == wulaiClient) {
+//            synchronized (WulaiClient.class) {
+//                if (wulaiClient == null) {
+//                    wulaiClient = new WulaiClient(pubkey, secret, apiVersion);
+//                    wulaiClient.log = new Log();
+//                    wulaiClient.log.setDEBUG(debug);
+//                }
+//            }
+//        }
+//        return wulaiClient;
+//    }
+
+//    public static WulaiClient getInstance() throws ClientException {
+//        if (wulaiClient != null) {
+//            return wulaiClient;
+//        } else {
+//            throw new ClientException("SDK_NOT_SUPPORT", "SDK 未初始化");
+//        }
+//    }
 
 
     private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
@@ -96,7 +105,7 @@ public class WulaiClient {
             return buffer.toString().toLowerCase();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
-            throw new ClientException("", "getSign方法错误");
+            throw new ClientException("SDK_INVALID_CREDENTIAL", "getSign方法错误");
         }
     }
 
@@ -105,7 +114,7 @@ public class WulaiClient {
             cm = new PoolingHttpClientConnectionManager();
             int count = 20;
             cm.setDefaultMaxPerRoute(count);
-            int totalCount=20;
+            int totalCount = 20;
             cm.setMaxTotal(totalCount);
             httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(5)).build();
         }
@@ -185,12 +194,12 @@ public class WulaiClient {
         return request;
     }
 
-    public synchronized String processCommonRequest(String action, String data, String opts) throws ServerException {
-        long startTime = System.currentTimeMillis();
+    public synchronized String processCommonRequest(String action, String data, String opts) throws ClientException {
+        ParamsCheck.checkOpts(opts);
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
-        CloseableHttpResponse httpResponse =null;
+        CloseableHttpResponse httpResponse = null;
         try {
             if (httpClient == null) {
                 initPools();
@@ -199,7 +208,7 @@ public class WulaiClient {
             postrequest.setEntity(new StringEntity(data));
             postrequest = setRequestParams(postrequest);
             HttpContext context = HttpClientContext.create();
-            httpResponse =httpClient.execute(postrequest, context);
+            httpResponse = httpClient.execute(postrequest, context);
             httpEntity = httpResponse.getEntity();
             if (httpEntity != null) {
                 responseBody = EntityUtils.toString(httpEntity, "UTF-8");
@@ -210,38 +219,34 @@ public class WulaiClient {
             }
             e.printStackTrace();
             log.error("execute post request exception, url:" + ENDPOINT + ", exception:" + e.toString()
-                    + ", cost time(ms):" + (System.currentTimeMillis() - startTime));
-            throw new ServerException("",e.getMessage(),httpResponse.getStatusLine().getStatusCode());
+                    + ", cost time(ms):" + (System.currentTimeMillis() ));
+            throw new ServerException("", e.getMessage(), httpResponse.getStatusLine().getStatusCode());
         }
         log.debug("responseBody:{0}", responseBody.toString());
         return responseBody;
     }
 
-
-
-
-    public void userCreate(UserCreate userCreate) throws ServerException {
-
-        HashMap<String,Object> params=new HashMap<String,Object>();
-        params.put("nickname",userCreate.getNikename());
-        params.put("avatar_url",userCreate.getAvatar_url());
-        params.put("user_id",userCreate.getUser_id());
-        Object body=JSONObject.toJSON(params);
-        processCommonRequest("/user/create",body.toString(),"post");
-    }
-
-    public void botResponse(BotResponse botResponse) throws ServerException {
-        HashMap<String,Object> params=new HashMap<String ,Object>();
-        params.put("extra",botResponse.getExtra());
-        params.put("user_id",botResponse.getUserId());
-        HashMap<String,Object> msg=new HashMap<String,Object>();
-        HashMap<String,Object> text=new HashMap<String,Object>();
-        text.put("content",botResponse.getMsgBody().getText().getContent());
-        msg.put("text",text);
-        params.put("msg_body",msg);
-        Object body=JSONObject.toJSON(params);
-        processCommonRequest("/msg/bot-response",body.toString(),"post");
-    }
+//    public void userCreate(UserCreate userCreate) throws ClientException {
+//        HashMap<String, Object> params = new HashMap<String, Object>();
+//        params.put("nickname", userCreate.getNickname());
+//        params.put("avatar_url", userCreate.getAvatar_url());
+//        params.put("user_id", userCreate.getUser_id());
+//        Object body = JSONObject.toJSON(params);
+//        processCommonRequest("/user/create", body.toString(), "post");
+//    }
+//
+//    public void botResponse(BotResponse botResponse) throws ClientException {
+//        HashMap<String, Object> params = new HashMap<String, Object>();
+//        params.put("extra", botResponse.getExtra());
+//        params.put("user_id", botResponse.getUserId());
+//        HashMap<String, Object> msg = new HashMap<String, Object>();
+//        HashMap<String, Object> text = new HashMap<String, Object>();
+//        text.put("content", "你是谁");
+//        msg.put("text", text);
+//        params.put("msg_body", msg);
+//        Object body = JSONObject.toJSON(params);
+//        processCommonRequest("/msg/bot-response", body.toString(), "post");
+//    }
 
 
 }
