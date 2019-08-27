@@ -24,8 +24,6 @@
 ## 安装
 使用 maven 添加依赖
 
-如果您使用了 glide 管理依赖，您也可以使用 glide 来安装 SDK
-
 ## 快速使用
 在您开始之前，您需要注册帐户并获取您的[凭证](https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#section/%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81)。
 
