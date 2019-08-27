@@ -7,15 +7,13 @@
 
 <p align="center">
 
-[![build status][travis-image]][travis-url]   
+[![build status][travis-image]][travis-url]
 [![codecov][cov-image]][cov-url]
 
 [travis-image]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java.svg?branch=develop
 [travis-url]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java
-[cov-image]: https://codecov.io/gh/laiye-ai/wulai-openapi-sdk-java/branch/master/graph/badge.svg
-[cov-url]: https://codecov.io/gh/laiye-ai/wulai-openapi-sdk-java
-
-
+[cov-image]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java/branch/master/graph/badge.svg
+[cov-url]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java
 </p>
 
 欢迎使用 Wulai Openapi SDK for Java。
