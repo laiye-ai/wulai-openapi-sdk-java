@@ -65,10 +65,10 @@ public class WulaiClient {
      * 初始化SDK对象，需要传入公钥密钥信息及对应的SDK版本和是否开启debug模式
      *
      * @param pubkey     每个开放平台渠道有一组 Pubkey 和 Secret，可从吾来平台-渠道设置-开放平台新版(v2)页面上查询。
-     * @param secret
+     * @param secret     每个开放平台渠道有一组 Pubkey 和 Secret，可从吾来平台-渠道设置-开放平台新版(v2)页面上查询。
      * @param apiVersion 当前支持v2模式
      * @param debug      是否开启debug模式,debug模式下会在console中打印相关运行信息
-     * @throws ClientException
+     * @throws ClientException 客户端错误
      */
     public WulaiClient(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
         ParamsCheck.checkApiVersion(apiVersion);
@@ -198,8 +198,7 @@ public class WulaiClient {
     /**
      * @param action 请求路径，例如 /user/create , /msg/bot-response 等
      * @param data   请求参数，json字符串
-     * @param opts   请求方式，当前只支持 post 方式
-     * @return
+     * @param opts   请求方式，当前只支持 post 方法
      * @throws ClientException
      */
     public synchronized void processCommonRequest(String action, String data, String opts) throws ClientException {
