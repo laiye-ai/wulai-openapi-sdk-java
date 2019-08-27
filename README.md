@@ -3,7 +3,7 @@
 	<a href="https://www.laiye.com"><img src="https://www.laiye.com/static/official-website/logo.png"></a>
 </p>
 
-<h1 align="center">Wulai Openapi SDK for Go</h1>
+<h1 align="center">Wulai Openapi SDK for Java</h1>
 
 <p align="center">
 
