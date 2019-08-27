@@ -1,19 +1,33 @@
 
 import exceptions.ClientException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestWulai  {
+public class TestWulaiClient {
+    WulaiClient wulaiClient;
+    String name;
+    String usercreate;
+    String botresponse;
 
-    public static void main(String[] args) throws ClientException {
-        WulaiClient wulaiClient=new WulaiClient(System.getenv("pubkey"),
+
+    @Before
+    public void setEnv() throws ClientException {
+        wulaiClient=new WulaiClient(System.getenv("pubkey"),
                 System.getenv("secret"), "v2", true);
-        String name="zhangtao@test";
-        String usercreate=String.format("{\"user_id\":\"%s\"}", name);
-        String botresponse = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
+        name="zhangtao@test";
+        usercreate=String.format("{\"user_id\":\"%s\"}", name);
+        botresponse = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
 
-        wulaiClient.processCommonRequest("/user/create", usercreate, "post");
-        wulaiClient.processCommonRequest("/msg/bot-response", botresponse, "post");
+    }
 
-
+    @Test
+    public void testProcessCommonRequest(){
+        try {
+            wulaiClient.processCommonRequest("/user/create", usercreate, "post");
+            wulaiClient.processCommonRequest("/msg/bot-response", botresponse, "post");
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
     }
 
 
