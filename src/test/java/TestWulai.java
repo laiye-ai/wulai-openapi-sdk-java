@@ -3,6 +3,7 @@ import exceptions.ClientException;
 
 public class TestWulai  {
 
+
     public static void main(String[] args) throws ClientException {
         WulaiClient wulaiClient=new WulaiClient(System.getenv("pubkey"),
                 System.getenv("secret"), "v2", true);
