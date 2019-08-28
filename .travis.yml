@@ -4,6 +4,7 @@ jdk:
   - openjdk8
   - openjdk10
   - openjdk11
+  - openjdk12
 branches: # build only on these branches
   only:
     - master
@@ -19,3 +20,4 @@ matrix:
   allow_failures:
     - jdk: openjdk10
     - jdk: openjdk11
+    - jdk: openjdk12
