@@ -6,6 +6,7 @@
     <packaging>jar</packaging>
     <groupId>com.laiye.wulai.javasdk</groupId>
     <artifactId>wulaiSDK</artifactId>
+    <name>wulaiSDKforJava</name>
     <version>1.0</version>
     <description>Laiye Wulai SDK for Python Programming Language</description>
     <url>https://github.com/laiye-ai/wulai-openapi-sdk-java</url>
