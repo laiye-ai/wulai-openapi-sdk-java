@@ -12,33 +12,6 @@ public class TestWulaiClient {
     private static String botresponse;
 
 
-    public static void main(String[] args) {
-        try {
-
-            wulaiClient=new WulaiClient(System.getenv("pubkey"),
-                    System.getenv("secret"), "v2", true);
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-        name="zhangtao@test";
-        usercreate=String.format("{\"user_id\":\"%s\"}", name);
-        botresponse = String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
-        try {
-            wulaiClient.processCommonRequest("/user/create", usercreate, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response", botresponse, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response",botresponse.substring(1,20),"post");
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-        try {
-            new WulaiClient(System.getenv("pubkey"),
-                    System.getenv("secret"), "v1", true);
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Before
     public void setEnv() throws ClientException {
         wulaiClient=new WulaiClient(System.getenv("pubkey"),
