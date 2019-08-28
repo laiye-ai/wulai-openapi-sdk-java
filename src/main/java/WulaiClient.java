@@ -264,8 +264,8 @@ public class WulaiClient {
             log.debug(httpResponse.toString(), true);
             throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
         } else if (httpCode == 401) {
-            log.error("验证信息错误，请检查公钥和密钥", true);
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "验证信息错误，请检查公钥和密钥");
+            log.error("Invalid pubkey or secret", true);
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, " Invalid credential ，pelease check the pubkey , secret and apiVersion");
         }
 
     }
