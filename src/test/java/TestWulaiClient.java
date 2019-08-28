@@ -28,7 +28,7 @@ public class TestWulaiClient {
             wulaiClient.processCommonRequest("/user/create", usercreate, "post");
             wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
             wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response",botresponse.substring(1,20),"post");
+
         } catch (ClientException e) {
             e.printStackTrace();
         }
