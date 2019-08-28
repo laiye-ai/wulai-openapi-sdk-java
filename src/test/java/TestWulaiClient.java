@@ -30,7 +30,7 @@ public class TestWulaiClient {
             wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
 
         } catch (ClientException e) {
-            e.printStackTrace();
+            System.out.println("捕获异常");
         }
     }
 
@@ -40,18 +40,18 @@ public class TestWulaiClient {
             new WulaiClient(System.getenv("pubkey"),
                     System.getenv("secret"), "v1", true);
         } catch (ClientException e) {
-            e.printStackTrace();
+            System.out.println("捕获异常");
         }
         try {
             wulaiClient=new WulaiClient(System.getenv("pubkey"),
                     System.getenv("secret").substring(1,4), "v2", true);
         } catch (ClientException e) {
-            e.printStackTrace();
+            System.out.println("捕获异常");
         }
         try {
             wulaiClient.processCommonRequest("/user/create",usercreate,"post");
         } catch (ClientException e) {
-            e.printStackTrace();
+            System.out.println("捕获异常");
         }
     }
 
