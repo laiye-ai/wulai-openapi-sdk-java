@@ -30,9 +30,9 @@ public class TestWulaiClient {
     @Test
     public void testProcessCommonRequest(){
         try {
-            wulaiClient.processCommonRequest("/requestentity/user/create", usercreate, "post");
-            wulaiClient.processCommonRequest("/requestentity/msg/bot-response",botresponse, "post");
-            wulaiClient.processCommonRequest("/requestentity/msg/bot-response",botresponse, "post");
+            wulaiClient.processCommonRequest("/user/create", usercreate, "post");
+            wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
+            wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
 
         } catch (ClientException e) {
             System.out.println("捕获异常");
@@ -54,7 +54,7 @@ public class TestWulaiClient {
             System.out.println("捕获异常");
         }
         try {
-            wulaiClient.processCommonRequest("/requestentity/user/create",usercreate,"post");
+            wulaiClient.processCommonRequest("/user/create",usercreate,"post");
         } catch (ClientException e) {
             System.out.println("捕获异常");
         }
