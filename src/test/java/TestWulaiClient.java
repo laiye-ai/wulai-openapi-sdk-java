@@ -30,9 +30,9 @@ public class TestWulaiClient {
     @Test
     public void testProcessCommonRequest(){
         try {
-            wulaiClient.processCommonRequest("/user/create", usercreate, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
-            wulaiClient.processCommonRequest("/msg/bot-response",botresponse, "post");
+            wulaiClient.processCommonRequest("/requestentity/user/create", usercreate, "post");
+            wulaiClient.processCommonRequest("/requestentity/msg/bot-response",botresponse, "post");
+            wulaiClient.processCommonRequest("/requestentity/msg/bot-response",botresponse, "post");
 
         } catch (ClientException e) {
             System.out.println("捕获异常");
@@ -54,62 +54,14 @@ public class TestWulaiClient {
             System.out.println("捕获异常");
         }
         try {
-            wulaiClient.processCommonRequest("/user/create",usercreate,"post");
+            wulaiClient.processCommonRequest("/requestentity/user/create",usercreate,"post");
         } catch (ClientException e) {
             System.out.println("捕获异常");
         }
     }
 
 }
-//class TestCreateUser extends Thread{
-//    private WulaiClient wulaiClient=WulaiClient.getInstance();
-//
-//    TestCreateUser() throws ClientException {
-//    }
-//
-//    public void run() {
-//        UserCreate userCreate= null;
-//        try {
-//            userCreate = new UserCreate("zhangtao@test");
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            while (true) {
-//                assert userCreate != null;
-//                wulaiClient.userCreate(userCreate);
-//            }
-//        } catch (ServerException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
-//
-//class TestBotResponse  extends Thread{
-//    private WulaiClient wulaiClient=WulaiClient.getInstance();
-//
-//    TestBotResponse() throws ClientException {
-//    }
-//
-//    public void run() {
-//        MsgBody msgBody=new MsgBody("你是谁");
-//        BotResponse botResponse = null;
-//        try {
-//            botResponse = new BotResponse("zhangtao@test",msgBody);
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            while (true) {
-//                assert botResponse != null;
-//                wulaiClient.botResponse(botResponse);
-//            }
-//        } catch (ServerException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
+
 
 
 

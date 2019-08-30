@@ -41,8 +41,12 @@ public class WulaiClient {
     private static final int DEFAUL_TIME_OUT = 15000;
     private static PoolingHttpClientConnectionManager cm = null;
     private static CloseableHttpClient httpClient = null;
-    private static URI ENDPOINT = URI.create("https://openapi.wul.ai/");
+    private URI endpoint = URI.create("https://openapi.wul.ai/");
     private static MessageDigest md = null;
+
+    public void setEndpoint(URI endpoint) {
+        this.endpoint = endpoint;
+    }
 
     static {
         try {
@@ -168,7 +172,7 @@ public class WulaiClient {
                 .setExpectContinueEnabled(false).build();
         if (HttpPost.METHOD_NAME.equalsIgnoreCase(opts)) {
             // 根据endpoint拼接生成的request的uri信息
-            request = new HttpPost(ENDPOINT.resolve(ApiVersion + uri));
+            request = new HttpPost(endpoint.resolve(ApiVersion + uri));
         } else {
             log.error("{0}", "SDK目前只支持POST方法");
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, "opts参数需为POST");
