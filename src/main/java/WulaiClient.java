@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -29,24 +30,17 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Laiye Wulai SDK for Java Programming Language
- *
  */
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
-    private static final int DEFAUL_TIME_OUT = 15000;
-    private static PoolingHttpClientConnectionManager cm = null;
-    private static CloseableHttpClient httpClient = null;
-    private URI endpoint = URI.create("https://openapi.wul.ai/");
+    private static final int DEFAULT_TIME_OUT = 15000;
     private static MessageDigest md = null;
-
-    public void setEndpoint(URI endpoint) {
-        this.endpoint = endpoint;
-    }
 
     static {
         try {
@@ -56,14 +50,17 @@ public class WulaiClient {
         }
     }
 
+    private PoolingHttpClientConnectionManager cm = null;
+    private CloseableHttpClient httpClient = null;
+    private URI endpoint = URI.create("https://openapi.wul.ai/");
+    private HashMap<String, Integer> opts = null;
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
     private Log log;
-
-
     private WulaiClient() {
     }
+
 
     /**
      * 初始化SDK对象，需要传入公钥密钥信息及对应的SDK版本和是否开启debug模式
@@ -75,8 +72,14 @@ public class WulaiClient {
      * @throws ClientException 客户端错误
      */
     public WulaiClient(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
-        assert null!=pubkey;
-        assert null!=secret;
+        try {
+            assert null != pubkey;
+            assert null != secret;
+        } catch (AssertionError error) {
+            throw new ClientException(ClientExceptionConstant.SDK_NOT_SUPPORT,
+                    "pubkey or secret can not be null ,Please check !");
+        }
+
         ParamsCheck.checkApiVersion(apiVersion);
         this.PUBKEY = pubkey;
         this.SECRET = secret;
@@ -101,20 +104,6 @@ public class WulaiClient {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
-        }
-    }
-
-    /**
-     * 初始化http连接池
-     */
-    public static synchronized void initPools() {
-        if (httpClient == null) {
-            cm = new PoolingHttpClientConnectionManager();
-            int count = 20;
-            cm.setDefaultMaxPerRoute(count);
-            int totalCount = 20;
-            cm.setMaxTotal(totalCount);
-            httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(5)).build();
         }
     }
 
@@ -159,24 +148,53 @@ public class WulaiClient {
         return httpRequestRetryHandler;
     }
 
-    private HttpRequestBase getRequest(String uri, String opts, int timeout) throws ClientException {
+    public void setEndpoint(URI endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    /**
+     * 初始化http连接池
+     */
+    public synchronized void initPools() {
+        if (httpClient == null) {
+            cm = new PoolingHttpClientConnectionManager();
+            int count = 20;
+            cm.setDefaultMaxPerRoute(count);
+            int totalCount = 20;
+            cm.setMaxTotal(totalCount);
+            httpClient = HttpClients.custom().
+                    setConnectionManager(cm).
+                    setRetryHandler(retryHandler(5)).
+                    build();
+        }
+    }
+
+    public void setPools(PoolingHttpClientConnectionManager cm) {
+        this.cm = cm;
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(5)).build();
+    }
+
+    public void setPools(PoolingHttpClientConnectionManager cm, int retryTimes) {
+        this.cm = cm;
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(retryTimes)).build();
+    }
+
+    private HttpRequestBase getRequest(String uri, int timeout) throws ClientException {
         if (httpClient == null) {
             initPools();
         }
         HttpRequestBase request = null;
         if (timeout <= 0) {
-            timeout = DEFAUL_TIME_OUT;
+            timeout = DEFAULT_TIME_OUT;
         }
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout * 1000)
                 .setConnectTimeout(timeout * 1000).setConnectionRequestTimeout(timeout * 1000)
                 .setExpectContinueEnabled(false).build();
-        if (HttpPost.METHOD_NAME.equalsIgnoreCase(opts)) {
-            // 根据endpoint拼接生成的request的uri信息
-            request = new HttpPost(endpoint.resolve(ApiVersion + uri));
-        } else {
-            log.error("{0}", "SDK目前只支持POST方法");
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, "opts参数需为POST");
-        }
+
+
+        // 根据endpoint拼接生成的request的uri信息
+        request = new HttpPost(endpoint.resolve(ApiVersion + uri));
+
         request.setConfig(requestConfig);
         return request;
     }
@@ -184,7 +202,8 @@ public class WulaiClient {
     /**
      * 将验证信息放入request header中
      */
-    private HttpEntityEnclosingRequestBase setRequestParams(HttpEntityEnclosingRequestBase request) throws ClientException {
+    private HttpEntityEnclosingRequestBase setRequestParams(HttpEntityEnclosingRequestBase request)
+            throws ClientException {
         String nonce = UUID.randomUUID().toString().replace("-", "");
         Long timestamp = System.currentTimeMillis() / 1000;
         request.setHeader("Api-Auth-pubkey", PUBKEY);
@@ -207,10 +226,11 @@ public class WulaiClient {
      * @param opts   请求方式，当前只支持 post 方法
      * @throws ClientException
      */
-    public synchronized void processCommonRequest(String action, String data, String opts) throws ClientException {
+    public synchronized String processCommonRequest(String action, String data, HashMap<String, Integer> opts)
+            throws ClientException {
         //校验入参
-        ParamsCheck.checkOpts(opts);
-
+        //ParamsCheck.checkOpts();
+        this.opts = opts;
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
@@ -218,25 +238,44 @@ public class WulaiClient {
         if (httpClient == null) {
             initPools();
         }
+        int timeout = opts.get("timeout");
 
         //获取request 对象，设置参数
-        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, opts, 0);
+        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
 
         try {
             log.debug("data:" + data, true);
             postrequest.setEntity(new StringEntity(data));
         } catch (UnsupportedEncodingException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "request setEntity exception,please check data");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,
+                    "request setEntity exception,please check data");
         }
         postrequest = setRequestParams(postrequest);
         HttpContext context = HttpClientContext.create();
         try {
             httpResponse = httpClient.execute(postrequest, context);
-        } catch (UnknownHostException e) {
-            ClientException clientException = new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE, "UnknownHostException,Please check the endpoint");
-            throw clientException;
+        }catch (ConnectTimeoutException | HttpHostConnectException | UnknownHostException e ){
+            throw new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE,e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage(),
+                    httpResponse.getStatusLine().getStatusCode());
+        }
+        int httpCode = httpResponse.getStatusLine().getStatusCode();
+        if (httpCode == 200) {
+            System.out.println("http good");
+        } else if (httpCode == 400) {
+            log.debug(httpResponse.toString(), true);
+            throw new ServerException(ClientExceptionConstant.SDK_INVALID_REQUEST, httpResponse.toString(), httpCode);
+        } else if (httpCode == 401) {
+            log.error("Invalid credential", true);
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL,
+                    " Invalid credential , please check the pubkey , secret and apiVersion");
+        } else if (httpCode == 500) {
+            log.debug(httpResponse.toString(), true);
+            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
+        } else {
+            System.out.println(httpCode);
+            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
         }
         httpEntity = httpResponse.getEntity();
         if (httpEntity != null) {
@@ -256,23 +295,15 @@ public class WulaiClient {
             }
         }
         log.debug(responseBody, true);
-        int httpCode = httpResponse.getStatusLine().getStatusCode();
+
         if (log.getDEBUG()) {
             for (Header header : httpResponse.getAllHeaders()) {
                 log.info("{0}:{1}", header.getName(), header.getValue());
             }
         }
         log.debug("httpcode:{0},responseBody:{1}", httpCode, responseBody.toString());
-        if (httpCode == 500) {
-            log.debug(httpResponse.toString(), true);
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
-        } else if (httpCode == 400) {
-            log.debug(httpResponse.toString(), true);
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
-        } else if (httpCode == 401) {
-            log.error("Invalid pubkey or secret", true);
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, " Invalid credential ，pelease check the pubkey , secret and apiVersion");
-        }
+
+        return responseBody;
 
     }
 
