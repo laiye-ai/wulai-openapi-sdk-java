@@ -1,7 +1,6 @@
 
 import exceptions.ClientException;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,12 +10,9 @@ import java.util.HashMap;
 public class TestWulaiClient {
     private static WulaiClient wulaiClient;
     private static String name;
-
     private static String usercreate;
     private static String botresponse;
     private HashMap<String,Integer> hashMap=new HashMap<String,Integer>();
-
-
 
     @Before
     public void setEnv() throws ClientException {
@@ -39,7 +35,6 @@ public class TestWulaiClient {
         }
     }
 
-
     @Test
     public void testSetPool(){
         try {
@@ -49,8 +44,6 @@ public class TestWulaiClient {
             wulaiClient.setPools(cm,1);
             wulaiClient.processCommonRequest("/user/create", usercreate, hashMap);
             wulaiClient.processCommonRequest("/msg/bot-response",botresponse, hashMap);
-
-
         } catch (ClientException e) {
             System.out.println("testProcessCommonRequest捕获异常"+e.getMessage());
         }
@@ -71,8 +64,6 @@ public class TestWulaiClient {
         }
     }
 
-
-
     @Test
     public void testApiVersion(){
         try {
@@ -81,16 +72,12 @@ public class TestWulaiClient {
         } catch (ClientException e) {
             System.out.println("testApiVersion捕获异常:"+e.getMessage());
         }
-
-
         try {
             wulaiClient.processCommonRequest("/user/create",usercreate,hashMap);
         } catch (ClientException e) {
             System.out.println("testApiVersion捕获异常:"+e.getMessage());
         }
     }
-
-
 
     @Test
     public void testErrorSecret(){
@@ -102,6 +89,7 @@ public class TestWulaiClient {
             System.out.println("testErrorSecret捕获异常:"+e.getMessage());
         }
     }
+
     @Test
     public void testUnreacheableUrl(){
         wulaiClient.setEndpoint(URI.create("https://www.google.com/"));
@@ -110,7 +98,6 @@ public class TestWulaiClient {
         } catch (ClientException e) {
             System.out.println("testUnreacheableUrl捕获异常:"+e.getMessage());
         }
-
     }
 
     @Test
@@ -130,8 +117,6 @@ public class TestWulaiClient {
         }catch (NullPointerException e){
             System.out.println("testPubkeyisNull捕获异常:"+e.getMessage());
         }
-
-
     }
 
 }
