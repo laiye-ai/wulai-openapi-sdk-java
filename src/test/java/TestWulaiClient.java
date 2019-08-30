@@ -22,6 +22,11 @@ public class TestWulaiClient {
 
     }
 
+    public void test() throws ClientException {
+        wulaiClient=new WulaiClient(System.getenv("zhangtao"),System.getenv("zhang"),"v2",true);
+    }
+
+
     @Test
     public void testProcessCommonRequest(){
         try {

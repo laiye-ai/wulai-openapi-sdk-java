@@ -71,6 +71,8 @@ public class WulaiClient {
      * @throws ClientException 客户端错误
      */
     public WulaiClient(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
+        assert null!=pubkey;
+        assert null!=secret;
         ParamsCheck.checkApiVersion(apiVersion);
         this.PUBKEY = pubkey;
         this.SECRET = secret;
