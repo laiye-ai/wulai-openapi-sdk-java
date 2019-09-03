@@ -34,7 +34,7 @@ WulaiCLient wulaiClient=new WulaiClient(System.getenv("pubkey"),
 System.getenv("secret"), "v2", true);
 ```
 
-### 创建 WulaiClient 客户端
+### 使用通用方法processCommonRequest发送请求
 ```
 String name="Tom";
 //设置创建用户请求参数
@@ -48,9 +48,18 @@ wulaiClient.processCommonRequest("/user/create",data,"post");
 //发起对话机器人请求
 wulaiClient.processCommonRequest("/msg/bot-response",data2,"post");
 
-
 ```
+### 使用Wulai Java API发送请求
+```
+//创建requestBean 对象
+UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
+userCreateRequest.setNickname("Tom");
+userCreateRequest.setAvatar_url("https://www.laiye.com/static/official-website/logo.png");
 
+//调用Java API发送请求
+int result=wulaiClient.userCreate(userCreateRequest);
+System.out.println(result); //httpCode=200
+```
 
 ### 协议说明
 ```text
