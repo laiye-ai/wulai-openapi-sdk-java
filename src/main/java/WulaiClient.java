@@ -1,3 +1,4 @@
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ClientExceptionConstant;
@@ -18,14 +19,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import requestBean.msg.*;
+import requestBean.user.UserAttributeCreateRequest;
+import requestBean.user.UserAttributeListRequest;
+import requestBean.user.UserCreateRequest;
+import responseBean.msg.*;
+import responseBean.user.UserAttributeListResponse;
 import util.Log;
 import util.ParamsCheck;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -50,6 +55,8 @@ public class WulaiClient {
         }
     }
 
+    private int timeout = 15000;
+    private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
     private URI endpoint = URI.create("https://openapi.wul.ai/");
@@ -58,6 +65,7 @@ public class WulaiClient {
     private String SECRET = null;
     private String ApiVersion = null;
     private Log log;
+    private HashMap<String, Object> params=new HashMap<String,Object>();;
     private WulaiClient() {
     }
 
@@ -110,13 +118,13 @@ public class WulaiClient {
     /**
      * 根据指定类型设置http连接重试策略
      *
-     * @param tryTimes
+     * @param
      * @return
      */
-    private static HttpRequestRetryHandler retryHandler(final int tryTimes) {
+    private HttpRequestRetryHandler retryHandler() {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException e, int executionCount, HttpContext httpContext) {
-                if (executionCount > tryTimes) {
+                if (executionCount > retryTimes) {
                     return false;
                 }
                 if (e instanceof NoHttpResponseException) {
@@ -148,6 +156,20 @@ public class WulaiClient {
         return httpRequestRetryHandler;
     }
 
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
+    }
+
+    //将string 转化为HashMap
+    private Map parseToHashMap(String str){
+        return JSONObject.parseObject(str,HashMap.class);
+    }
+
+
     public void setEndpoint(URI endpoint) {
         this.endpoint = endpoint;
     }
@@ -164,19 +186,19 @@ public class WulaiClient {
             cm.setMaxTotal(totalCount);
             httpClient = HttpClients.custom().
                     setConnectionManager(cm).
-                    setRetryHandler(retryHandler(5)).
+                    setRetryHandler(retryHandler()).
                     build();
         }
     }
 
     public void setPools(PoolingHttpClientConnectionManager cm) {
         this.cm = cm;
-        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(5)).build();
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
     }
 
     public void setPools(PoolingHttpClientConnectionManager cm, int retryTimes) {
         this.cm = cm;
-        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler(retryTimes)).build();
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
     }
 
     private HttpRequestBase getRequest(String uri, int timeout) throws ClientException {
@@ -190,7 +212,6 @@ public class WulaiClient {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout * 1000)
                 .setConnectTimeout(timeout * 1000).setConnectionRequestTimeout(timeout * 1000)
                 .setExpectContinueEnabled(false).build();
-
 
         // 根据endpoint拼接生成的request的uri信息
         request = new HttpPost(endpoint.resolve(ApiVersion + uri));
@@ -223,14 +244,9 @@ public class WulaiClient {
     /**
      * @param action 请求路径，例如 /user/create , /msg/bot-response 等
      * @param data   请求参数，json字符串
-     * @param opts   请求方式，当前只支持 post 方法
      * @throws ClientException
      */
-    public synchronized String processCommonRequest(String action, String data, HashMap<String, Integer> opts)
-            throws ClientException {
-        //校验入参
-        //ParamsCheck.checkOpts();
-        this.opts = opts;
+    public synchronized String processCommonRequest(String action, String data) throws ClientException {
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
@@ -238,31 +254,23 @@ public class WulaiClient {
         if (httpClient == null) {
             initPools();
         }
-        int timeout = opts.get("timeout");
-
         //获取request 对象，设置参数
         postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
-
-        try {
-            log.debug("data:" + data, true);
-            postrequest.setEntity(new StringEntity(data));
-        } catch (UnsupportedEncodingException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,
-                    "request setEntity exception,please check data");
-        }
+        log.debug("data:" + data, true);
+        postrequest.setEntity(new StringEntity(data, "UTF-8"));
         postrequest = setRequestParams(postrequest);
         HttpContext context = HttpClientContext.create();
         try {
             httpResponse = httpClient.execute(postrequest, context);
-        }catch (ConnectTimeoutException | HttpHostConnectException | UnknownHostException e ){
-            throw new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE,e.getMessage());
+        } catch (ConnectTimeoutException | HttpHostConnectException | UnknownHostException e) {
+            throw new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE, e.getMessage());
         } catch (IOException e) {
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage(),
+            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage(),
                     httpResponse.getStatusLine().getStatusCode());
         }
         int httpCode = httpResponse.getStatusLine().getStatusCode();
         if (httpCode == 200) {
-            System.out.println("http good");
+            log.debug("http good",true);
         } else if (httpCode == 400) {
             log.debug(httpResponse.toString(), true);
             throw new ServerException(ClientExceptionConstant.SDK_INVALID_REQUEST, httpResponse.toString(), httpCode);
@@ -301,15 +309,249 @@ public class WulaiClient {
                 log.info("{0}:{1}", header.getName(), header.getValue());
             }
         }
-        log.debug("httpcode:{0},responseBody:{1}", httpCode, responseBody.toString());
+        log.info("httpcode:{0},responseBody:{1}", httpCode, responseBody.toString());
 
         return responseBody;
+    }
 
+    private synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data) throws ClientException {
+        HttpEntityEnclosingRequestBase postrequest = null;
+        CloseableHttpResponse httpResponse = null;
+        if (httpClient == null) {
+            initPools();
+        }
+        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
+        postrequest = setRequestParams(postrequest);
+        String body = JSONObject.toJSON(data).toString();
+        log.debug(body, true);
+        postrequest.setEntity(new StringEntity(body, "UTF-8"));
+        HttpContext context = HttpClientContext.create();
+        try {
+            httpResponse = httpClient.execute(postrequest, context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return httpResponse;
     }
 
 
+    //创建用户接口，返回httpcode
+    public int userCreate(UserCreateRequest userCreateRequest) throws ClientException {
+        params = new HashMap<String, Object>();
+        params.put("user_id", userCreateRequest.getUser_id());
+        params.put("avatar_url", userCreateRequest.getAvatar_url());
+        params.put("nickname", userCreateRequest.getNickname());
+        CloseableHttpResponse httpResponse= excuteRequest("/user/create", params);
+        return httpResponse.getStatusLine().getStatusCode();
+    }
+
+    //获取机器人回复接口，返回BotResponseResponse
+    public BotResponse getBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", botResponseRequest.getUserId());
+        params.put("extra", botResponseRequest.getExtra());
+        HashMap<String, Object> text = new HashMap<String, Object>();
+        HashMap<String, Object> contentmap = new HashMap<String, Object>();
+        if (botResponseRequest.getMsgBody() instanceof String) {
+            contentmap.put("content", (String) botResponseRequest.getMsgBody());
+            text.put("text", contentmap);
+        }
+        params.put("msg_body", text);
+        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response", params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BotResponse botResponse =new BotResponse();
+        botResponse.setDispatch((boolean)map.get("is_dispatch"));
+        botResponse.setSuggestedResponse(JSONArray.parseArray(map.get("suggested_response").toString()).toArray());
+        botResponse.setMsgId((String)map.get("msg_id"));
+        return botResponse;
+    }
+
+
+    //获取关键字机器人回复,返回KeywordResponseResponse
+    public KeywordResponse getKeywordBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", botResponseRequest.getUserId());
+        params.put("extra", botResponseRequest.getExtra());
+        HashMap<String, Object> text = new HashMap<String, Object>();
+        HashMap<String, Object> contentmap = new HashMap<String, Object>();
+        if (botResponseRequest.getMsgBody() instanceof String) {
+            contentmap.put("content", (String) botResponseRequest.getMsgBody());
+            text.put("text", contentmap);
+        }
+        params.put("msg_body", text);
+        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response/keyword", params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        KeywordResponse keywordResponse =new KeywordResponse();
+        keywordResponse.setDispatch((boolean)map.get("is_dispatch"));
+        keywordResponse.setKeywordSuggestedResponse(JSONArray.parseArray(map.get("keyword_suggested_response").toString()).toArray());
+        keywordResponse.setMsgId((String)map.get("msg_id"));
+        return keywordResponse;
+    }
+
+    public QaResponse getQABotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", botResponseRequest.getUserId());
+        params.put("extra", botResponseRequest.getExtra());
+        HashMap<String, Object> text = new HashMap<String, Object>();
+        HashMap<String, Object> contentmap = new HashMap<String, Object>();
+        if (botResponseRequest.getMsgBody() instanceof String) {
+            contentmap.put("content", (String) botResponseRequest.getMsgBody());
+            text.put("text", contentmap);
+        }
+        params.put("msg_body", text);
+        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response/qa", params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        QaResponse qaResponse =new QaResponse();
+        qaResponse.setDispatch((boolean)map.get("is_dispatch"));
+        qaResponse.setQaSuggestedResponse(JSONArray.parseArray(map.get("qa_suggested_response").toString()).toArray());
+        qaResponse.setMsgId((String)map.get("msg_id"));
+        return qaResponse;
+    }
+
+    public TaskResponse getTaskBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", botResponseRequest.getUserId());
+        params.put("extra", botResponseRequest.getExtra());
+        HashMap<String, Object> text = new HashMap<String, Object>();
+        HashMap<String, Object> contentmap = new HashMap<String, Object>();
+        if (botResponseRequest.getMsgBody() instanceof String) {
+            contentmap.put("content", botResponseRequest.getMsgBody());
+            text.put("text", contentmap);
+        }
+        params.put("msg_body", text);
+        CloseableHttpResponse  httpResponse= excuteRequest("/msg/bot-response/task", params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TaskResponse taskResponse =new TaskResponse();
+        taskResponse.setDispatch((boolean)map.get("is_dispatch"));
+        taskResponse.setTaskSuggestedResponse(JSONArray.parseArray(map.get("task_suggested_response").toString()).toArray());
+        taskResponse.setMsgId((String)map.get("msg_id"));
+        return taskResponse;
+    }
+
+    private BotResponse getResponseBean(CloseableHttpResponse httpResponse){
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BotResponse botResponse =new BotResponse();
+        botResponse.setDispatch((boolean)map.get("is_dispatch"));
+        botResponse.setSuggestedResponse(JSONArray.parseArray(map.get("suggested_response").toString()).toArray());
+        botResponse.setMsgId((String)map.get("msg_id"));
+        return botResponse;
+    }
+
+    public SyncResponse msgSync(SyncRequest syncRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", syncRequest.getUserId());
+        params.put("extra", syncRequest.getExtra());
+        params.put("msg_ts", syncRequest.getMsgTs());
+        HashMap<String, Object> text = new HashMap<String, Object>();
+        HashMap<String, Object> contentmap = new HashMap<String, Object>();
+        if (syncRequest.getMsgBody() instanceof String) {
+            contentmap.put("content", syncRequest.getMsgBody());
+            text.put("text", contentmap); }
+        params.put("msg_body", text);
+        CloseableHttpResponse httpResponse= excuteRequest("/msg/sync", params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SyncResponse syncResponse=new SyncResponse();
+        syncResponse.setMsgId(map.get("msg_id").toString());
+        return syncResponse;
+    }
+
+    public String userAttributeCreate(UserAttributeCreateRequest userAttributeCreateRequest) throws ClientException {
+        params.clear();
+        params.put("user_id", userAttributeCreateRequest.getUser_id());
+        params.put("user_attribute_user_attribute_value", userAttributeCreateRequest.getUser_attribute_user_attribute_value());
+        CloseableHttpResponse httpResponse= excuteRequest("/user/user-attribute/create",params);
+        return null;
+    }
+
+    public UserAttributeListResponse userAttributeList(UserAttributeListRequest userAttributeListRequest) throws ClientException {
+        params.clear();
+        params.put("page", userAttributeListRequest.getPage());
+        params.put("page_size", userAttributeListRequest.getPageSize());
+        CloseableHttpResponse httpResponse= excuteRequest("/user-attribute/list",params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        UserAttributeListResponse userAttributeListResponse=new UserAttributeListResponse();
+        userAttributeListResponse.setPageCount((int)map.get("page_count"));
+        userAttributeListResponse.setUserAttributeUserAttributeValues(JSONArray.
+                parseArray(map.get("user_attribute_user_attribute_values").toString()).toArray());
+        return userAttributeListResponse;
+    }
+
+    public HistoryResponse msgHistory(HistoryRequest historyRequest) throws ClientException {
+        params.clear();
+        params.put("user_id",historyRequest.getUserId());
+        params.put("num",historyRequest.getNum());
+        params.put("direction",historyRequest.getDirection());
+        params.put("msg_id",historyRequest.getMsgId());
+        CloseableHttpResponse  httpResponse= excuteRequest("/msg/history",params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HistoryResponse historyResponse=new HistoryResponse();
+        historyResponse.setHasMore((boolean) map.get("has_more"));
+        historyResponse.setMsg(JSONArray.parseArray(map.get("msg").toString()).toArray());
+        return historyResponse;
+    }
+
+    public ReceiveResponse msgReceive(ReceiveRequest receiveRequest) throws ClientException {
+        params.clear();
+        params.put("user_id",receiveRequest.getUserId());
+        params.put("extra",receiveRequest.getExtra());
+        params.put("third_msg_id",receiveRequest.getThirdMsgId());
+        HashMap<String,Object> text=new HashMap<String, Object>();
+        HashMap<String,Object> contentmap=new HashMap<String, Object>();
+        if (receiveRequest.getMsgBody() instanceof String){
+            contentmap.put("content",receiveRequest);
+            text.put("text",contentmap);
+        }
+        params.put("msg_body",text);
+        CloseableHttpResponse httpResponse= excuteRequest("/msg/receive",params);
+        Map map=null;
+        try {
+            map= parseToHashMap(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ReceiveResponse receiveResponse=new ReceiveResponse();
+        receiveResponse.setMsg_id(map.get("msg_id").toString());
+        return receiveResponse;
+    }
 
 }
-
-
-
