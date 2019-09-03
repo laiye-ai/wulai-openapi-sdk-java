@@ -8,7 +8,7 @@ jdk:
 branches: # build only on these branches
   only:
     - master
-    - develop
+    - dev
 script:
   - mvn test
   - mvn cobertura:cobertura
