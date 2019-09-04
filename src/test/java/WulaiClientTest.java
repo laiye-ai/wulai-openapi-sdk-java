@@ -1,4 +1,5 @@
 import exceptions.ClientException;
+import exceptions.ServerException;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,17 +20,18 @@ public class WulaiClientTest {
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
                 System.getenv("secret"), "v2", false);
+//        wulaiClient=new WulaiClient("eee","eee","v2",false);
         wulaiClient.setRetryTimes(1);
         System.out.println("setEnv");
     }
 
     @Test
-    public void test() throws ClientException {
-        try {
-            TestUserCreate("","tom","");
-        }catch (ClientException e){
-            System.out.println("生吞");
-        }
+    public void test() throws ClientException, ServerException {
+//        try {
+//            TestUserCreate("zhangtao","tom","");
+//        }catch (ClientException e){
+//            System.out.println("生吞");
+//        }
         TestBotResponse("zhangtao@test","你是谁" );
         TestUserCreate("taskbot","","");
         TestBotResponse("taskbot","年假");
@@ -40,7 +42,7 @@ public class WulaiClientTest {
         TestSync("zhangtao@test","好好好","1567583854600");
     }
 
-    public void TestUserCreate(String userId,String nickName,String avatarUrl) throws ClientException {
+    public void TestUserCreate(String userId,String nickName,String avatarUrl) throws ClientException, ServerException {
         UserCreateRequest userCreateRequest = new UserCreateRequest(userId);
         userCreateRequest.setNickname(nickName);
         userCreateRequest.setAvatarUrl(avatarUrl);
@@ -52,7 +54,7 @@ public class WulaiClientTest {
         }
      }
 
-    public void TestBotResponse(String userId, String msg) throws ClientException {
+    public void TestBotResponse(String userId, String msg) throws ClientException, ServerException {
         BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msg);
         BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest);
         for (Object object : botResponse.getSuggestedResponse()) {
@@ -60,7 +62,7 @@ public class WulaiClientTest {
         }
     }
 
-    public void TestKeywordBotResponse(String userId, String msg) throws ClientException {
+    public void TestKeywordBotResponse(String userId, String msg) throws ClientException, ServerException {
         BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msg);
         botResponseRequest.setExtra("hello");
         KeywordResponse keywordResponse = wulaiClient.getKeywordBotResponse(botResponseRequest);
@@ -70,7 +72,7 @@ public class WulaiClientTest {
 
     }
 
-    public void TestQAResponse(String userId, String msg) throws ClientException {
+    public void TestQAResponse(String userId, String msg) throws ClientException, ServerException {
         BotResponseRequest botResponse = new BotResponseRequest(userId, msg);
         botResponse.setExtra("hello");
         QaResponse qaResponse = wulaiClient.getQABotResponse(botResponse);
@@ -79,7 +81,7 @@ public class WulaiClientTest {
         }
     }
 
-    public void TestTaskBotResponse(String userId, String msg) throws ClientException {
+    public void TestTaskBotResponse(String userId, String msg) throws ClientException, ServerException {
         BotResponseRequest botResponse = new BotResponseRequest(userId, msg);
         TaskResponse taskResponse = wulaiClient.getTaskBotResponse(botResponse);
         for (Object object : taskResponse.getTaskSuggestedResponse()) {
@@ -88,7 +90,7 @@ public class WulaiClientTest {
 
     }
 
-    public void TestHistory(String userId,int num,String msgId ,HistoryRequest.Direction direction ) throws ClientException {
+    public void TestHistory(String userId,int num,String msgId ,HistoryRequest.Direction direction ) throws ClientException, ServerException {
         HistoryRequest historyRequest = new HistoryRequest(userId, num);
         historyRequest.setDirection(HistoryRequest.Direction.FORWARD);
         historyRequest.setDirection(HistoryRequest.Direction.BACKWARD);
@@ -99,7 +101,7 @@ public class WulaiClientTest {
             System.out.println(object);
         }
     }
-    public void TestSync(String userId,String msgBody,String msgTs) throws ClientException {
+    public void TestSync(String userId,String msgBody,String msgTs) throws ClientException, ServerException {
         SyncRequest syncRequest=new SyncRequest(userId,msgBody,msgTs);
         syncRequest.setExtra("hello");
         SyncResponse syncResponse=wulaiClient.msgSync(syncRequest);
@@ -114,7 +116,7 @@ public class WulaiClientTest {
         //wulaiClient.userCreate(userAttributeCreateRequest);
     }
 
-    public void TestAttributeList(int page,int pageSize,boolean filter) throws ClientException {
+    public void TestAttributeList(int page,int pageSize,boolean filter) throws ClientException, ServerException {
         UserAttributeListRequest userAttributeListRequest = new UserAttributeListRequest(page, pageSize);
         userAttributeListRequest.setFilter(filter);
         UserAttributeListResponse userAttributeListResponse = wulaiClient.userAttributeList(userAttributeListRequest);

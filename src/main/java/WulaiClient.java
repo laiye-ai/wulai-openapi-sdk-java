@@ -243,7 +243,7 @@ public class WulaiClient {
      * @param data   请求参数，json字符串
      * @throws ClientException 客户端异常
      */
-    public synchronized String processCommonRequest(String action, String data) throws ClientException {
+    public synchronized String processCommonRequest(String action, String data) throws ClientException, ServerException {
         HttpEntity httpEntity = null;
         HttpEntityEnclosingRequestBase postrequest = null;
         String responseBody = "";
@@ -272,7 +272,7 @@ public class WulaiClient {
             log.debug("http good",true);
         } else if (httpCode == 400) {
             log.debug(httpResponse.toString(), true);
-            throw new ServerException(ClientExceptionConstant.SDK_INVALID_REQUEST, httpResponse.toString(), httpCode);
+            throw new ServerException(ClientExceptionConstant.SDK_INVALID_PARAMS, httpResponse.toString(), httpCode);
         } else if (httpCode == 401) {
             log.error("Invalid credential", true);
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL,
@@ -319,7 +319,7 @@ public class WulaiClient {
      * @throws ClientException 客户端异常
      */
     private synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
-            throws ClientException {
+            throws ClientException, ServerException {
         HttpEntityEnclosingRequestBase postrequest = null;
         CloseableHttpResponse httpResponse = null;
         String body =null;
@@ -333,12 +333,50 @@ public class WulaiClient {
         log.debug(body, true);
         postrequest.setEntity(new StringEntity(body, "UTF-8"));
         HttpContext context = HttpClientContext.create();
+
         try {
             httpResponse = httpClient.execute(postrequest, context);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        checkHttpCode(httpResponse);
         return httpResponse;
+    }
+    private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
+        int httpCode=0;
+        Map map=null;
+        String responseBody = null;
+        httpCode=response.getStatusLine().getStatusCode();
+        if (httpCode!=200) {
+            HttpEntity entity = response.getEntity();
+            try {
+                responseBody = EntityUtils.toString(entity, "UTF-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            map = JSONObject.parseObject(responseBody);
+        }
+        switch (httpCode){
+            case 400:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,map.get("message").toString());
+            case 401:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL,map.get("message").toString());
+            case 403:
+            case 429:
+            case 404:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST,map.get("message").toString());
+            case 409:
+            case 499:
+                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,map.get("message").toString());
+            case 500:
+            case 501:
+            case 504:
+            case 503:
+                throw new ServerException(map.get("code").toString(),map.get("message").toString(),httpCode);
+            default:
+                break;
+        }
     }
 
     /**
@@ -348,10 +386,10 @@ public class WulaiClient {
      * @Required userId 用户唯一标识 [ 1 .. 128 ] characters
      * avatarUrl 用户头像url <= 512 characters
      * nickname 用户昵称 <= 128 characters
-     * @return httpCode,默认为0
+     * @return httpCode
      * @throws ClientException 客户端异常
      */
-    public int userCreate(UserCreateRequest userCreateRequest) throws ClientException {
+    public int userCreate(UserCreateRequest userCreateRequest) throws ClientException, ServerException {
         params = new HashMap<String, Object>();
         params.put("user_id", userCreateRequest.getUserId());
         params.put("avatar_url", userCreateRequest.getAvatarUrl());
@@ -369,9 +407,9 @@ public class WulaiClient {
      * @Required MsgBody 消息体
      * extra 自定义字段 <= 1024 characters
      * @return BotResponse
-     * @throws ClientException
+     * @throws ClientException 客户端错误
      */
-    public BotResponse getBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+    public BotResponse getBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
         HashMap<String, Object> text = new HashMap<String, Object>();
         HashMap<String, Object> contentmap = new HashMap<String, Object>();
@@ -409,7 +447,7 @@ public class WulaiClient {
      * @return KeywordResponse
      * @throws ClientException 客户端错误
      */
-    public KeywordResponse getKeywordBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+    public KeywordResponse getKeywordBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         HashMap<String, Object> text = new HashMap<String, Object>();
@@ -447,7 +485,7 @@ public class WulaiClient {
      * @return QaResponse
      * @throws ClientException
      */
-    public QaResponse getQABotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+    public QaResponse getQABotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         HashMap<String, Object> text = new HashMap<String, Object>();
@@ -484,7 +522,7 @@ public class WulaiClient {
      * @return TaskResponse
      * @throws ClientException 客户端错误
      */
-    public TaskResponse getTaskBotResponse(BotResponseRequest botResponseRequest) throws ClientException {
+    public TaskResponse getTaskBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         HashMap<String, Object> text = new HashMap<String, Object>();
@@ -523,7 +561,7 @@ public class WulaiClient {
      * @return
      * @throws ClientException
      */
-    public SyncResponse msgSync(SyncRequest syncRequest) throws ClientException {
+    public SyncResponse msgSync(SyncRequest syncRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         HashMap<String, Object> text = new HashMap<String, Object>();
@@ -550,7 +588,7 @@ public class WulaiClient {
         return syncResponse;
     }
 
-    public String userAttributeCreate(UserAttributeCreateRequest userAttributeCreateRequest) throws ClientException {
+    public String userAttributeCreate(UserAttributeCreateRequest userAttributeCreateRequest) throws ClientException, ServerException {
         params.clear();
         params.put("user_id", userAttributeCreateRequest.getUser_id());
         params.put("user_attribute_user_attribute_value", userAttributeCreateRequest
@@ -570,7 +608,7 @@ public class WulaiClient {
      * @throws ClientException
      */
     public UserAttributeListResponse userAttributeList(UserAttributeListRequest userAttributeListRequest)
-            throws ClientException {
+            throws ClientException, ServerException {
         params.clear();
         HashMap<String,Object> useInUserAttributeGroup=new HashMap<String, Object>();
         useInUserAttributeGroup.put("use_in_user_attribute_group",userAttributeListRequest.getFilter());
@@ -606,7 +644,7 @@ public class WulaiClient {
      * @return HistoryResponse
      * @throws ClientException 客户端错误
      */
-    public HistoryResponse msgHistory(HistoryRequest historyRequest) throws ClientException {
+    public HistoryResponse msgHistory(HistoryRequest historyRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         params.put("user_id",historyRequest.getUserId());
@@ -636,7 +674,7 @@ public class WulaiClient {
      * @return
      * @throws ClientException
      */
-    public ReceiveResponse msgReceive(ReceiveRequest receiveRequest) throws ClientException {
+    public ReceiveResponse msgReceive(ReceiveRequest receiveRequest) throws ClientException, ServerException {
         params.clear();
         Map map=null;
         HashMap<String,Object> text=new HashMap<String, Object>();
