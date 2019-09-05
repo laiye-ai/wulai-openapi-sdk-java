@@ -19,10 +19,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import request.MsgRoute;
 import request.msg.*;
 import request.user.UserAttributeCreateRequest;
 import request.user.UserAttributeListRequest;
 import request.user.UserCreateRequest;
+import response.MsgRouteResponse;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
 import util.Log;
@@ -60,7 +62,7 @@ public class WulaiClient {
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
-    private URI endpoint = URI.create("https://openapi.wul.ai/");
+    private URI endpoint = URI.create("https://preopenapi.wul.ai/");
     private HashMap<String, Integer> opts = null;
     private String PUBKEY = null;
     private String SECRET = null;
@@ -688,7 +690,6 @@ public class WulaiClient {
         params.put("msg_body",text);
         params.put("extra",receiveRequest.getExtra());
         params.put("third_msg_id",receiveRequest.getThirdMsgId());
-
 
         CloseableHttpResponse httpResponse= excuteRequest("/msg/receive",params);
         try {

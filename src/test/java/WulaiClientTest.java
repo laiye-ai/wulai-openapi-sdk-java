@@ -1,8 +1,10 @@
+import com.alibaba.fastjson.JSONArray;
 import exceptions.ClientException;
 import exceptions.ServerException;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Before;
 import org.junit.Test;
+import request.MsgRoute;
 import request.msg.BotResponseRequest;
 import request.msg.HistoryRequest;
 import request.msg.SyncRequest;
@@ -56,7 +58,10 @@ public class WulaiClientTest {
 
     public void TestBotResponse(String userId, String msg) throws ClientException, ServerException {
         BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msg);
+        botResponseRequest.setExtra("readme");
         BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest);
+        botResponse.getMsgId();
+        botResponse.isDispatch();
         for (Object object : botResponse.getSuggestedResponse()) {
             System.out.println(object.toString());
         }
@@ -124,6 +129,13 @@ public class WulaiClientTest {
             System.out.println(object);
         }
     }
+
+//    public void TestWebHook(){
+//        Object[] objects=JSONArray.parseArray("").toArray();
+//        MsgRoute msgRoute=new MsgRoute("zhangtao@test","Tom",
+//                "",false,"","你是谁",objects);
+//    }
+
 
 //    @Test
 //    public void testNormal() throws ClientException {
