@@ -51,15 +51,28 @@ wulaiClient.processCommonRequest("/msg/bot-response",data2);
 ```
 ### 使用Wulai Java API发送请求
 ```
-//创建requestBean 对象
+// 创建requestBean 对象
 UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
 userCreateRequest.setNickname("Tom");
 userCreateRequest.setAvatar_url("https://www.laiye.com/static/official-website/logo.png");
 
-//调用Java API发送请求
+// 调用Java API发送请求
 int result=wulaiClient.userCreate(userCreateRequest);
 System.out.println(result); //httpCode=200
-```
+
+
+// 创建requestBean对象
+BotResponseRequest botResponseRequest = new BotResponseRequest("wulai@test","你是谁""); //创建对象时传入必选参数
+botResponseRequest.setExtra("readme"); //set可选参数
+BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest); //得到responseBean
+
+// 获取回复内容
+System.out.println(botResponse.getMsgId()); 
+System.out.println(botResponse.isDispatch());
+for (Object object : botResponse.getSuggestedResponse()) {
+    System.out.println(object.toString());
+}
+```      
 
 ### 协议说明
 ```text
