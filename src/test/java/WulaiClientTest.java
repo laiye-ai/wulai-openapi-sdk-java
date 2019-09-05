@@ -1,10 +1,7 @@
-import com.alibaba.fastjson.JSONArray;
 import exceptions.ClientException;
 import exceptions.ServerException;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Before;
 import org.junit.Test;
-import request.MsgRoute;
 import request.msg.BotResponseRequest;
 import request.msg.HistoryRequest;
 import request.msg.SyncRequest;
@@ -12,8 +9,6 @@ import request.user.UserAttributeListRequest;
 import request.user.UserCreateRequest;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
-
-import java.net.URI;
 
 public class WulaiClientTest {
     private static WulaiClient wulaiClient;
