@@ -43,10 +43,10 @@ String data="{\"user_id\":\"%s\",name}";
 String data2=String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
 
 //发起创建用户
-wulaiClient.processCommonRequest("/user/create",data,"post");
+wulaiClient.processCommonRequest("/user/create",data);
 
 //发起对话机器人请求
-wulaiClient.processCommonRequest("/msg/bot-response",data2,"post");
+wulaiClient.processCommonRequest("/msg/bot-response",data2);
 
 ```
 ### 使用Wulai Java API发送请求
