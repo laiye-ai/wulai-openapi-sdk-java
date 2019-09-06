@@ -7,5 +7,4 @@ public class KnowledgeUpdate {
     private String respondAll;
     private String id;
 
-
 }

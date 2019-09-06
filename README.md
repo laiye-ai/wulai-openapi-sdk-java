@@ -22,7 +22,17 @@
 - 您的系统需要安装JDK 1.8 的运行环境 
 
 ## 安装
-使用 maven 添加依赖
+添加依赖到 pom.xml 中
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.wulai.laiye.javasdk</groupId>
+        <artifactId>wulaiSDK</artifactId>
+        <version>1.0</version>
+    </dependency>
+</dependencies>
+```
 
 ## 快速使用
 在您开始之前，您需要注册帐户并获取您的[凭证](https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#section/%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81)。
