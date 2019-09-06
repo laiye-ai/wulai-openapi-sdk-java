@@ -9,11 +9,14 @@
 
 [![build status][travis-image]][travis-url]
 [![codecov][cov-image]][cov-url]
+[![Codacy Badge][codacy-image]][codacy-url]
 
 [travis-image]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java.svg?branch=develop
 [travis-url]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java
 [cov-image]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java/branch/master/graph/badge.svg
 [cov-url]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java
+[codacy-image]: https://api.codacy.com/project/badge/Grade/877660309403463dbab6a3393d7291d5
+[codacy-url]: https://www.codacy.com/app/zuiyuqingfeng/wulai-openapi-sdk-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zuiyuqingfeng/wulai-openapi-sdk-java&amp;utm_campaign=Badge_Grade
 </p>
 
 欢迎使用 Wulai Openapi SDK for Java。
@@ -22,7 +25,17 @@
 - 您的系统需要安装JDK 1.8 的运行环境 
 
 ## 安装
-使用 maven 添加依赖
+添加依赖到 pom.xml 中
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.wulai.laiye.javasdk</groupId>
+        <artifactId>wulaiSDK</artifactId>
+        <version>1.0</version>
+    </dependency>
+</dependencies>
+```
 
 ## 快速使用
 在您开始之前，您需要注册帐户并获取您的[凭证](https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#section/%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81)。
@@ -34,7 +47,7 @@ WulaiCLient wulaiClient=new WulaiClient(System.getenv("pubkey"),
 System.getenv("secret"), "v2", true);
 ```
 
-### 创建 WulaiClient 客户端
+### 使用通用方法processCommonRequest发送请求
 ```
 String name="Tom";
 //设置创建用户请求参数
@@ -43,14 +56,36 @@ String data="{\"user_id\":\"%s\",name}";
 String data2=String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
 
 //发起创建用户
-wulaiClient.processCommonRequest("/user/create",data,"post");
+wulaiClient.processCommonRequest("/user/create",data);
 
 //发起对话机器人请求
-wulaiClient.processCommonRequest("/msg/bot-response",data2,"post");
-
+wulaiClient.processCommonRequest("/msg/bot-response",data2);
 
 ```
+### 使用Wulai Java API发送请求
+```
+// 创建requestBean 对象
+UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
+userCreateRequest.setNickname("Tom");
+userCreateRequest.setAvatar_url("https://www.laiye.com/static/official-website/logo.png");
 
+// 调用Java API发送请求
+int result=wulaiClient.userCreate(userCreateRequest);
+System.out.println(result); //httpCode=200
+
+
+// 创建requestBean对象
+BotResponseRequest botResponseRequest = new BotResponseRequest("wulai@test","你是谁""); //创建对象时传入必选参数
+botResponseRequest.setExtra("readme"); //set可选参数
+BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest); //得到responseBean
+
+// 获取回复内容
+System.out.println(botResponse.getMsgId()); 
+System.out.println(botResponse.isDispatch());
+for (Object object : botResponse.getSuggestedResponse()) {
+    System.out.println(object.toString());
+}
+```      
 
 ### 协议说明
 ```text

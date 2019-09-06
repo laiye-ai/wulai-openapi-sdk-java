@@ -5,9 +5,13 @@ import java.text.MessageFormat;
 public class Log {
     private boolean DEBUG = false;
     private boolean ERROR = true;
-
+    private String logPath;
 
     public Log() {
+    }
+
+    public void setLogPath(String logPath) {
+        this.logPath = logPath;
     }
 
     public void setDEBUG(boolean DEBUG) {

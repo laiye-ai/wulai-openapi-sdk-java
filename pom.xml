@@ -7,8 +7,8 @@
     <groupId>com.laiye.wulai.javasdk</groupId>
     <artifactId>wulaiSDK</artifactId>
     <name>wulaiSDKforJava</name>
-    <version>1.0</version>
-    <description>Laiye Wulai SDK for Python Programming Language</description>
+    <version>1.0.1</version>
+    <description>Laiye Wulai SDK for Java Programming Language</description>
     <url>https://github.com/laiye-ai/wulai-openapi-sdk-java</url>
     <developers>
         <developer>
@@ -70,19 +70,19 @@
                     <check />
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-source-plugin</artifactId>-->
-<!--                <version>2.2.1</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>attach-sources</id>-->
-<!--                        <goals>-->
-<!--                            <goal>jar-no-fork</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
 <!--                <artifactId>maven-gpg-plugin</artifactId>-->

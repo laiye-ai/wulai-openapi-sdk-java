@@ -13,6 +13,8 @@ public class ClientException extends Exception {
         this.setErrorType(ErrorType.Client);
     }
 
+    public ClientException(String errMsg) {
+    }
 
     public ErrorType getErrorType() {
         return errorType;
@@ -21,11 +23,6 @@ public class ClientException extends Exception {
     protected void setErrorType(ErrorType errorType) {
         this.errorType = errorType;
     }
-
-    public String getErrCode() {
-        return errCode;
-    }
-
 
 
 }
