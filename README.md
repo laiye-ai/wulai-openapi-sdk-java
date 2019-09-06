@@ -7,6 +7,7 @@
 
 <p align="center">
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.laiye.wulai.javasdk/wulaiSDK.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.laiye.wulai.javasdk%22%20AND%20a:%22wulaiSDK%22)
 [![build status][travis-image]][travis-url]
 [![codecov][cov-image]][cov-url]
 [![Codacy Badge][codacy-image]][codacy-url]
