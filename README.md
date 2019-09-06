@@ -9,11 +9,14 @@
 
 [![build status][travis-image]][travis-url]
 [![codecov][cov-image]][cov-url]
+[![Codacy Badge][codacy-image]][codacy-url]
 
 [travis-image]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java.svg?branch=develop
 [travis-url]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java
 [cov-image]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java/branch/master/graph/badge.svg
 [cov-url]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java
+[codacy-image]: https://api.codacy.com/project/badge/Grade/877660309403463dbab6a3393d7291d5
+[codacy-url]: https://www.codacy.com/app/zuiyuqingfeng/wulai-openapi-sdk-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zuiyuqingfeng/wulai-openapi-sdk-java&amp;utm_campaign=Badge_Grade
 </p>
 
 欢迎使用 Wulai Openapi SDK for Java。
