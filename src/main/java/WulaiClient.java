@@ -41,8 +41,9 @@ import java.util.UUID;
 
 /**
  * Laiye Wulai SDK for Java Programming Language
- * @Author zhangtao@laiye.com
+ *
  */
+// no package declaration
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 15000;
@@ -61,7 +62,6 @@ public class WulaiClient {
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
     private URI endpoint = URI.create("https://preopenapi.wul.ai/");
-    private HashMap<String, Integer> opts = null;
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
