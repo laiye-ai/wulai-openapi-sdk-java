@@ -268,21 +268,7 @@ public class WulaiClient {
                     httpCode);
         }
         httpCode = httpResponse.getStatusLine().getStatusCode();
-        if (httpCode == 200) {
-            log.debug("http good",true);
-        } else if (httpCode == 400) {
-            log.debug(httpResponse.toString(), true);
-            throw new ServerException(ClientExceptionConstant.SDK_INVALID_PARAMS, httpResponse.toString(), httpCode);
-        } else if (httpCode == 401) {
-            log.error("Invalid credential", true);
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL,
-                    " Invalid credential , please check the pubkey , secret and apiVersion");
-        } else if (httpCode == 500) {
-            log.debug(httpResponse.toString(), true);
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
-        } else {
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, httpResponse.toString(), httpCode);
-        }
+        checkHttpCode(httpResponse);
         httpEntity = httpResponse.getEntity();
         if (httpEntity != null) {
             try {
@@ -323,7 +309,6 @@ public class WulaiClient {
         HttpEntityEnclosingRequestBase postrequest = null;
         CloseableHttpResponse httpResponse = null;
         String body =null;
-
         if (httpClient == null) {
             initPools();
         }
@@ -333,10 +318,8 @@ public class WulaiClient {
         log.debug(body, true);
         postrequest.setEntity(new StringEntity(body, "UTF-8"));
         HttpContext context = HttpClientContext.create();
-
         try {
             httpResponse = httpClient.execute(postrequest, context);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -344,7 +327,7 @@ public class WulaiClient {
         return httpResponse;
     }
     private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
-        int httpCode=0;
+        int httpCode;
         Map map=null;
         String responseBody = null;
         httpCode=response.getStatusLine().getStatusCode();

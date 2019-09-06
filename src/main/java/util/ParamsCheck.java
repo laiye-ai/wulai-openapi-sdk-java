@@ -58,7 +58,6 @@ public class ParamsCheck {
         }
     }
 
-
     public static void checkNum(int param) throws ClientException {
         if (param < 1 || param > 50) {
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "num must be [1..50] characters");
