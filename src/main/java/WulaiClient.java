@@ -293,7 +293,7 @@ public class WulaiClient {
                 log.info("{0}:{1}", header.getName(), header.getValue());
             }
         }
-        log.info("httpcode:{0},responseBody:{1}", httpCode, responseBody.toString());
+        log.info("httpcode:{0},responseBody:{1}", httpCode, responseBody);
         return responseBody;
     }
 

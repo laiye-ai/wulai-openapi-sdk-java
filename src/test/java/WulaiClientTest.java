@@ -16,7 +16,7 @@ public class WulaiClientTest {
     @Before
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                System.getenv("secret"), "v2", false);
+                System.getenv("secret"), "v2", true);
 //        wulaiClient=new WulaiClient("eee","eee","v2",false);
         wulaiClient.setRetryTimes(1);
         System.out.println("setEnv");
@@ -24,11 +24,6 @@ public class WulaiClientTest {
 
     @Test
     public void test() throws ClientException, ServerException {
-//        try {
-//            TestUserCreate("zhangtao","tom","");
-//        }catch (ClientException e){
-//            System.out.println("生吞");
-//        }
         TestBotResponse("zhangtao@test","你是谁" );
         TestUserCreate("taskbot","","");
         TestBotResponse("taskbot","年假");
