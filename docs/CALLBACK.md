@@ -42,10 +42,12 @@ public class Common extends HttpServlet {
         JSONObject jsonObject = JSONObject.parseObject(data);
         Object suggested_obj = jsonObject.get("suggested_response");
         Object[] suggested_response = JSONArray.parseArray(suggested_obj.toString()).toArray();
+        
+        //业务代码处理
         for (int i = 0; i < suggested_response.length; i++) {
             Object object = suggested_response[i];
             JSONObject json = JSONObject.parseObject(object.toString());
-            json.put("is_send", false); //修改is_send 为false，仅为实例，具体代码请结合业务逻辑
+            json.put("is_send", false); //修改is_send 为false，仅为示例，具体代码请结合业务逻辑
             suggested_response[i] = json;
         }
         
@@ -62,3 +64,16 @@ public class Common extends HttpServlet {
 
 附开发者文档：
 https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/MessageRoute
+
+##错误回调
+当吾来向第三方（目前只有微信公众号）发消息失败时，会把这个错误详情投递到该接口。注：该接口的回调地址暂时不能在吾来平台页面上配置，如需使用请联系我们。
+                                        
+##### REQUEST BODY SCHEMA: application/json
+|类型|字段名称|
+| --- | --- |
+|String|userId|
+|String|error_msg|
+|String|source_msg_id|
+
+##### RESPONSE SCHEMA: application/json
+无
