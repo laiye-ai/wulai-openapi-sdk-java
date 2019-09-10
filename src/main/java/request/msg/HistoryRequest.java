@@ -26,7 +26,9 @@ public class HistoryRequest implements Serializable {
     }
 
     public void setDirection(Direction direction) {
-        this.direction= Direction.FORWARD;
+        if (direction!=null) {
+            this.direction = Direction.FORWARD;
+        }
     }
 
     public void setMsgId(String msgId) throws ClientException {

@@ -62,7 +62,7 @@ public class Common extends HttpServlet {
 
 ```
 
-附开发者文档：
+附开发者文档链接：
 https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/MessageRoute
 
 ##错误回调
@@ -77,3 +77,36 @@ https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/Mes
 
 ##### RESPONSE SCHEMA: application/json
 无
+
+附开发者文档链接：
+https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/CallbackError
+
+##消息投递
+调用方开发。如果机器人对接第三方渠道，机器人做出响应后，会调用消息投递接口，将消息投递到第三方渠道。
+
+注意：
+1) 此接口可保证至少投递一次（即服务质量QOS=At least once，不保证100%消息只投递一次）；
+2) 此接口不能保证消息100%按照消息发送的顺序投递
+
+因此建议：
+1) 接入方根据msg_id做去重
+2) 接入方根据msg_ts在客户端做重排序
+
+#####REQUEST BODY SCHEMA: application/json
+|类型|字段名称|
+| --- | --- |
+|String|user_id|
+|Object|sender_info|
+|string|msg_type|
+|string|extra|
+|string|msg_id|
+|string|msg_ts|
+|string|source|
+|Object|bot|
+|Object|msg_body|
+|Object[]|similar_response|
+|Boolean|enable_evaluate|
+|String[]|quick_reply|
+
+附开发者文档链接：
+https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/CallbackMessage

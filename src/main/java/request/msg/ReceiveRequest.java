@@ -12,7 +12,7 @@ public class ReceiveRequest extends AbstractBotRequest implements Serializable {
     private String thirdMsgId;
 
 
-    public ReceiveRequest(String userId, Object msgBody) throws ClientException {
+    public ReceiveRequest(String userId, MsgBody msgBody) throws ClientException {
         super(userId, msgBody);
     }
 

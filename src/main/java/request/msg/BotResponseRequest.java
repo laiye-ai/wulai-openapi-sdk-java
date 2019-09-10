@@ -11,7 +11,7 @@ public class BotResponseRequest extends AbstractBotRequest implements Serializab
     public BotResponseRequest() {
     }
 
-    public BotResponseRequest(String userId, Object msgBody) throws ClientException {
+    public BotResponseRequest(String userId, MsgBody msgBody) throws ClientException {
         super(userId, msgBody);
     }
 
