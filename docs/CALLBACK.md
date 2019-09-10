@@ -4,13 +4,13 @@
 
 
 ##### REQUEST BODY SCHEMA: application/json
-|类型|字段名称|长度|是否必须|
+|类型|字段名称|长度|是否一定存在|
 | --- | --- | --- | --- |
 |Object[]| suggested_response|-| true |
 |String |user_id|[1..128]|true|
 |String |extra| [0..1024]||
 |String |msg_id|[1..18]|true|
-|Boolean| is_dispatch| - |true|
+|Boolean|is_dispatch| - |true|
 |String |msg_ts| [1..]|true|
 |Object |msg_body|-|true|
 |String |nickname|[1..128] |true|
@@ -20,3 +20,45 @@
 | --- | --- | 
 |Boolean|is_dispatch|  
 |Object[]|suggested_response| 
+
+Example:
+
+```java
+
+public class Common extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        InputStream in = request.getInputStream();
+        StringBuilder sb = new StringBuilder();
+        byte[] b = new byte[1024];
+        for (int n; (n = in.read(b)) != -1; ) {
+            sb.append(new String(b, 0, n));
+        }
+        response.setContentType("application/json");
+        OutputStream out = response.getOutputStream();
+        byte[] dataByteArr = sb.toString().getBytes("UTF-8");
+        String data = sb.toString();
+        System.out.println("data: " + data);
+        JSONObject jsonObject = JSONObject.parseObject(data);
+        Object suggested_obj = jsonObject.get("suggested_response");
+        Object[] suggested_response = JSONArray.parseArray(suggested_obj.toString()).toArray();
+        for (int i = 0; i < suggested_response.length; i++) {
+            Object object = suggested_response[i];
+            JSONObject json = JSONObject.parseObject(object.toString());
+            json.put("is_send", false); //修改is_send 为false，仅为实例，具体代码请结合业务逻辑
+            suggested_response[i] = json;
+        }
+        
+        // 生成返回对象
+        JSONObject responseJson=new JSONObject();
+        responseJson.put("suggested_response",suggested_response);
+        responseJson.put("is_dispatch",false);
+        
+        out.write(responseJson.toJSONString().getBytes());
+        }
+    }
+
+```
+
+附开发者文档：
+https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/MessageRoute
