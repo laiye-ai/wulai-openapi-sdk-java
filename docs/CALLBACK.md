@@ -1,4 +1,4 @@
-##消息路由
+## 消息路由
 
 消息路由即 Webhook ，该 Web 服务需要开发者自己搭建，并且需要遵从开放平台预先定义好的输入输出。机器人每次响应，吾来会把机器人回复内容、对话解析结果传给消息路由，调用方可以按需使或修改消息体内容达到影响机器人回复的目的。
 
@@ -65,7 +65,7 @@ public class Common extends HttpServlet {
 附开发者文档链接：
 https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/MessageRoute
 
-##错误回调
+## 错误回调
 当吾来向第三方（目前只有微信公众号）发消息失败时，会把这个错误详情投递到该接口。注：该接口的回调地址暂时不能在吾来平台页面上配置，如需使用请联系我们。
                                         
 ##### REQUEST BODY SCHEMA: application/json
@@ -81,7 +81,7 @@ https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/Mes
 附开发者文档链接：
 https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/CallbackError
 
-##消息投递
+## 消息投递
 调用方开发。如果机器人对接第三方渠道，机器人做出响应后，会调用消息投递接口，将消息投递到第三方渠道。
 
 注意：
@@ -92,7 +92,7 @@ https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/Cal
 1) 接入方根据msg_id做去重
 2) 接入方根据msg_ts在客户端做重排序
 
-#####REQUEST BODY SCHEMA: application/json
+##### REQUEST BODY SCHEMA: application/json
 |类型|字段名称|
 | --- | --- |
 |String|user_id|
