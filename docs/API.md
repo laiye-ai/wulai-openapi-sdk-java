@@ -6,6 +6,7 @@
 | --- | --- |
 | 创建用户 | userCreate |
 | 获取用户属性列表 |userAttributeList|
+|创建用户属性|userAttributeCreate|
 
 
 ### 对话类 

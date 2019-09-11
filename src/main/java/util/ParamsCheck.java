@@ -54,13 +54,13 @@ public class ParamsCheck {
 
     public static void checkPageSize(int param) throws ClientException {
         if (param < 1 || param > 200) {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "pageSize must be [1..200] characters");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, param + "is not [1..200] ");
         }
     }
 
     public static void checkNum(int param) throws ClientException {
         if (param < 1 || param > 50) {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "num must be [1..50] characters");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, param +" is not [1..50] ");
         }
     }
 
@@ -80,8 +80,12 @@ public class ParamsCheck {
         }
     }
 
-    public static void checkEndPoint(String endpoint) {
-        endpoint.trim().matches("https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
+    public static void checkEndPoint(String endpoint) throws ClientException {
+        String re="https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/$";
+        if (!endpoint.trim().matches(re)){
+            throw new ClientException(ClientExceptionConstant.SDK_ENDPOINT_RESOLVING_ERROR,
+                    endpoint +" is not correct endpoint. Please use correct endpoint and must be end with /");
+        }
     }
 
 }

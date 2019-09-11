@@ -1,6 +1,7 @@
 import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ServerException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import request.msg.*;
@@ -8,22 +9,29 @@ import request.user.*;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
 
+import java.net.URI;
+import java.util.logging.Logger;
+
 
 public class WulaiClientTest {
     private static WulaiClient wulaiClient;
+    private Logger logger=Logger.getLogger("WulaiClientTest");
 
     @Before
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
                 System.getenv("secret"), "v2", false);
         wulaiClient.setRetryTimes(1);
-        System.out.println("setEnv");
+        wulaiClient.setTimeout(10);
+
+        wulaiClient.setEndpoint(URI.create("https://preopenapi.wul.ai/"));
     }
 
     @Test
     public void testProcessCommonRequest() throws ServerException, ClientException {
         String data="{\"user_id\":\"zhangtao@test\"}";
-        wulaiClient.processCommonRequest("/user/create",data);
+        String body=wulaiClient.processCommonRequest("/user/create",data);
+        logger.info(body);
     }
 
     @Test
@@ -50,9 +58,9 @@ public class WulaiClientTest {
         userCreateRequest.setAvatarUrl(avatarUrl);
         int result = wulaiClient.userCreate(userCreateRequest);
         if (result==200){
-            System.out.println("创建用户成功");
+            logger.info("创建用户成功");
         }else {
-            System.out.println("创建用户失败");
+            logger.severe("创建用户失败");
         }
      }
 
@@ -63,7 +71,7 @@ public class WulaiClientTest {
         botResponseRequest.setExtra("readme");
         BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest);
         Object jsonObject=JSONObject.toJSON(botResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
 
     private void TestKeywordBotResponse(String userId, String msg) throws ClientException, ServerException {
@@ -73,8 +81,7 @@ public class WulaiClientTest {
         botResponseRequest.setExtra("hello");
         KeywordResponse keywordResponse = wulaiClient.getKeywordBotResponse(botResponseRequest);
         Object jsonObject=JSONObject.toJSON(keywordResponse);
-        System.out.println(jsonObject.toString());
-
+        logger.info(jsonObject.toString());
     }
 
     private void TestQAResponse(String userId, String msg) throws ClientException, ServerException {
@@ -84,7 +91,7 @@ public class WulaiClientTest {
         botResponse.setExtra("hello");
         QaResponse qaResponse = wulaiClient.getQABotResponse(botResponse);
         Object jsonObject=JSONObject.toJSON(qaResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
 
     private void TestTaskBotResponse(String userId, String msg) throws ClientException, ServerException {
@@ -93,7 +100,7 @@ public class WulaiClientTest {
         BotResponseRequest botResponse = new BotResponseRequest(userId, msgBody);
         TaskResponse taskResponse = wulaiClient.getTaskBotResponse(botResponse);
         Object jsonObject=JSONObject.toJSON(taskResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
 
     private void TestHistory(String userId, int num, String msgId, HistoryRequest.Direction direction) throws ClientException, ServerException {
@@ -102,7 +109,7 @@ public class WulaiClientTest {
         historyRequest.setMsgId(msgId);
         HistoryResponse historyResponse = wulaiClient.msgHistory(historyRequest);
         Object jsonObject=JSONObject.toJSON(historyResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
     private void TestSync(String userId, String msg, String msgTs) throws ClientException, ServerException {
         Text text=new Text(msg);
@@ -111,7 +118,7 @@ public class WulaiClientTest {
         syncRequest.setExtra("hello");
         SyncResponse syncResponse=wulaiClient.msgSync(syncRequest);
         Object jsonObject=JSONObject.toJSON(syncResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
     private void TestMsgReceive(String userId, String msg, String thirdMsgId) throws ClientException, ServerException {
         Text text=new Text(msg);
@@ -120,7 +127,7 @@ public class WulaiClientTest {
         receiveRequest.setThirdMsgId(thirdMsgId);
         ReceiveResponse receiveResponse=wulaiClient.msgReceive(receiveRequest);
         Object jsonObject=JSONObject.toJSON(receiveResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
 
     public void TestAttributeCreate(String id,String name) throws ClientException, ServerException {
@@ -137,7 +144,8 @@ public class WulaiClientTest {
         UserAttributeCreateRequest userAttributeCreateRequest=new UserAttributeCreateRequest("zhangtao@test");
         userAttributeCreateRequest.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
 
-        wulaiClient.userAttributeCreate(userAttributeCreateRequest);
+        int httpCode=wulaiClient.userAttributeCreate(userAttributeCreateRequest);
+        logger.info(String.valueOf(httpCode));
     }
 
     private void TestAttributeList(int page, int pageSize, boolean filter) throws ClientException, ServerException {
@@ -145,9 +153,27 @@ public class WulaiClientTest {
         userAttributeListRequest.setFilter(filter);
         UserAttributeListResponse userAttributeListResponse = wulaiClient.userAttributeList(userAttributeListRequest);
         Object jsonObject=JSONObject.toJSON(userAttributeListResponse);
-        System.out.println(jsonObject.toString());
+        logger.info(jsonObject.toString());
     }
 
+    @After
+    public void TestGoogle() throws ClientException, ServerException {
+        try {
+            wulaiClient.setEndpoint(URI.create("https://www.google.com"));
+        }catch (ClientException e ){
+            if (e.getErrCode().equals("SDK.EndpointResolvingError")){
+                logger.severe("endpoint error");
+                e.printStackTrace();
+            }
+        }
+        wulaiClient.setTimeout(1);
+        UserCreateRequest userCreateRequest=new UserCreateRequest("zhangtao@test");
+        try {
+            wulaiClient.userCreate(userCreateRequest);
+        }catch (ClientException e){
+            logger.severe("无法访问google服务");
+        }
+    }
 }
 
 

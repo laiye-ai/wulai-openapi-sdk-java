@@ -16,6 +16,10 @@ public class ClientException extends Exception {
     public ClientException(String errMsg) {
     }
 
+    public String getErrCode() {
+        return errCode;
+    }
+
     public ErrorType getErrorType() {
         return errorType;
     }

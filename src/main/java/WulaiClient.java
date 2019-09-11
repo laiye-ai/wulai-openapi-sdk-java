@@ -24,7 +24,6 @@ import request.user.UserAttributeListRequest;
 import request.user.UserCreateRequest;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
-import util.Log;
 import util.ParamsCheck;
 
 import javax.net.ssl.SSLException;
@@ -37,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Laiye Wulai SDK for Java Programming Language
@@ -47,6 +48,7 @@ public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 300;
     private static MessageDigest md = null;
+    private static Logger logger=Logger.getLogger("wulaiClient");
 
     static {
         try {
@@ -64,7 +66,6 @@ public class WulaiClient {
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
-    private Log log;
     private HashMap<String, Object> params=new HashMap<String,Object>();;
     private WulaiClient() {}
 
@@ -89,8 +90,12 @@ public class WulaiClient {
         this.PUBKEY = pubkey;
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
-        log = new Log();
-        log.setDEBUG(debug);
+        if (debug){
+            logger.setLevel(Level.INFO);
+        }else {
+            logger.setLevel(Level.SEVERE);
+        }
+
     }
 
     /**
@@ -107,7 +112,7 @@ public class WulaiClient {
             }
             return buffer.toString().toLowerCase();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
         }
     }
@@ -167,11 +172,17 @@ public class WulaiClient {
 
     private Map getEntityMapFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
         Map map=null;
+        HttpEntity entity=httpResponse.getEntity();
+        String body= null;
         try {
-            map=JSONObject.parseObject(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"),
-                    HashMap.class);
-        }catch (IOException e){
+            body = EntityUtils.toString(entity,"UTF-8");
+        } catch (IOException e) {
+            logger.severe("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage());
+        }
+        map=JSONObject.parseObject(body,HashMap.class);
+        if (map==null){
+            logger.info("EntityMap is null");
         }
         return map;
     }
@@ -180,7 +191,8 @@ public class WulaiClient {
      *
      * @param endpoint
      */
-    public void setEndpoint(URI endpoint) {
+    public void setEndpoint(URI endpoint) throws ClientException {
+        ParamsCheck.checkEndPoint(endpoint.toString());
         this.endpoint = endpoint;
     }
 
@@ -242,12 +254,12 @@ public class WulaiClient {
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("Content-Type", CONTENT_TYPE);
 
-        if (log.getDEBUG()) {
+        if (logger.getLevel()==Level.INFO) {
             for (Header header : request.getAllHeaders()) {
-                log.info("{0}:{1}", header.getName(), header.getValue());
+                logger.info(header.getName() +" : "+ header.getValue());
             }
         }
-        log.debug("url:{0}", request.getURI().toString());
+        logger.info("url:" + request.getURI().toString());
     }
 
     /**
@@ -268,7 +280,7 @@ public class WulaiClient {
         }
         // 获取request 对象，设置参数
         postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
-        log.debug( data, true);
+        logger.info(data);
         postrequest.setEntity(new StringEntity(data, "UTF-8"));
         setRequestParams(postrequest);
         try {
@@ -289,22 +301,22 @@ public class WulaiClient {
             }
         }
 
-        log.debug("HttpEntity" + responseBody, true);
+        logger.info("HttpEntity" + responseBody);
         Map map = (Map) JSONObject.parseObject(responseBody, Map.class);
         ArrayList list = new ArrayList();
         for (Object obj : map.keySet()) {
-            log.debug(obj.toString() + ":" + map.get(obj), true);
+            logger.info(obj.toString() + ":" + map.get(obj));
             list.add(map.get(obj));
         }
 
-        if (log.getDEBUG()) {
-            log.debug("responseEntity:" + list.toString(), true);
-            log.debug(responseBody, true);
+        if (logger.getLevel()==Level.INFO) {
+            logger.info("responseEntity:" + list.toString());
+            logger.info(responseBody);
             for (Header header : httpResponse.getAllHeaders()) {
-                log.info("{0}:{1}", header.getName(), header.getValue());
+                logger.info( header.getName()+" : "+header.getValue());
             }
         }
-        log.info("httpcode:{0},responseBody:{1}", httpCode, responseBody);
+        logger.info("httpcode:"+httpCode +"  "+"responseBody: "+ responseBody);
         return responseBody;
     }
 
@@ -326,7 +338,7 @@ public class WulaiClient {
         postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
         setRequestParams(postrequest);
         body = JSONObject.toJSON(data).toString();
-        log.debug(body, true);
+        logger.info(body);
         postrequest.setEntity(new StringEntity(body, "UTF-8"));
         HttpContext context = HttpClientContext.create();
         try {
