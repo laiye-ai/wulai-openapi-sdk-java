@@ -45,7 +45,7 @@ import java.util.UUID;
 // no package declaration
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
-    private final static int DEFAULT_TIME_OUT = 15000;
+    private final static int DEFAULT_TIME_OUT = 300;
     private static MessageDigest md = null;
 
     static {
@@ -56,7 +56,7 @@ public class WulaiClient {
         }
     }
 
-    private int timeout = 15000;
+    private int timeout = 10;
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
@@ -211,7 +211,7 @@ public class WulaiClient {
         httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
     }
 
-    private HttpRequestBase getRequest(String uri, int timeout) throws ClientException {
+    private HttpRequestBase getRequest(String uri, int timeout)  {
         if (httpClient == null) {
             initPools();
         }
