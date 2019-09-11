@@ -1,7 +1,6 @@
 import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ServerException;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import request.msg.*;
@@ -9,7 +8,6 @@ import request.user.*;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
 
-import java.util.*;
 
 public class WulaiClientTest {
     private static WulaiClient wulaiClient;
@@ -17,9 +15,15 @@ public class WulaiClientTest {
     @Before
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                System.getenv("secret"), "v2", true);
+                System.getenv("secret"), "v2", false);
         wulaiClient.setRetryTimes(1);
         System.out.println("setEnv");
+    }
+
+    @Test
+    public void testProcessCommonRequest() throws ServerException, ClientException {
+        String data="{\"user_id\":\"zhangtao@test\"}";
+        wulaiClient.processCommonRequest("/user/create",data);
     }
 
     @Test
@@ -144,11 +148,6 @@ public class WulaiClientTest {
         System.out.println(jsonObject.toString());
     }
 
-
-    public void testList(){
-        List list =new ArrayList();
-
-    }
 }
 
 

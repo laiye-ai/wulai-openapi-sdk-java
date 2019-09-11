@@ -1,4 +1,3 @@
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ClientExceptionConstant;
@@ -22,7 +21,6 @@ import org.apache.http.util.EntityUtils;
 import request.msg.*;
 import request.user.UserAttributeCreateRequest;
 import request.user.UserAttributeListRequest;
-import request.user.UserAttributeUserAttributeValue;
 import request.user.UserCreateRequest;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
@@ -69,7 +67,6 @@ public class WulaiClient {
     private Log log;
     private HashMap<String, Object> params=new HashMap<String,Object>();;
     private WulaiClient() {}
-
 
     /**
      * 初始化SDK对象，需要传入公钥密钥信息及对应的SDK版本和是否开启debug模式
@@ -119,7 +116,7 @@ public class WulaiClient {
      * 根据指定类型设置http连接重试策略
      *
      * @param
-     * @return
+     * @return HttpRequestRetryHandler
      */
     private HttpRequestRetryHandler retryHandler() {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
@@ -160,6 +157,10 @@ public class WulaiClient {
         this.timeout = timeout;
     }
 
+    /**
+     *
+     * @param retryTimes
+     */
     public void setRetryTimes(int retryTimes) {
         this.retryTimes = retryTimes;
     }
@@ -175,7 +176,10 @@ public class WulaiClient {
         return map;
     }
 
-
+    /**
+     *
+     * @param endpoint
+     */
     public void setEndpoint(URI endpoint) {
         this.endpoint = endpoint;
     }
@@ -198,6 +202,10 @@ public class WulaiClient {
         }
     }
 
+    /**
+     *
+     * @param cm
+     */
     public void setPools(PoolingHttpClientConnectionManager cm) {
         this.cm = cm;
         httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
@@ -268,8 +276,7 @@ public class WulaiClient {
         } catch (ConnectTimeoutException | HttpHostConnectException | UnknownHostException e) {
             throw new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE, e.getMessage());
         } catch (IOException e) {
-            throw new ServerException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage(),
-                    httpCode);
+            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
         }
         httpCode = httpResponse.getStatusLine().getStatusCode();
         checkHttpCode(httpResponse);
@@ -325,12 +332,19 @@ public class WulaiClient {
         try {
             httpResponse = httpClient.execute(postrequest, context);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage());
         }
         assert httpResponse != null;
         checkHttpCode(httpResponse);
         return httpResponse;
     }
+
+    /**
+     *  检查 httpcode 异常
+     * @param response
+     * @throws ClientException
+     * @throws ServerException
+     */
     private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
         int httpCode;
         Map map=null;
