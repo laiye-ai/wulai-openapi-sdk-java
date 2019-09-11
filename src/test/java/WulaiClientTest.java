@@ -1,14 +1,13 @@
+import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ServerException;
 import org.junit.Before;
 import org.junit.Test;
-import request.msg.BotResponseRequest;
-import request.msg.HistoryRequest;
-import request.msg.SyncRequest;
-import request.user.UserAttributeListRequest;
-import request.user.UserCreateRequest;
+import request.msg.*;
+import request.user.*;
 import response.msg.*;
 import response.user.UserAttributeListResponse;
+
 
 public class WulaiClientTest {
     private static WulaiClient wulaiClient;
@@ -17,29 +16,35 @@ public class WulaiClientTest {
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
                 System.getenv("secret"), "v2", false);
-//        wulaiClient=new WulaiClient("eee","eee","v2",false);
         wulaiClient.setRetryTimes(1);
         System.out.println("setEnv");
     }
 
     @Test
-    public void test() throws ClientException, ServerException {
-//        try {
-//            TestUserCreate("zhangtao","tom","");
-//        }catch (ClientException e){
-//            System.out.println("生吞");
-//        }
-        TestBotResponse("zhangtao@test","你是谁" );
-        TestUserCreate("taskbot","","");
-        TestBotResponse("taskbot","年假");
-        TestBotResponse("taskbot","122");
-        TestHistory("taskbot",3,"", HistoryRequest.Direction.BACKWARD);
-        TestAttributeList(1,5,true);
-        TestHistory("zhangtao@test",3,null, null);
-        TestSync("zhangtao@test","好好好","1567583854600");
+    public void testProcessCommonRequest() throws ServerException, ClientException {
+        String data="{\"user_id\":\"zhangtao@test\"}";
+        wulaiClient.processCommonRequest("/user/create",data);
     }
 
-    public void TestUserCreate(String userId,String nickName,String avatarUrl) throws ClientException, ServerException {
+    @Test
+    public void test() throws ClientException, ServerException {
+        String userId="zhangtao@test";
+        TestBotResponse(userId,"你是谁" );
+        TestUserCreate("taskbot","","");
+        TestKeywordBotResponse(userId,"hello");
+        TestQAResponse(userId,"你是谁");
+        TestTaskBotResponse("taskbot","年假");
+        TestTaskBotResponse("taskbot","122");
+        TestHistory("taskbot",3,"", HistoryRequest.Direction.BACKWARD);
+        TestHistory(userId,3,"",null);
+        TestAttributeList(1,5,false);
+        TestHistory(userId,3,null, null);
+        TestSync(userId,"好好好","1567583854600");
+        TestMsgReceive(userId,"你好","");
+        TestAttributeCreate("101481","德鲁伊");
+    }
+
+    private void TestUserCreate(String userId, String nickName, String avatarUrl) throws ClientException, ServerException {
         UserCreateRequest userCreateRequest = new UserCreateRequest(userId);
         userCreateRequest.setNickname(nickName);
         userCreateRequest.setAvatarUrl(avatarUrl);
@@ -51,184 +56,97 @@ public class WulaiClientTest {
         }
      }
 
-    public void TestBotResponse(String userId, String msg) throws ClientException, ServerException {
-        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msg);
+    private void TestBotResponse(String userId, String msg) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
+        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msgBody);
         botResponseRequest.setExtra("readme");
         BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest);
-        botResponse.getMsgId();
-        botResponse.isDispatch();
-        for (Object object : botResponse.getSuggestedResponse()) {
-            System.out.println(object.toString());
-        }
+        Object jsonObject=JSONObject.toJSON(botResponse);
+        System.out.println(jsonObject.toString());
     }
 
-    public void TestKeywordBotResponse(String userId, String msg) throws ClientException, ServerException {
-        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msg);
+    private void TestKeywordBotResponse(String userId, String msg) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
+        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msgBody);
         botResponseRequest.setExtra("hello");
         KeywordResponse keywordResponse = wulaiClient.getKeywordBotResponse(botResponseRequest);
-        for (Object object : keywordResponse.getKeywordSuggestedResponse()) {
-            System.out.println(object);
-        }
+        Object jsonObject=JSONObject.toJSON(keywordResponse);
+        System.out.println(jsonObject.toString());
 
     }
 
-    public void TestQAResponse(String userId, String msg) throws ClientException, ServerException {
-        BotResponseRequest botResponse = new BotResponseRequest(userId, msg);
+    private void TestQAResponse(String userId, String msg) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
+        BotResponseRequest botResponse = new BotResponseRequest(userId, msgBody);
         botResponse.setExtra("hello");
         QaResponse qaResponse = wulaiClient.getQABotResponse(botResponse);
-        for (Object object : qaResponse.getQaSuggestedResponse()) {
-            System.out.println(object);
-        }
+        Object jsonObject=JSONObject.toJSON(qaResponse);
+        System.out.println(jsonObject.toString());
     }
 
-    public void TestTaskBotResponse(String userId, String msg) throws ClientException, ServerException {
-        BotResponseRequest botResponse = new BotResponseRequest(userId, msg);
+    private void TestTaskBotResponse(String userId, String msg) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
+        BotResponseRequest botResponse = new BotResponseRequest(userId, msgBody);
         TaskResponse taskResponse = wulaiClient.getTaskBotResponse(botResponse);
-        for (Object object : taskResponse.getTaskSuggestedResponse()) {
-            System.out.println(object);
-        }
-
+        Object jsonObject=JSONObject.toJSON(taskResponse);
+        System.out.println(jsonObject.toString());
     }
 
-    public void TestHistory(String userId,int num,String msgId ,HistoryRequest.Direction direction ) throws ClientException, ServerException {
+    private void TestHistory(String userId, int num, String msgId, HistoryRequest.Direction direction) throws ClientException, ServerException {
         HistoryRequest historyRequest = new HistoryRequest(userId, num);
-        historyRequest.setDirection(HistoryRequest.Direction.FORWARD);
-        historyRequest.setDirection(HistoryRequest.Direction.BACKWARD);
+        historyRequest.setDirection(direction);
         historyRequest.setMsgId(msgId);
         HistoryResponse historyResponse = wulaiClient.msgHistory(historyRequest);
-        System.out.println(historyResponse.isHasMore());
-        for (Object object : historyResponse.getMsg()) {
-            System.out.println(object);
-        }
+        Object jsonObject=JSONObject.toJSON(historyResponse);
+        System.out.println(jsonObject.toString());
     }
-    public void TestSync(String userId,String msgBody,String msgTs) throws ClientException, ServerException {
+    private void TestSync(String userId, String msg, String msgTs) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
         SyncRequest syncRequest=new SyncRequest(userId,msgBody,msgTs);
         syncRequest.setExtra("hello");
         SyncResponse syncResponse=wulaiClient.msgSync(syncRequest);
-        System.out.println(syncResponse.getMsgId());
+        Object jsonObject=JSONObject.toJSON(syncResponse);
+        System.out.println(jsonObject.toString());
+    }
+    private void TestMsgReceive(String userId, String msg, String thirdMsgId) throws ClientException, ServerException {
+        Text text=new Text(msg);
+        MsgBody msgBody=new MsgBody(text);
+        ReceiveRequest receiveRequest=new ReceiveRequest(userId,msgBody);
+        receiveRequest.setThirdMsgId(thirdMsgId);
+        ReceiveResponse receiveResponse=wulaiClient.msgReceive(receiveRequest);
+        Object jsonObject=JSONObject.toJSON(receiveResponse);
+        System.out.println(jsonObject.toString());
     }
 
-    public void TestAttributeCreate() throws ClientException {
-        String data = "{\"user_attribute_user_attribute_value\":[{\"user_attribute\":{\"id\":\"101480\"},\"user_attribute_value\":{\"name\":\"骑士\"}}],\"user_id\":\"zhangtao@test\"}";
+    public void TestAttributeCreate(String id,String name) throws ClientException, ServerException {
+        UserAttribute user_attribute=new UserAttribute();
+        user_attribute.setId(id);
 
-        //UserAttributeCreateRequest userAttributeCreateRequest=new UserAttributeCreateRequest("zhangtao@test");
-        //userAttributeCreateRequest.setUser_id("zhangtao@test");
-        //wulaiClient.userCreate(userAttributeCreateRequest);
+        UserAttributeValue user_attribute_value=new UserAttributeValue();
+        user_attribute_value.setName(name);
+
+        UserAttributeUserAttributeValue userAttributeUserAttributeValue=new UserAttributeUserAttributeValue();
+        userAttributeUserAttributeValue.setUser_attribute(user_attribute);
+        userAttributeUserAttributeValue.setUser_attribute_value(user_attribute_value);
+
+        UserAttributeCreateRequest userAttributeCreateRequest=new UserAttributeCreateRequest("zhangtao@test");
+        userAttributeCreateRequest.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
+
+        wulaiClient.userAttributeCreate(userAttributeCreateRequest);
     }
 
-    public void TestAttributeList(int page,int pageSize,boolean filter) throws ClientException, ServerException {
+    private void TestAttributeList(int page, int pageSize, boolean filter) throws ClientException, ServerException {
         UserAttributeListRequest userAttributeListRequest = new UserAttributeListRequest(page, pageSize);
         userAttributeListRequest.setFilter(filter);
         UserAttributeListResponse userAttributeListResponse = wulaiClient.userAttributeList(userAttributeListRequest);
-        for (Object object : userAttributeListResponse.getUserAttributeUserAttributeValues()) {
-            System.out.println(object);
-        }
+        Object jsonObject=JSONObject.toJSON(userAttributeListResponse);
+        System.out.println(jsonObject.toString());
     }
-
-//    public void TestWebHook(){
-//        Object[] objects=JSONArray.parseArray("").toArray();
-//        MsgRoute msgRoute=new MsgRoute("zhangtao@test","Tom",
-//                "",false,"","你是谁",objects);
-//    }
-
-
-//    @Test
-//    public void testNormal() throws ClientException {
-//        wulaiClient.processCommonRequest("/user/create", usercreate);
-//        wulaiClient.processCommonRequest("/msg/bot-response", botresponse);
-//    }
-//
-//
-//    @Test
-//    public void testErrorEnv() {
-//        try {
-//            wulaiClient = new WulaiClient(System.getenv("LOGNAME"), System.getenv("LOGNAME"),
-//                    "v2", false);
-//            wulaiClient.processCommonRequest("/user/create", usercreate);
-//        } catch (ClientException e) {
-//            System.out.println("test捕获异常:" + e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void testSetPool() {
-//        try {
-//            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-//            cm.setDefaultMaxPerRoute(20);
-//            cm.setMaxTotal(20);
-//            wulaiClient.setPools(cm);
-//            wulaiClient.processCommonRequest("/user/create", usercreate);
-//            wulaiClient.processCommonRequest("/msg/bot-response", botresponse);
-//        } catch (ClientException e) {
-//            System.out.println("testProcessCommonRequest捕获异常" + e.getMessage());
-//        }
-//    }
-//
-//
-//    @Test
-//    public void test404() {
-//        try {
-//            wulaiClient.processCommonRequest("/user/createaaaaa", usercreate);
-//        } catch (ClientException e) {
-//            System.out.println("test404捕获异常" + e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void testApiVersion() {
-//        try {
-//            wulaiClient = new WulaiClient(System.getenv("pubkey"),
-//                    System.getenv("secret"), "v1", false);
-//        } catch (ClientException e) {
-//            System.out.println("testApiVersion捕获异常:" + e.getMessage());
-//        }
-//        try {
-//            wulaiClient.processCommonRequest("/user/create", usercreate);
-//        } catch (ClientException e) {
-//            System.out.println("testApiVersion捕获异常:" + e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void testErrorSecret() {
-//        try {
-//            wulaiClient = new WulaiClient(System.getenv("pubkey"),
-//                    System.getenv("secret").substring(1, 4), "v2", false);
-//            wulaiClient.processCommonRequest("/msg/bot-response", botresponse);
-//        } catch (ClientException e) {
-//            System.out.println("testErrorSecret捕获异常:" + e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void testUnreacheableUrl() {
-//        wulaiClient.setEndpoint(URI.create("https://www.google.com/"));
-//        try {
-//            wulaiClient.processCommonRequest("/msg/bot-response", botresponse);
-//        } catch (ClientException e) {
-//            System.out.println("testUnreacheableUrl捕获异常:" + e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void testPubkeyisNull() {
-//        WulaiClient wulaiClient2 = null;
-//        try {
-//
-//            wulaiClient2 = new WulaiClient(System.getenv(""), System.getenv(""),
-//                    "v2", false);
-//        } catch (ClientException e) {
-//            System.out.println("testPubkeyisNull捕获异常:" + e.getMessage());
-//        }
-//        try {
-//            wulaiClient2.processCommonRequest("/user/create", usercreate);
-//            wulaiClient2.processCommonRequest("/msg/bot-response", botresponse);
-//        } catch (ClientException e) {
-//            System.out.println("testPubkeyisNull捕获异常:" + e.getMessage());
-//        } catch (NullPointerException e) {
-//            System.out.println("testPubkeyisNull捕获异常:" + e.getMessage());
-//        }
-//    }
 
 }
 

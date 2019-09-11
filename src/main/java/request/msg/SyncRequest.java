@@ -17,7 +17,7 @@ public class SyncRequest extends AbstractBotRequest implements Serializable {
     }
 
 
-    public SyncRequest(String userId, Object msgBody, String msgTs) throws ClientException {
+    public SyncRequest(String userId, MsgBody msgBody, String msgTs) throws ClientException {
         super(userId, msgBody);
         ParamsCheck.checkMsgTs(msgTs.trim());
         this.msgTs = msgTs.trim();

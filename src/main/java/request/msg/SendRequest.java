@@ -14,7 +14,7 @@ public class SendRequest extends AbstractBotRequest implements Serializable {
 
 
     //构造方法
-    public SendRequest(String userId, Object msgBody) throws ClientException {
+    public SendRequest(String userId, MsgBody msgBody) throws ClientException {
         super(userId, msgBody);
     }
 

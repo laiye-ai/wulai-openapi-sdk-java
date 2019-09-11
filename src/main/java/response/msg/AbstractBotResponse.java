@@ -1,10 +1,18 @@
 package response.msg;
 
+import com.alibaba.fastjson.JSONArray;
+
+import java.util.Map;
+
 public abstract class AbstractBotResponse {
     private boolean isDispatch;
     private String msgId;
 
-    public void setMsgId(String msgId) {
+    AbstractBotResponse(Map map){
+        setDispatch((boolean)map.get("is_dispatch"));
+        setMsgId((String)map.get("msg_id"));
+    }
+    private void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 
@@ -12,7 +20,7 @@ public abstract class AbstractBotResponse {
         return msgId;
     }
 
-    public void setDispatch(boolean dispatch) {
+    private void setDispatch(boolean dispatch) {
         isDispatch = dispatch;
     }
 

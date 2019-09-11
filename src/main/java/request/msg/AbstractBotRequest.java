@@ -9,22 +9,22 @@ public abstract class AbstractBotRequest implements Serializable {
 
     private static final long serialVersionUID = -6175041688453020736L;
 
-    private Object msgBody;
+    private MsgBody msgBody;
     private String userId;
     private String extra;
 
     protected AbstractBotRequest(){}
 
-    protected AbstractBotRequest(String userId, Object msgBody) throws ClientException {
+    protected AbstractBotRequest(String userId, MsgBody msgBody) throws ClientException {
         ParamsCheck.checkUserId(userId);
         this.userId=userId;
         this.msgBody=msgBody;
     }
-    public void setMsgBody(Object msgBody){
+    public void setMsgBody(MsgBody msgBody){
         this.msgBody=msgBody;
     }
 
-    public Object getMsgBody() {
+    public MsgBody getMsgBody() {
         return msgBody;
     }
 

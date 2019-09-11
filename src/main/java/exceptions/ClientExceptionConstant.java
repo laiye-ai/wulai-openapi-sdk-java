@@ -8,5 +8,4 @@ public class ClientExceptionConstant {
     public static final String SDK_INVALID_PARAMS = "SDK.InvalidParams";
     public static final String SDK_NOT_SUPPORT = "SDK.NotSupport";
     public static final String SDK_HTTP_ERROR = "SDK.HttpError";
-    public static final String SDK_SERVER_ERROR="SDK.ServerError";
 }
