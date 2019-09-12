@@ -64,7 +64,7 @@ wulaiClient.processCommonRequest("/msg/bot-response",data2);
 
 ```
 ### 使用Wulai Java API发送请求
-```
+```java
 // 创建requestBean 对象
 UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
 userCreateRequest.setNickname("Tom");
