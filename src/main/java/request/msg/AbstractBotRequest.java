@@ -13,19 +13,21 @@ public abstract class AbstractBotRequest implements Serializable {
     private String userId;
     private String extra;
 
-    protected AbstractBotRequest(){}
+    protected AbstractBotRequest() {
+    }
 
     protected AbstractBotRequest(String userId, MsgBody msgBody) throws ClientException {
         ParamsCheck.checkUserId(userId);
-        this.userId=userId;
-        this.msgBody=msgBody;
-    }
-    public void setMsgBody(MsgBody msgBody){
-        this.msgBody=msgBody;
+        this.userId = userId;
+        this.msgBody = msgBody;
     }
 
     public MsgBody getMsgBody() {
         return msgBody;
+    }
+
+    public void setMsgBody(MsgBody msgBody) {
+        this.msgBody = msgBody;
     }
 
     public String getUserId() {

@@ -15,19 +15,19 @@ public class HistoryResponse implements Serializable {
         setMsg(JSONArray.parseArray(map.get("msg").toString()).toArray());
     }
 
-    private void setHasMore(boolean hasMore) {
-        this.hasMore = hasMore;
+    public Object[] getMsg() {
+        return msg;
     }
 
     public void setMsg(Object[] msg) {
         this.msg = msg;
     }
 
-    public Object[] getMsg() {
-        return msg;
-    }
-
     public boolean isHasMore() {
         return hasMore;
+    }
+
+    private void setHasMore(boolean hasMore) {
+        this.hasMore = hasMore;
     }
 }

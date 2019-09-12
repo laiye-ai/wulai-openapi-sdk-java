@@ -1,7 +1,6 @@
 package request.user;
 
 import exceptions.ClientException;
-import exceptions.ClientExceptionConstant;
 import util.ParamsCheck;
 
 import java.io.Serializable;
@@ -19,9 +18,17 @@ public class UserCreateRequest implements Serializable {
         this.userId = userId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void setUserId(String userId) throws ClientException {
         ParamsCheck.checkUserId(userId);
         this.userId = userId;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     public void setNickname(String nickname) throws ClientException {
@@ -29,21 +36,13 @@ public class UserCreateRequest implements Serializable {
         this.nickname = nickname;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
     public void setAvatarUrl(String avatarUrl) throws ClientException {
         ParamsCheck.checkAvatarUrl(avatarUrl);
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
     }
 
 }

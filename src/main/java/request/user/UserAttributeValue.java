@@ -3,7 +3,7 @@ package request.user;
 public class UserAttributeValue {
     private String name;
 
-    public UserAttributeValue(String name){
+    public UserAttributeValue(String name) {
         setName(name);
     }
 

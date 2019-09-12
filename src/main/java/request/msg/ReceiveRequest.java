@@ -16,13 +16,13 @@ public class ReceiveRequest extends AbstractBotRequest implements Serializable {
         super(userId, msgBody);
     }
 
+    public String getThirdMsgId() {
+        return thirdMsgId;
+    }
+
     public void setThirdMsgId(String thirdMsgId) throws ClientException {
         ParamsCheck.checkThirdMsgId(thirdMsgId);
         this.thirdMsgId = thirdMsgId;
-    }
-
-    public String getThirdMsgId() {
-        return thirdMsgId;
     }
 
 }

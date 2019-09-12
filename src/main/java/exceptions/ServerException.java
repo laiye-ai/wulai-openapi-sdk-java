@@ -10,13 +10,13 @@ public class ServerException extends Exception {
 
     public ServerException(String errCode, String errorMsg, int http_code) {
         super(errorMsg);
-        this.errCode=errCode;
-        this.http_code=http_code;
+        this.errCode = errCode;
+        this.http_code = http_code;
         this.setErrorType(ErrorType.Server);
     }
 
     private void setErrorType(ErrorType errorType) {
-        this.errorType=errorType;
+        this.errorType = errorType;
     }
 
 }

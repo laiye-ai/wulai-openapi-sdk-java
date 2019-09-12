@@ -1,4 +1,5 @@
 package request.user;
+
 import exceptions.ClientException;
 import util.ParamsCheck;
 
@@ -12,23 +13,24 @@ public class UserAttributeListRequest implements Serializable {
     private Integer page;
     private Integer pageSize;
 
-    private UserAttributeListRequest(){}
+    private UserAttributeListRequest() {
+    }
 
     public UserAttributeListRequest(Integer page, Integer pageSize) throws ClientException {
         ParamsCheck.checkPage(page);
         ParamsCheck.checkPageSize(pageSize);
-        this.page=page;
-        this.pageSize=pageSize;
+        this.page = page;
+        this.pageSize = pageSize;
+    }
+
+    public Object getFilter() {
+        return filter;
     }
 
     public void setFilter(Object filter) {
         if (filter instanceof Boolean) {
             this.filter = filter;
         }
-    }
-
-    public Object getFilter() {
-        return filter;
     }
 
     public int getPage() {

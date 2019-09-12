@@ -8,14 +8,15 @@ public class ReceiveResponse implements Serializable {
 
     private String msg_id;
 
-    public ReceiveResponse(Map map){
+    public ReceiveResponse(Map map) {
         setMsg_id(map.get("msg_id").toString());
-    }
-    private void setMsg_id(String msg_id) {
-        this.msg_id = msg_id;
     }
 
     public String getMsg_id() {
         return msg_id;
+    }
+
+    private void setMsg_id(String msg_id) {
+        this.msg_id = msg_id;
     }
 }

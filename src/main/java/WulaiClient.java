@@ -18,7 +18,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import request.msg.*;
+import request.msg.BotResponseRequest;
+import request.msg.HistoryRequest;
+import request.msg.ReceiveRequest;
+import request.msg.SyncRequest;
 import request.user.UserAttributeCreateRequest;
 import request.user.UserAttributeListRequest;
 import request.user.UserCreateRequest;
@@ -28,7 +31,8 @@ import util.ParamsCheck;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
-import java.io.*;
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -41,14 +45,13 @@ import java.util.logging.Logger;
 
 /**
  * Laiye Wulai SDK for Java Programming Language
- *
  */
 // no package declaration
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 300;
     private static MessageDigest md = null;
-    private static Logger logger=Logger.getLogger("wulaiClient");
+    private static Logger logger = Logger.getLogger("wulaiClient");
 
     static {
         try {
@@ -66,8 +69,11 @@ public class WulaiClient {
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
-    private HashMap<String, Object> params=new HashMap<String,Object>();;
-    private WulaiClient() {}
+    private HashMap<String, Object> params = new HashMap<String, Object>();
+    ;
+
+    private WulaiClient() {
+    }
 
     /**
      * 初始化SDK对象，需要传入公钥密钥信息及对应的SDK版本和是否开启debug模式
@@ -90,9 +96,9 @@ public class WulaiClient {
         this.PUBKEY = pubkey;
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
-        if (debug){
+        if (debug) {
             logger.setLevel(Level.INFO);
-        }else {
+        } else {
             logger.setLevel(Level.SEVERE);
         }
 
@@ -163,7 +169,6 @@ public class WulaiClient {
     }
 
     /**
-     *
      * @param retryTimes
      */
     public void setRetryTimes(int retryTimes) {
@@ -171,24 +176,23 @@ public class WulaiClient {
     }
 
     private Map getEntityMapFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
-        Map map=null;
-        HttpEntity entity=httpResponse.getEntity();
-        String body= null;
+        Map map = null;
+        HttpEntity entity = httpResponse.getEntity();
+        String body = null;
         try {
-            body = EntityUtils.toString(entity,"UTF-8");
+            body = EntityUtils.toString(entity, "UTF-8");
         } catch (IOException e) {
             logger.severe("EntityUtils toString exception");
-            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage());
+            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
         }
-        map=JSONObject.parseObject(body,HashMap.class);
-        if (map==null){
+        map = JSONObject.parseObject(body, HashMap.class);
+        if (map == null) {
             logger.info("EntityMap is null");
         }
         return map;
     }
 
     /**
-     *
      * @param endpoint
      */
     public void setEndpoint(URI endpoint) throws ClientException {
@@ -215,7 +219,6 @@ public class WulaiClient {
     }
 
     /**
-     *
      * @param cm
      */
     public void setPools(PoolingHttpClientConnectionManager cm) {
@@ -223,7 +226,7 @@ public class WulaiClient {
         httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
     }
 
-    private HttpRequestBase getRequest(String uri, int timeout)  {
+    private HttpRequestBase getRequest(String uri, int timeout) {
         if (httpClient == null) {
             initPools();
         }
@@ -254,9 +257,9 @@ public class WulaiClient {
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("Content-Type", CONTENT_TYPE);
 
-        if (logger.getLevel()==Level.INFO) {
+        if (logger.getLevel() == Level.INFO) {
             for (Header header : request.getAllHeaders()) {
-                logger.info(header.getName() +" : "+ header.getValue());
+                logger.info(header.getName() + " : " + header.getValue());
             }
         }
         logger.info("url:" + request.getURI().toString());
@@ -273,7 +276,7 @@ public class WulaiClient {
         String responseBody = "";
         CloseableHttpResponse httpResponse = null;
         HttpContext context = HttpClientContext.create();
-        int httpCode=0;
+        int httpCode = 0;
 
         if (httpClient == null) {
             initPools();
@@ -309,21 +312,20 @@ public class WulaiClient {
             list.add(map.get(obj));
         }
 
-        if (logger.getLevel()==Level.INFO) {
+        if (logger.getLevel() == Level.INFO) {
             logger.info("responseEntity:" + list.toString());
             logger.info(responseBody);
             for (Header header : httpResponse.getAllHeaders()) {
-                logger.info( header.getName()+" : "+header.getValue());
+                logger.info(header.getName() + " : " + header.getValue());
             }
         }
-        logger.info("httpcode:"+httpCode +"  "+"responseBody: "+ responseBody);
+        logger.info("httpcode:" + httpCode + "  " + "responseBody: " + responseBody);
         return responseBody;
     }
 
     /**
-     *
      * @param action 请求路径
-     * @param data 请求参数
+     * @param data   请求参数
      * @return 返回 CloseableHttpResponse
      * @throws ClientException 客户端异常
      */
@@ -331,7 +333,7 @@ public class WulaiClient {
             throws ClientException, ServerException {
         HttpEntityEnclosingRequestBase postrequest = null;
         CloseableHttpResponse httpResponse = null;
-        String body =null;
+        String body = null;
         if (httpClient == null) {
             initPools();
         }
@@ -344,7 +346,7 @@ public class WulaiClient {
         try {
             httpResponse = httpClient.execute(postrequest, context);
         } catch (IOException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,e.getMessage());
+            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
         }
         assert httpResponse != null;
         checkHttpCode(httpResponse);
@@ -352,35 +354,36 @@ public class WulaiClient {
     }
 
     /**
-     *  检查 httpcode 异常
+     * 检查 httpcode 异常
+     *
      * @param response
      * @throws ClientException
      * @throws ServerException
      */
     private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
         int httpCode;
-        Map map=null;
-        httpCode=response.getStatusLine().getStatusCode();
-        if (httpCode!=200) {
+        Map map = null;
+        httpCode = response.getStatusLine().getStatusCode();
+        if (httpCode != 200) {
             map = getEntityMapFromResponse(response);
         }
-        switch (httpCode){
+        switch (httpCode) {
             case 400:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, map.get("message").toString());
             case 401:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL,map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, map.get("message").toString());
             case 403:
             case 429:
             case 404:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST,map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, map.get("message").toString());
             case 409:
             case 499:
-                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR,map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, map.get("message").toString());
             case 500:
             case 501:
             case 504:
             case 503:
-                throw new ServerException(map.get("code").toString(),map.get("message").toString(),httpCode);
+                throw new ServerException(map.get("code").toString(), map.get("message").toString(), httpCode);
             default:
                 break;
         }
@@ -388,13 +391,13 @@ public class WulaiClient {
 
     /**
      * 创建用户
-     * @param userCreateRequest
-     * Constructor: new UserCreateRequest(String user_id)
+     *
+     * @param userCreateRequest Constructor: new UserCreateRequest(String user_id)
+     * @return httpCode
+     * @throws ClientException 客户端异常
      * @Required userId 用户唯一标识 [ 1 .. 128 ] characters
      * avatarUrl 用户头像url <= 512 characters
      * nickname 用户昵称 <= 128 characters
-     * @return httpCode
-     * @throws ClientException 客户端异常
      */
     public int userCreate(UserCreateRequest userCreateRequest) throws ClientException, ServerException {
         params = new HashMap<String, Object>();
@@ -402,29 +405,29 @@ public class WulaiClient {
         params.put("avatar_url", userCreateRequest.getAvatarUrl());
         params.put("nickname", userCreateRequest.getNickname());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/user/create", params);
+        CloseableHttpResponse httpResponse = excuteRequest("/user/create", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 
     /**
      * 获取机器人回复
-     * @param botResponseRequest
-     * Constructor: new BotResponseRequest(String userId, Object msgBody)
+     *
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, Object msgBody)
+     * @return BotResponse
+     * @throws ClientException 客户端错误
      * @Required userId 用户唯一标识  [ 1 .. 128 ] characters
      * @Required MsgBody 消息体
      * extra 自定义字段 <= 1024 characters
-     * @return BotResponse
-     * @throws ClientException 客户端错误
      */
     public BotResponse getBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
-        params.put("msg_body",botResponseRequest.getMsgBody());
+        Map map = null;
+        params.put("msg_body", botResponseRequest.getMsgBody());
         params.put("user_id", botResponseRequest.getUserId());
         params.put("extra", botResponseRequest.getExtra());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response", params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response", params);
+        map = getEntityMapFromResponse(httpResponse);
 
         return new BotResponse(map);
     }
@@ -432,87 +435,87 @@ public class WulaiClient {
 
     /**
      * 获取关键字机器人回复
-     * @param botResponseRequest
-     * Constructor: new BotResponseRequest(String userId, Object msgBody)
+     *
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, Object msgBody)
+     * @return KeywordResponse
+     * @throws ClientException 客户端错误
      * @Required userId 用户唯一标识 [ 1 .. 128 ] characters
      * @Required MsgBody 消息体
      * extra 自定义字段 <= 1024 characters
-     * @return KeywordResponse
-     * @throws ClientException 客户端错误
      */
     public KeywordResponse getKeywordBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
+        Map map = null;
 
         params.put("user_id", botResponseRequest.getUserId());
         params.put("msg_body", botResponseRequest.getMsgBody());
         params.put("extra", botResponseRequest.getExtra());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response/keyword", params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/keyword", params);
+        map = getEntityMapFromResponse(httpResponse);
         return new KeywordResponse(map);
     }
 
     /**
      * 获取问答机器人回复
-     * @param botResponseRequest
-     * Constructor: new BotResponseRequest(String userId,Object msgBody)
+     *
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId,Object msgBody)
+     * @return QaResponse
+     * @throws ClientException
      * @Required user_id 用户唯一标识  [ 1 .. 128 ] characters
      * @Required MsgBody 消息体
      * extra 自定义字段 <= 1024 characters
-     * @return QaResponse
-     * @throws ClientException
      */
     public QaResponse getQABotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
+        Map map = null;
 
         params.put("user_id", botResponseRequest.getUserId());
         params.put("msg_body", botResponseRequest.getMsgBody());
         params.put("extra", botResponseRequest.getExtra());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/msg/bot-response/qa", params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/qa", params);
+        map = getEntityMapFromResponse(httpResponse);
         return new QaResponse(map);
     }
 
     /**
      * 获取任务机器人回复
-     * @param botResponseRequest
-     * Constructor: new BotResponseRequest(String user_id, Object msgBody)
+     *
+     * @param botResponseRequest Constructor: new BotResponseRequest(String user_id, Object msgBody)
+     * @return TaskResponse
+     * @throws ClientException 客户端错误
      * @Required user_id 用户唯一标识  [ 1 .. 128 ] characters
      * @Required MsgBody 消息体
      * extra 自定义字段 <= 1024 characters
-     * @return TaskResponse
-     * @throws ClientException 客户端错误
      */
     public TaskResponse getTaskBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
+        Map map = null;
         params.put("user_id", botResponseRequest.getUserId());
         params.put("msg_body", botResponseRequest.getMsgBody());
         params.put("extra", botResponseRequest.getExtra());
 
-        CloseableHttpResponse  httpResponse= excuteRequest("/msg/bot-response/task", params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/task", params);
+        map = getEntityMapFromResponse(httpResponse);
 
         return new TaskResponse(map);
     }
 
     /**
      * 同步发给用户的消息
-     * @param syncRequest
-     * Constructor: new SyncRequest(String userId, Object msgBody, String msgTs)
+     *
+     * @param syncRequest Constructor: new SyncRequest(String userId, Object msgBody, String msgTs)
+     * @return
+     * @throws ClientException
      * @Required userId 用户唯一标识  [ 1 .. 128 ] characters
      * @Required msgTs 消息毫秒级时间戳 >= 1
      * @Required msgBody 消息体
      * extra 自定义字段 <= 1024 characters
-     * @return
-     * @throws ClientException
      */
     public SyncResponse msgSync(SyncRequest syncRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
+        Map map = null;
 
         params.put("user_id", syncRequest.getUserId());
         params.put("msg_body", syncRequest.getMsgBody());
@@ -520,8 +523,8 @@ public class WulaiClient {
         params.put("msg_ts", syncRequest.getMsgTs());
 
 
-        CloseableHttpResponse httpResponse= excuteRequest("/msg/sync", params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/sync", params);
+        map = getEntityMapFromResponse(httpResponse);
 
         return new SyncResponse(map);
     }
@@ -534,86 +537,88 @@ public class WulaiClient {
         params.put("user_attribute_user_attribute_value",
                 userAttributeCreateRequest.getUser_attribute_user_attribute_value());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/user/user-attribute/create",params);
-        int httpCode=httpResponse.getStatusLine().getStatusCode();
+        CloseableHttpResponse httpResponse = excuteRequest("/user/user-attribute/create", params);
+        int httpCode = httpResponse.getStatusLine().getStatusCode();
 
         return httpCode;
     }
 
     /**
      * 获取用户属性列表
+     *
      * @param userAttributeListRequest
+     * @return
+     * @throws ClientException
      * @Required page 页码，代表查看第几页的数据，从1开始 >= 1
      * @Required page_size 每页的属性组数量 [ 1 .. 200 ]
      * filter 过滤条件
-     * @return
-     * @throws ClientException
      */
     public UserAttributeListResponse userAttributeList(UserAttributeListRequest userAttributeListRequest)
             throws ClientException, ServerException {
         params.clear();
-        HashMap<String,Object> useInUserAttributeGroup=new HashMap<>();
-        useInUserAttributeGroup.put("use_in_user_attribute_group",userAttributeListRequest.getFilter());
+        HashMap<String, Object> useInUserAttributeGroup = new HashMap<>();
+        useInUserAttributeGroup.put("use_in_user_attribute_group", userAttributeListRequest.getFilter());
         params.put("page", userAttributeListRequest.getPage());
         params.put("page_size", userAttributeListRequest.getPageSize());
-        params.put("filter",useInUserAttributeGroup);
+        params.put("filter", useInUserAttributeGroup);
 
-        CloseableHttpResponse httpResponse= excuteRequest("/user-attribute/list",params);
-        Map map=null;
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/user-attribute/list", params);
+        Map map = null;
+        map = getEntityMapFromResponse(httpResponse);
 
         return new UserAttributeListResponse(map);
     }
 
     /**
      * 查询历史消息
-     * @param historyRequest
-     * Constructor: new HistoryRequest(String userId,int num)
+     *
+     * @param historyRequest Constructor: new HistoryRequest(String userId,int num)
+     * @return HistoryResponse
+     * @throws ClientException 客户端错误
      * @Required userId 用户唯一标识  [ 1 .. 128 ] characters
      * @Required num 一次获取消息的数目  [ 1 .. 50 ]
      * msgId 从这个msg_id开始查询（结果包含此条消息）；为空时查询最新的消息  <= 18 characters
      * direction 翻页方向. Default: "BACKWARD"
-     *      Enum:"BACKWARD" "FORWARD"
-     *      BACKWARD: 向旧的消息翻页，查询比传入msg_id更小的消息
-     *      FORWARD: 先新的消息翻页，查询比传入msg_id更大的消息
-     * @return HistoryResponse
-     * @throws ClientException 客户端错误
+     * Enum:"BACKWARD" "FORWARD"
+     * BACKWARD: 向旧的消息翻页，查询比传入msg_id更小的消息
+     * FORWARD: 先新的消息翻页，查询比传入msg_id更大的消息
      */
     public HistoryResponse msgHistory(HistoryRequest historyRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
-        params.put("user_id",historyRequest.getUserId());
-        params.put("num",historyRequest.getNum());
-        params.put("direction",historyRequest.getDirection());
-        params.put("msg_id",historyRequest.getMsgId());
+        Map map = null;
+        params.put("user_id", historyRequest.getUserId());
+        params.put("num", historyRequest.getNum());
+        params.put("direction", historyRequest.getDirection());
+        params.put("msg_id", historyRequest.getMsgId());
 
-        CloseableHttpResponse  httpResponse= excuteRequest("/msg/history",params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/history", params);
+        map = getEntityMapFromResponse(httpResponse);
 
         return new HistoryResponse(map);
     }
 
     /**
      * 接收用户发的消息
+     *
      * @param receiveRequest
+     * @return ReceiveResponse
+     * @throws ClientException 客户端错误
      * @Required user_id 用户唯一标识 [ 1 .. 128 ] characters
      * @Required msgBody 消息体
      * thirdMsgId 接入方唯一msg_id，保证1分钟内的幂等性 <= 64 characters
      * extra 自定义字段 <= 1024 characters
-     * @return ReceiveResponse
-     * @throws ClientException 客户端错误
      */
     public ReceiveResponse msgReceive(ReceiveRequest receiveRequest) throws ClientException, ServerException {
         params.clear();
-        Map map=null;
+        Map map = null;
 
-        params.put("user_id",receiveRequest.getUserId());
-        params.put("msg_body",receiveRequest.getMsgBody());
-        params.put("extra",receiveRequest.getExtra());
-        params.put("third_msg_id",receiveRequest.getThirdMsgId());
+        params.put("user_id", receiveRequest.getUserId());
+        params.put("msg_body", receiveRequest.getMsgBody());
+        params.put("extra", receiveRequest.getExtra());
+        params.put("third_msg_id", receiveRequest.getThirdMsgId());
 
-        CloseableHttpResponse httpResponse= excuteRequest("/msg/receive",params);
-        map= getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = excuteRequest("/msg/receive", params);
+        map = getEntityMapFromResponse(httpResponse);
 
         return new ReceiveResponse(map);
     }

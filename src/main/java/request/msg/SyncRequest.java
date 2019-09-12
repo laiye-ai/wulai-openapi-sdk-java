@@ -12,15 +12,14 @@ public class SyncRequest extends AbstractBotRequest implements Serializable {
 
     private String msgTs;
 
-    public String getMsgTs() {
-        return msgTs;
-    }
-
-
     public SyncRequest(String userId, MsgBody msgBody, String msgTs) throws ClientException {
         super(userId, msgBody);
         ParamsCheck.checkMsgTs(msgTs.trim());
         this.msgTs = msgTs.trim();
+    }
+
+    public String getMsgTs() {
+        return msgTs;
     }
 
 

@@ -11,22 +11,27 @@ public class HistoryRequest implements Serializable {
     private String msgId;
     private String userId;
     private Integer num;
-    private Direction direction=Direction.BACKWARD;
-    public enum Direction {
-        FORWARD, BACKWARD
-    }
+    private Direction direction = Direction.BACKWARD;
 
-    public HistoryRequest(String userId,int num) throws ClientException {
+    public HistoryRequest(String userId, int num) throws ClientException {
         ParamsCheck.checkUserId(userId);
         ParamsCheck.checkNum(num);
-        this.userId=userId;
-        this.num=num;
+        this.userId = userId;
+        this.num = num;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public void setDirection(Direction direction) {
-        if (direction!=null) {
+        if (direction != null) {
             this.direction = Direction.FORWARD;
         }
+    }
+
+    public String getMsgId() {
+        return msgId;
     }
 
     public void setMsgId(String msgId) throws ClientException {
@@ -34,22 +39,17 @@ public class HistoryRequest implements Serializable {
         this.msgId = msgId;
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public String getMsgId() {
-        return msgId;
-    }
-
-
     public String getUserId() {
         return userId;
     }
 
-
     public int getNum() {
         return num;
+    }
+
+
+    public enum Direction {
+        FORWARD, BACKWARD
     }
 
 

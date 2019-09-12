@@ -21,15 +21,16 @@ public class ParamsCheck {
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "userId can not be null");
         }
     }
+
     public static void checkAvatarUrl(String param) throws ClientException {
-        if (param!=null && param.length()>512){
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"avatarUrl need less than 512 characters");
+        if (param != null && param.length() > 512) {
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "avatarUrl need less than 512 characters");
         }
     }
 
     public static void checkNickname(String param) throws ClientException {
-        if (param !=null && param.length() > 128){
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"nickname need less than 128 characters");
+        if (param != null && param.length() > 128) {
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "nickname need less than 128 characters");
         }
     }
 
@@ -60,7 +61,7 @@ public class ParamsCheck {
 
     public static void checkNum(int param) throws ClientException {
         if (param < 1 || param > 50) {
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, param +" is not [1..50] ");
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, param + " is not [1..50] ");
         }
     }
 
@@ -71,20 +72,20 @@ public class ParamsCheck {
     }
 
     public static void checkMsgTs(String param) throws ClientException {
-        String re="[0-9]{13}";
-        if (param != null && !param.matches(re)){
+        String re = "[0-9]{13}";
+        if (param != null && !param.matches(re)) {
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,
                     "msgTs'length must be 13 characters");
-        }else if (param == null){
-            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS,"msgTs can not be null");
+        } else if (param == null) {
+            throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, "msgTs can not be null");
         }
     }
 
     public static void checkEndPoint(String endpoint) throws ClientException {
-        String re="https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/$";
-        if (!endpoint.trim().matches(re)){
+        String re = "https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/$";
+        if (!endpoint.trim().matches(re)) {
             throw new ClientException(ClientExceptionConstant.SDK_ENDPOINT_RESOLVING_ERROR,
-                    endpoint +" is not correct endpoint. Please use correct endpoint and must be end with /");
+                    endpoint + " is not correct endpoint. Please use correct endpoint and must be end with /");
         }
     }
 

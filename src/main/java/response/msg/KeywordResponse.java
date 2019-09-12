@@ -9,7 +9,7 @@ public class KeywordResponse extends AbstractBotResponse implements Serializable
     private static final long serialVersionUID = -3572603159680660431L;
     private Object[] keywordSuggestedResponse;
 
-    public KeywordResponse(Map map){
+    public KeywordResponse(Map map) {
         super(map);
         setKeywordSuggestedResponse(JSONArray.parseArray(map.get("keyword_suggested_response")
                 .toString()).toArray());
