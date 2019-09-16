@@ -65,7 +65,7 @@ public class WulaiClient {
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
-    private URI endpoint = URI.create("https://preopenapi.wul.ai/");
+    private URI endpoint = URI.create("https://oepnapi.wul.ai/");
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;

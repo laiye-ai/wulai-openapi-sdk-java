@@ -2,6 +2,7 @@ import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ServerException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import request.msg.*;
@@ -31,147 +32,120 @@ public class WulaiClientTest {
     public void testProcessCommonRequest() throws ServerException, ClientException {
         String data = "{\"user_id\":\"zhangtao@test\"}";
         String body = wulaiClient.processCommonRequest("/user/create", data);
-        logger.info(body);
+        Assert.assertNotNull(body);
     }
 
     @Test
-    public void test() throws ClientException, ServerException {
-        String userId = "zhangtao@test";
-        TestBotResponse(userId, "你是谁");
-        TestUserCreate("taskbot", "", "");
-        TestKeywordBotResponse(userId, "hello");
-        TestQAResponse(userId, "你是谁");
-        TestTaskBotResponse("taskbot", "年假");
-        TestTaskBotResponse("taskbot", "122");
-        TestHistory("taskbot", 3, "", HistoryRequest.Direction.BACKWARD);
-        TestHistory(userId, 3, "", null);
-        TestAttributeList(1, 5, false);
-        TestHistory(userId, 3, null, null);
-        TestSync(userId, "好好好", "1567583854600");
-        TestMsgReceive(userId, "你好", "");
-        TestAttributeCreate("101481", "德鲁伊");
-    }
-
-    private void TestUserCreate(String userId, String nickName, String avatarUrl) throws ClientException, ServerException {
-        UserCreateRequest userCreateRequest = new UserCreateRequest(userId);
-        userCreateRequest.setNickname(nickName);
-        userCreateRequest.setAvatarUrl(avatarUrl);
+    public void TestUserCreate() throws ClientException, ServerException {
+        UserCreateRequest userCreateRequest = new UserCreateRequest("laiye@test");
+        userCreateRequest.setNickname("JavaSDK");
+        userCreateRequest.setAvatarUrl("https://www.laiye.com/static/official-website/logo.png");
         int result = wulaiClient.userCreate(userCreateRequest);
-        if (result == 200) {
-            logger.info("创建用户成功");
-        } else {
-            logger.severe("创建用户失败");
-        }
+        Assert.assertEquals(result,200);
     }
 
-    private void TestBotResponse(String userId, String msg) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestBotResponse() throws ClientException, ServerException {
+        Text text = new Text("你是谁");
         MsgBody msgBody = new MsgBody(text);
-        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msgBody);
+        BotResponseRequest botResponseRequest = new BotResponseRequest("laiye@test", msgBody);
         botResponseRequest.setExtra("readme");
         BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest);
-        Object jsonObject = JSONObject.toJSON(botResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(botResponse.getMsgId());
+        Assert.assertNotNull(botResponse.getSuggestedResponse());
     }
 
-    private void TestKeywordBotResponse(String userId, String msg) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestKeywordBotResponse() throws ClientException, ServerException {
+        Text text = new Text("你好");
         MsgBody msgBody = new MsgBody(text);
-        BotResponseRequest botResponseRequest = new BotResponseRequest(userId, msgBody);
+        BotResponseRequest botResponseRequest = new BotResponseRequest("laiye@test", msgBody);
         botResponseRequest.setExtra("hello");
         KeywordResponse keywordResponse = wulaiClient.getKeywordBotResponse(botResponseRequest);
-        Object jsonObject = JSONObject.toJSON(keywordResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(keywordResponse.getMsgId());
+        Assert.assertNotNull(keywordResponse.getKeywordSuggestedResponse());
     }
 
-    private void TestQAResponse(String userId, String msg) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestQAResponse() throws ClientException, ServerException {
+        Text text = new Text("你好");
         MsgBody msgBody = new MsgBody(text);
-        BotResponseRequest botResponse = new BotResponseRequest(userId, msgBody);
+        BotResponseRequest botResponse = new BotResponseRequest("laiye@test", msgBody);
         botResponse.setExtra("hello");
         QaResponse qaResponse = wulaiClient.getQABotResponse(botResponse);
-        Object jsonObject = JSONObject.toJSON(qaResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(qaResponse);
     }
 
-    private void TestTaskBotResponse(String userId, String msg) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestTaskBotResponse() throws ClientException, ServerException {
+        Text text = new Text("年假");
         MsgBody msgBody = new MsgBody(text);
-        BotResponseRequest botResponse = new BotResponseRequest(userId, msgBody);
+        BotResponseRequest botResponse = new BotResponseRequest("laiye@test", msgBody);
         TaskResponse taskResponse = wulaiClient.getTaskBotResponse(botResponse);
-        Object jsonObject = JSONObject.toJSON(taskResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(taskResponse);
     }
 
-    private void TestHistory(String userId, int num, String msgId, HistoryRequest.Direction direction) throws ClientException, ServerException {
-        HistoryRequest historyRequest = new HistoryRequest(userId, num);
-        historyRequest.setDirection(direction);
-        historyRequest.setMsgId(msgId);
+    @Test
+    public void TestHistory() throws ClientException, ServerException {
+        HistoryRequest historyRequest = new HistoryRequest("laiye@test", 3);
+        historyRequest.setDirection(HistoryRequest.Direction.BACKWARD);
+        //historyRequest.setMsgId(msgId);
         HistoryResponse historyResponse = wulaiClient.msgHistory(historyRequest);
-        Object jsonObject = JSONObject.toJSON(historyResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(historyResponse);
     }
 
-    private void TestSync(String userId, String msg, String msgTs) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestSync() throws ClientException, ServerException {
+        Text text = new Text("好好好");
         MsgBody msgBody = new MsgBody(text);
-        SyncRequest syncRequest = new SyncRequest(userId, msgBody, msgTs);
+        SyncRequest syncRequest = new SyncRequest("laiye@test", msgBody, (String.valueOf(System.currentTimeMillis())));
         syncRequest.setExtra("hello");
         SyncResponse syncResponse = wulaiClient.msgSync(syncRequest);
-        Object jsonObject = JSONObject.toJSON(syncResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(syncResponse);
     }
 
-    private void TestMsgReceive(String userId, String msg, String thirdMsgId) throws ClientException, ServerException {
-        Text text = new Text(msg);
+    @Test
+    public void TestMsgReceive() throws ClientException, ServerException {
+        Text text = new Text("你好");
         MsgBody msgBody = new MsgBody(text);
-        ReceiveRequest receiveRequest = new ReceiveRequest(userId, msgBody);
-        receiveRequest.setThirdMsgId(thirdMsgId);
+        ReceiveRequest receiveRequest = new ReceiveRequest("laiye@test", msgBody);
+        //receiveRequest.setThirdMsgId("123231");
         ReceiveResponse receiveResponse = wulaiClient.msgReceive(receiveRequest);
-        Object jsonObject = JSONObject.toJSON(receiveResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(receiveResponse);
     }
 
-    public void TestAttributeCreate(String id, String name) throws ClientException, ServerException {
-        UserAttribute user_attribute = new UserAttribute(id);
+    @Test
+    public void TestAttributeCreate() throws ClientException, ServerException {
+        UserAttribute user_attribute = new UserAttribute("101481");
 
-        UserAttributeValue user_attribute_value = new UserAttributeValue(name);
+        UserAttributeValue user_attribute_value = new UserAttributeValue("德鲁伊");
 
         UserAttributeUserAttributeValue userAttributeUserAttributeValue = new UserAttributeUserAttributeValue();
         userAttributeUserAttributeValue.setUser_attribute(user_attribute);
         userAttributeUserAttributeValue.setUser_attribute_value(user_attribute_value);
 
-        UserAttributeCreateRequest userAttributeCreateRequest = new UserAttributeCreateRequest("zhangtao@test");
+        UserAttributeCreateRequest userAttributeCreateRequest = new UserAttributeCreateRequest("laiye@test");
         userAttributeCreateRequest.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
 
         int httpCode = wulaiClient.userAttributeCreate(userAttributeCreateRequest);
-        logger.info(String.valueOf(httpCode));
+        Assert.assertEquals(httpCode,200);
     }
 
-    private void TestAttributeList(int page, int pageSize, boolean filter) throws ClientException, ServerException {
-        UserAttributeListRequest userAttributeListRequest = new UserAttributeListRequest(page, pageSize);
-        userAttributeListRequest.setFilter(filter);
+    @Test
+    public void TestAttributeList() throws ClientException, ServerException {
+        UserAttributeListRequest userAttributeListRequest = new UserAttributeListRequest(1, 5);
+        userAttributeListRequest.setFilter(false);
         UserAttributeListResponse userAttributeListResponse = wulaiClient.userAttributeList(userAttributeListRequest);
-        Object jsonObject = JSONObject.toJSON(userAttributeListResponse);
-        logger.info(jsonObject.toString());
+        Assert.assertNotNull(userAttributeListResponse);
     }
 
-    @After
+    @Test
     public void TestGoogle() throws ClientException, ServerException {
-        try {
-            wulaiClient.setEndpoint(URI.create("https://www.google.com"));
-        } catch (ClientException e) {
-            if (e.getErrCode().equals("SDK.EndpointResolvingError")) {
-                logger.severe("endpoint error");
-            }
-        }
+        wulaiClient.setEndpoint(URI.create("https://preopenapi.wul.ai/"));
         wulaiClient.setTimeout(1);
         UserCreateRequest userCreateRequest = new UserCreateRequest("zhangtao@test");
-        try {
-            wulaiClient.userCreate(userCreateRequest);
-        } catch (ClientException e) {
-            logger.severe("无法访问google服务");
-        }
+        int httpcode = wulaiClient.userCreate(userCreateRequest);
+        Assert.assertEquals(httpcode,200);
     }
 }
 
