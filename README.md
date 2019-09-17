@@ -76,8 +76,8 @@ wulaiClient.processCommonRequest("/msg/bot-response",data2);
 ### 使用Wulai Java API发送请求
 ```
 // 创建requestBean 对象
-UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
-userCreateRequest.setNickname("Tom");
+UserCreateRequest userCreateRequest = new UserCreateRequest("laiye@test");
+userCreateRequest.setNickname("laiye");
 userCreateRequest.setAvatar_url("https://www.laiye.com/static/official-website/logo.png");
 
 // 调用Java API发送请求
@@ -86,7 +86,9 @@ System.out.println(result); //httpCode=200
 
 
 // 创建requestBean对象
-BotResponseRequest botResponseRequest = new BotResponseRequest("wulai@test","你是谁""); //创建对象时传入必选参数
+Text text =new Text("你是谁");
+MsgBody msgBody =new MsgBody(text);
+BotResponseRequest botResponseRequest = new BotResponseRequest("laiye@test",msgBody); //创建对象时传入必选参数
 botResponseRequest.setExtra("readme"); //set可选参数
 BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest); //得到responseBean
 
@@ -97,6 +99,30 @@ for (Object object : botResponse.getSuggestedResponse()) {
     System.out.println(object.toString());
 }
 ```      
+### 启用日志功能
+SDK默认提供了slf4j对象，在maven中添加相关依赖即可实现日志功能，例如
+```xml
+       
+<dependencies>
+    ...
+    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.7.28</version>
+    </dependency>
+   <dependency>
+       <groupId>log4j</groupId>
+       <artifactId>log4j</artifactId>
+       <version>1.2.17</version>
+   </dependency>
+   <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-log4j12</artifactId>
+       <version> 1.7.25</version>
+   </dependency>
+</dependencies>
+```
+
 
 ### 协议说明
 ```text

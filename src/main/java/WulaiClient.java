@@ -51,7 +51,7 @@ public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 5;
     private static MessageDigest md = null;
-    private static Logger logger = LoggerFactory.getLogger(WulaiClient.class);
+    private static Logger logger =LoggerFactory.getLogger(WulaiClient.class);
 
     static {
         try {
@@ -93,6 +93,10 @@ public class WulaiClient {
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
 
+    }
+
+    public static void setLogger(Logger logger) {
+        WulaiClient.logger = logger;
     }
 
     /**
