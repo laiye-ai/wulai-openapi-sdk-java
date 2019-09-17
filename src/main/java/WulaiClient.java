@@ -2,6 +2,7 @@ import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ClientExceptionConstant;
 import exceptions.ServerException;
+import module.response.msg.*;
 import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
@@ -20,15 +21,14 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import request.msg.BotResponseRequest;
-import request.msg.HistoryRequest;
-import request.msg.ReceiveRequest;
-import request.msg.SyncRequest;
-import request.user.UserAttributeCreateRequest;
-import request.user.UserAttributeListRequest;
-import request.user.UserCreateRequest;
-import response.msg.*;
-import response.user.UserAttributeListResponse;
+import module.request.msg.BotResponseRequest;
+import module.request.msg.HistoryRequest;
+import module.request.msg.ReceiveRequest;
+import module.request.msg.SyncRequest;
+import module.request.user.UserAttributeCreateRequest;
+import module.request.user.UserAttributeListRequest;
+import module.request.user.UserCreateRequest;
+import module.response.user.UserAttributeListResponse;
 import util.ParamsCheck;
 
 import javax.net.ssl.SSLException;
@@ -47,28 +47,22 @@ import java.util.UUID;
  * Laiye Wulai SDK for Java Programming Language
  */
 // no package declaration
-public class WulaiClient {
-    private final static String CONTENT_TYPE = "application/json";
-    private final static int DEFAULT_TIME_OUT = 5;
-    private static MessageDigest md = null;
+public class WulaiClient implements IUser,IMsg {
     private static Logger logger =LoggerFactory.getLogger(WulaiClient.class);
+    private static MessageDigest md = null;
 
-    static {
-        try {
-            md = MessageDigest.getInstance("SHA");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private int timeout = 10;
+    private CloseableHttpClient httpClient = null;
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
-    private CloseableHttpClient httpClient = null;
-    private URI endpoint = URI.create("https://openapi.wul.ai/");
+    private final static String CONTENT_TYPE = "application/json";
+    private final static int DEFAULT_TIME_OUT = 5;
+    private static URI endpoint = URI.create("https://openapi.wul.ai/");
+    private static int timeout = 10;
+
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
+
     private HashMap<String, Object> params = new HashMap<String, Object>();
 
     /**
@@ -94,14 +88,33 @@ public class WulaiClient {
         this.ApiVersion = apiVersion;
 
     }
-
-    public static void setLogger(Logger logger) {
-        WulaiClient.logger = logger;
+    public void setRetryTimes(int retryTimes){
+        this.retryTimes=retryTimes;
     }
 
-    /**
-     * 验签函数
-     */
+    public void setPools(PoolingHttpClientConnectionManager cm) {
+        this.cm = cm;
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
+    }
+
+    static {
+        try {
+            md = MessageDigest.getInstance("SHA");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public  void setEndpoint(URI endpoint) throws ClientException {
+        ParamsCheck.checkEndPoint(endpoint.toString());
+        this.endpoint = endpoint;
+    }
+
+
     private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
         String source = nonce + timeStamp + secret;
         StringBuilder buffer = new StringBuilder();
@@ -117,13 +130,6 @@ public class WulaiClient {
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
         }
     }
-
-    /**
-     * 根据指定类型设置http连接重试策略
-     *
-     * @param
-     * @return HttpRequestRetryHandler
-     */
     private HttpRequestRetryHandler retryHandler() {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException e, int executionCount, HttpContext httpContext) {
@@ -158,16 +164,103 @@ public class WulaiClient {
         };
         return httpRequestRetryHandler;
     }
+    public synchronized void initPools() {
+        if (httpClient == null) {
+            int count = 20;
+            int totalCount = 20;
+            cm = new PoolingHttpClientConnectionManager();
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+            cm.setDefaultMaxPerRoute(count);
+            cm.setMaxTotal(totalCount);
+            httpClient = HttpClients.custom().
+                    setConnectionManager(cm).
+                    setRetryHandler(retryHandler()).
+                    build();
+            logger.debug("init pool success");
+        }
     }
 
-    /**
-     * @param retryTimes
-     */
-    public void setRetryTimes(int retryTimes) {
-        this.retryTimes = retryTimes;
+
+    private HttpRequestBase getRequest(String uri, int timeout) {
+        if (httpClient == null) {
+            initPools();
+        }
+        HttpRequestBase request = null;
+        if (timeout <= 0) {
+            timeout = DEFAULT_TIME_OUT;
+        }
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout * 1000)
+                .setConnectTimeout(timeout * 1000).setConnectionRequestTimeout(timeout * 1000)
+                .setExpectContinueEnabled(false).build();
+        // 根据endpoint拼接生成的request的uri信息
+        request = new HttpPost(endpoint.resolve(ApiVersion + uri));
+        request.setConfig(requestConfig);
+        return request;
+    }
+    private void setRequestParams(HttpEntityEnclosingRequestBase request)
+            throws ClientException {
+        String nonce = UUID.randomUUID().toString().replace("-", "");
+        Long timestamp = System.currentTimeMillis() / 1000;
+
+        request.setHeader("Api-Auth-pubkey", PUBKEY);
+        request.setHeader("Api-Auth-nonce", nonce);
+        request.setHeader("Api-Auth-timestamp", String.valueOf(timestamp));
+        request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
+        request.setHeader("Content-Type", CONTENT_TYPE);
+        logger.debug("url:" + request.getURI().toString());
+
+    }
+
+    public  synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
+            throws ClientException, ServerException {
+        HttpEntityEnclosingRequestBase postrequest = null;
+        CloseableHttpResponse httpResponse = null;
+        String body = null;
+        if (httpClient == null) {
+            initPools();
+        }
+        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
+        setRequestParams(postrequest);
+        body = JSONObject.toJSON(data).toString();
+        logger.debug(body);
+        postrequest.setEntity(new StringEntity(body, "UTF-8"));
+        HttpContext context = HttpClientContext.create();
+        try {
+            httpResponse = httpClient.execute(postrequest, context);
+        } catch (IOException e) {
+            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
+        }
+        assert httpResponse != null;
+        checkHttpCode(httpResponse);
+        return httpResponse;
+    }
+    private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
+        int httpCode;
+        Map map = null;
+        httpCode = response.getStatusLine().getStatusCode();
+        if (httpCode != 200) {
+            map = getEntityMapFromResponse(response);
+        }
+        switch (httpCode) {
+            case 400:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, map.get("message").toString());
+            case 401:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, map.get("message").toString());
+            case 403:
+            case 429:
+            case 404:
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, map.get("message").toString());
+            case 409:
+            case 499:
+                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, map.get("message").toString());
+            case 500:
+            case 501:
+            case 504:
+            case 503:
+                throw new ServerException(map.get("code").toString(), map.get("message").toString(), httpCode);
+            default:
+                break;
+        }
     }
 
     private Map getEntityMapFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
@@ -187,74 +280,7 @@ public class WulaiClient {
         return map;
     }
 
-    /**
-     * @param endpoint
-     */
-    public void setEndpoint(URI endpoint) throws ClientException {
-        ParamsCheck.checkEndPoint(endpoint.toString());
-        this.endpoint = endpoint;
-    }
 
-    /**
-     * 初始化http连接池
-     */
-    public synchronized void initPools() {
-        if (httpClient == null) {
-            int count = 20;
-            int totalCount = 20;
-            cm = new PoolingHttpClientConnectionManager();
-
-            cm.setDefaultMaxPerRoute(count);
-            cm.setMaxTotal(totalCount);
-            httpClient = HttpClients.custom().
-                    setConnectionManager(cm).
-                    setRetryHandler(retryHandler()).
-                    build();
-            logger.debug("init pool success");
-        }
-    }
-
-    /**
-     * @param cm
-     */
-    public void setPools(PoolingHttpClientConnectionManager cm) {
-        this.cm = cm;
-        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
-    }
-
-    private HttpRequestBase getRequest(String uri, int timeout) {
-        if (httpClient == null) {
-            initPools();
-        }
-        HttpRequestBase request = null;
-        if (timeout <= 0) {
-            timeout = DEFAULT_TIME_OUT;
-        }
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout * 1000)
-                .setConnectTimeout(timeout * 1000).setConnectionRequestTimeout(timeout * 1000)
-                .setExpectContinueEnabled(false).build();
-        // 根据endpoint拼接生成的request的uri信息
-        request = new HttpPost(endpoint.resolve(ApiVersion + uri));
-        request.setConfig(requestConfig);
-        return request;
-    }
-
-    /**
-     * 将验证信息放入request header中
-     */
-    private void setRequestParams(HttpEntityEnclosingRequestBase request)
-            throws ClientException {
-        String nonce = UUID.randomUUID().toString().replace("-", "");
-        Long timestamp = System.currentTimeMillis() / 1000;
-
-        request.setHeader("Api-Auth-pubkey", PUBKEY);
-        request.setHeader("Api-Auth-nonce", nonce);
-        request.setHeader("Api-Auth-timestamp", String.valueOf(timestamp));
-        request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
-        request.setHeader("Content-Type", CONTENT_TYPE);
-        logger.debug("url:" + request.getURI().toString());
-
-    }
 
     /**
      * @param action 请求路径，例如 /user/create , /msg/bot-response 等
@@ -314,82 +340,7 @@ public class WulaiClient {
         return responseBody;
     }
 
-    /**
-     * @param action 请求路径
-     * @param data   请求参数
-     * @return 返回 CloseableHttpResponse
-     * @throws ClientException 客户端异常
-     */
-    public synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
-            throws ClientException, ServerException {
-        HttpEntityEnclosingRequestBase postrequest = null;
-        CloseableHttpResponse httpResponse = null;
-        String body = null;
-        if (httpClient == null) {
-            initPools();
-        }
-        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
-        setRequestParams(postrequest);
-        body = JSONObject.toJSON(data).toString();
-        logger.debug(body);
-        postrequest.setEntity(new StringEntity(body, "UTF-8"));
-        HttpContext context = HttpClientContext.create();
-        try {
-            httpResponse = httpClient.execute(postrequest, context);
-        } catch (IOException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
-        }
-        assert httpResponse != null;
-        checkHttpCode(httpResponse);
-        return httpResponse;
-    }
 
-    /**
-     * 检查 httpcode 异常
-     *
-     * @param response
-     * @throws ClientException
-     * @throws ServerException
-     */
-    private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
-        int httpCode;
-        Map map = null;
-        httpCode = response.getStatusLine().getStatusCode();
-        if (httpCode != 200) {
-            map = getEntityMapFromResponse(response);
-        }
-        switch (httpCode) {
-            case 400:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, map.get("message").toString());
-            case 401:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, map.get("message").toString());
-            case 403:
-            case 429:
-            case 404:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, map.get("message").toString());
-            case 409:
-            case 499:
-                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, map.get("message").toString());
-            case 500:
-            case 501:
-            case 504:
-            case 503:
-                throw new ServerException(map.get("code").toString(), map.get("message").toString(), httpCode);
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 创建用户
-     *
-     * @param userCreateRequest Constructor: new UserCreateRequest(String user_id)
-     * @return httpCode
-     * @throws ClientException 客户端异常
-     * @Required userId 用户唯一标识 [ 1 .. 128 ] characters
-     * avatarUrl 用户头像url <= 512 characters
-     * nickname 用户昵称 <= 128 characters
-     */
     public int userCreate(UserCreateRequest userCreateRequest) throws ClientException, ServerException {
         params.clear();
         params.put("user_id", userCreateRequest.getUserId());
