@@ -2,7 +2,15 @@ import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ClientExceptionConstant;
 import exceptions.ServerException;
+import module.request.msg.BotResponseRequest;
+import module.request.msg.HistoryRequest;
+import module.request.msg.ReceiveRequest;
+import module.request.msg.SyncRequest;
+import module.request.user.UserAttributeCreateRequest;
+import module.request.user.UserAttributeListRequest;
+import module.request.user.UserCreateRequest;
 import module.response.msg.*;
+import module.response.user.UserAttributeListResponse;
 import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
@@ -21,14 +29,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import module.request.msg.BotResponseRequest;
-import module.request.msg.HistoryRequest;
-import module.request.msg.ReceiveRequest;
-import module.request.msg.SyncRequest;
-import module.request.user.UserAttributeCreateRequest;
-import module.request.user.UserAttributeListRequest;
-import module.request.user.UserCreateRequest;
-import module.response.user.UserAttributeListResponse;
 import util.ParamsCheck;
 
 import javax.net.ssl.SSLException;
@@ -47,22 +47,28 @@ import java.util.UUID;
  * Laiye Wulai SDK for Java Programming Language
  */
 // no package declaration
-public class WulaiClient implements IUser,IMsg {
-    private static Logger logger =LoggerFactory.getLogger(WulaiClient.class);
+public class WulaiClient implements IUser, IMsg {
+    private final static String CONTENT_TYPE = "application/json";
+    private final static int DEFAULT_TIME_OUT = 5;
+    private static Logger logger = LoggerFactory.getLogger(WulaiClient.class);
     private static MessageDigest md = null;
 
+    static {
+        try {
+            md = MessageDigest.getInstance("SHA");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private URI endpoint = URI.create("https://openapi.wul.ai/");
+    private int timeout = 10;
     private CloseableHttpClient httpClient = null;
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
-    private final static String CONTENT_TYPE = "application/json";
-    private final static int DEFAULT_TIME_OUT = 5;
-    private static URI endpoint = URI.create("https://openapi.wul.ai/");
-    private static int timeout = 10;
-
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
-
     private HashMap<String, Object> params = new HashMap<String, Object>();
 
     /**
@@ -88,32 +94,6 @@ public class WulaiClient implements IUser,IMsg {
         this.ApiVersion = apiVersion;
 
     }
-    public void setRetryTimes(int retryTimes){
-        this.retryTimes=retryTimes;
-    }
-
-    public void setPools(PoolingHttpClientConnectionManager cm) {
-        this.cm = cm;
-        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
-    }
-
-    static {
-        try {
-            md = MessageDigest.getInstance("SHA");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public  void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public  void setEndpoint(URI endpoint) throws ClientException {
-        ParamsCheck.checkEndPoint(endpoint.toString());
-        this.endpoint = endpoint;
-    }
-
 
     private static String getSign(String nonce, Long timeStamp, String secret) throws ClientException {
         String source = nonce + timeStamp + secret;
@@ -130,6 +110,25 @@ public class WulaiClient implements IUser,IMsg {
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
         }
     }
+
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
+    }
+
+    public void setPools(PoolingHttpClientConnectionManager cm) {
+        this.cm = cm;
+        httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(retryHandler()).build();
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setEndpoint(URI endpoint) throws ClientException {
+        ParamsCheck.checkEndPoint(endpoint.toString());
+        this.endpoint = endpoint;
+    }
+
     private HttpRequestRetryHandler retryHandler() {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException e, int executionCount, HttpContext httpContext) {
@@ -164,6 +163,7 @@ public class WulaiClient implements IUser,IMsg {
         };
         return httpRequestRetryHandler;
     }
+
     public synchronized void initPools() {
         if (httpClient == null) {
             int count = 20;
@@ -197,6 +197,7 @@ public class WulaiClient implements IUser,IMsg {
         request.setConfig(requestConfig);
         return request;
     }
+
     private void setRequestParams(HttpEntityEnclosingRequestBase request)
             throws ClientException {
         String nonce = UUID.randomUUID().toString().replace("-", "");
@@ -211,7 +212,7 @@ public class WulaiClient implements IUser,IMsg {
 
     }
 
-    public  synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
+    private synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
             throws ClientException, ServerException {
         HttpEntityEnclosingRequestBase postrequest = null;
         CloseableHttpResponse httpResponse = null;
@@ -234,6 +235,7 @@ public class WulaiClient implements IUser,IMsg {
         checkHttpCode(httpResponse);
         return httpResponse;
     }
+
     private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
         int httpCode;
         Map map = null;
@@ -279,7 +281,6 @@ public class WulaiClient implements IUser,IMsg {
         }
         return map;
     }
-
 
 
     /**
@@ -336,11 +337,18 @@ public class WulaiClient implements IUser,IMsg {
                 logger.debug(header.getName() + " : " + header.getValue());
             }
         }
-        logger.debug("httpCode:{}, responseBody:{}",httpCode, responseBody);
+        logger.debug("httpCode:{}, responseBody:{}", httpCode, responseBody);
         return responseBody;
     }
 
-
+    /**
+     * 创建用户
+     *
+     * @param userCreateRequest Constructor:new UserCreateRequest(String userId)
+     * @return int
+     * @throws ClientException
+     * @throws ServerException
+     */
     public int userCreate(UserCreateRequest userCreateRequest) throws ClientException, ServerException {
         params.clear();
         params.put("user_id", userCreateRequest.getUserId());
@@ -348,15 +356,15 @@ public class WulaiClient implements IUser,IMsg {
         params.put("nickname", userCreateRequest.getNickname());
 
         CloseableHttpResponse httpResponse = excuteRequest("/user/create", params);
-        int httpCode=httpResponse.getStatusLine().getStatusCode();
-        logger.info("userCreate:{} ,status:{}", userCreateRequest.getUserId(),httpCode);
+        int httpCode = httpResponse.getStatusLine().getStatusCode();
+        logger.info("userCreate:{} ,status:{}", userCreateRequest.getUserId(), httpCode);
         return httpCode;
     }
 
     /**
      * 获取机器人回复
      *
-     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, Object msgBody)
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, MsgBody msgBody)
      * @return BotResponse
      * @throws ClientException 客户端错误
      * @Required userId 用户唯一标识  [ 1 .. 128 ] characters
@@ -380,7 +388,7 @@ public class WulaiClient implements IUser,IMsg {
     /**
      * 获取关键字机器人回复
      *
-     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, Object msgBody)
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId, MsgBody msgBody)
      * @return KeywordResponse
      * @throws ClientException 客户端错误
      * @Required userId 用户唯一标识 [ 1 .. 128 ] characters
@@ -404,7 +412,7 @@ public class WulaiClient implements IUser,IMsg {
     /**
      * 获取问答机器人回复
      *
-     * @param botResponseRequest Constructor: new BotResponseRequest(String userId,Object msgBody)
+     * @param botResponseRequest Constructor: new BotResponseRequest(String userId,MsgBody msgBody)
      * @return QaResponse
      * @throws ClientException
      * @Required user_id 用户唯一标识  [ 1 .. 128 ] characters
@@ -421,14 +429,14 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/qa", params);
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("getQABotResponse:msg_id->{}",map.get("msg_id"));
+        logger.info("getQABotResponse:msg_id->{}", map.get("msg_id"));
         return new QaResponse(map);
     }
 
     /**
      * 获取任务机器人回复
      *
-     * @param botResponseRequest Constructor: new BotResponseRequest(String user_id, Object msgBody)
+     * @param botResponseRequest Constructor: new BotResponseRequest(String user_id, MsgBody msgBody)
      * @return TaskResponse
      * @throws ClientException 客户端错误
      * @Required user_id 用户唯一标识  [ 1 .. 128 ] characters
@@ -445,14 +453,14 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/task", params);
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("getTaskBotResponse:msg_id->{}",map.get("msg_id"));
+        logger.info("getTaskBotResponse:msg_id->{}", map.get("msg_id"));
         return new TaskResponse(map);
     }
 
     /**
      * 同步发给用户的消息
      *
-     * @param syncRequest Constructor: new SyncRequest(String userId, Object msgBody, String msgTs)
+     * @param syncRequest Constructor: new SyncRequest(String userId, MsgBody msgBody, String msgTs)
      * @return
      * @throws ClientException
      * @Required userId 用户唯一标识  [ 1 .. 128 ] characters
@@ -471,7 +479,7 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/sync", params);
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("msgSync:msg_id->{}",map.get("msg_id"));
+        logger.info("msgSync:msg_id->{}", map.get("msg_id"));
 
         return new SyncResponse(map);
     }
@@ -486,7 +494,7 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/user/user-attribute/create", params);
         int httpCode = httpResponse.getStatusLine().getStatusCode();
-        logger.info("userAttributeCreate:{}",httpCode);
+        logger.info("userAttributeCreate:{}", httpCode);
         return httpCode;
     }
 
@@ -512,7 +520,7 @@ public class WulaiClient implements IUser,IMsg {
         CloseableHttpResponse httpResponse = excuteRequest("/user-attribute/list", params);
         Map map = null;
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("userAttributeList:page_count->{}",map.get("page_count"));
+        logger.info("userAttributeList:page_count->{}", map.get("page_count"));
         return new UserAttributeListResponse(map);
     }
 
@@ -540,7 +548,7 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/history", params);
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("msgHistory:hasMore{}",map.get("has_more"));
+        logger.info("msgHistory:hasMore{}", map.get("has_more"));
         return new HistoryResponse(map);
     }
 
@@ -566,7 +574,7 @@ public class WulaiClient implements IUser,IMsg {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/receive", params);
         map = getEntityMapFromResponse(httpResponse);
-        logger.info("msgReceive:msg_id->{}",map.get("msg_id"));
+        logger.info("msgReceive:msg_id->{}", map.get("msg_id"));
 
         return new ReceiveResponse(map);
     }
