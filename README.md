@@ -50,10 +50,6 @@ public class Test {
 
         //为避免泄漏公钥密钥等信息，建议将相关配置写到环境变量后使用System类的getenv方法获取环境变量。
         WulaiClient wulaiClient=new WulaiClient(System.getenv("pubkey"),System.getenv("secret"),"v2");
-        //若要启动日志功能，请传入实现了org.slf4j.Logger接口的对象
-        Logger logger= LoggerFactory.getLogger(Test.class);
-        WulaiClient.setLogger(logger);
-
         //设置域名
         wulaiClient.setEndpoint(URI.create("https://openapi.wul.ai/"));
         

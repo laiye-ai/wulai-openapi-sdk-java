@@ -49,13 +49,9 @@ import java.util.UUID;
 // no package declaration
 public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
-    private final static int DEFAULT_TIME_OUT = 300;
+    private final static int DEFAULT_TIME_OUT = 5;
     private static MessageDigest md = null;
-    private static Logger logger= LoggerFactory.getLogger(WulaiClient.class);
-
-    public static void setLogger(Logger logger) {
-        WulaiClient.logger = logger;
-    }
+    private static Logger logger = LoggerFactory.getLogger(WulaiClient.class);
 
     static {
         try {
@@ -88,6 +84,7 @@ public class WulaiClient {
             assert null != pubkey;
             assert null != secret;
         } catch (AssertionError error) {
+            logger.error("pubkey or secret can not be null ,Please check !");
             throw new ClientException(ClientExceptionConstant.SDK_NOT_SUPPORT,
                     "pubkey or secret can not be null ,Please check !");
         }
@@ -209,6 +206,7 @@ public class WulaiClient {
                     setConnectionManager(cm).
                     setRetryHandler(retryHandler()).
                     build();
+            logger.debug("init pool success");
         }
     }
 
@@ -250,13 +248,7 @@ public class WulaiClient {
         request.setHeader("Api-Auth-timestamp", String.valueOf(timestamp));
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("Content-Type", CONTENT_TYPE);
-
-        if (logger.isDebugEnabled()) {
-            for (Header header : request.getAllHeaders()) {
-                logger.debug(header.getName() + " : " + header.getValue());
-            }
-            logger.debug("url:" + request.getURI().toString());
-        }
+        logger.debug("url:" + request.getURI().toString());
 
     }
 
@@ -295,11 +287,11 @@ public class WulaiClient {
             try {
                 responseBody = EntityUtils.toString(httpEntity, "UTF-8");
             } catch (IOException e) {
-                throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR,e.getMessage());
+                throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
             }
         }
 
-        logger.debug("HttpEntity" + responseBody);
+        logger.debug("HttpEntity:{}", responseBody);
         Map map = (Map) JSONObject.parseObject(responseBody, Map.class);
         ArrayList list = new ArrayList();
         for (Object obj : map.keySet()) {
@@ -314,7 +306,7 @@ public class WulaiClient {
                 logger.debug(header.getName() + " : " + header.getValue());
             }
         }
-        logger.debug("httpCode:" + httpCode + "  " + "responseBody: " + responseBody);
+        logger.debug("httpCode:{}, responseBody:{}",httpCode, responseBody);
         return responseBody;
     }
 
@@ -401,7 +393,9 @@ public class WulaiClient {
         params.put("nickname", userCreateRequest.getNickname());
 
         CloseableHttpResponse httpResponse = excuteRequest("/user/create", params);
-        return httpResponse.getStatusLine().getStatusCode();
+        int httpCode=httpResponse.getStatusLine().getStatusCode();
+        logger.info("userCreate:{} ,status:{}", userCreateRequest.getUserId(),httpCode);
+        return httpCode;
     }
 
     /**
@@ -423,7 +417,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response", params);
         map = getEntityMapFromResponse(httpResponse);
-
+        logger.info("getBotResponse:msg_id->{}", map.get("msg_id"));
         return new BotResponse(map);
     }
 
@@ -448,6 +442,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/keyword", params);
         map = getEntityMapFromResponse(httpResponse);
+        logger.info("getKeywordBotResponse:msg_id->{}", map.get("msg_id"));
         return new KeywordResponse(map);
     }
 
@@ -471,6 +466,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/qa", params);
         map = getEntityMapFromResponse(httpResponse);
+        logger.info("getQABotResponse:msg_id->{}",map.get("msg_id"));
         return new QaResponse(map);
     }
 
@@ -494,7 +490,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/bot-response/task", params);
         map = getEntityMapFromResponse(httpResponse);
-
+        logger.info("getTaskBotResponse:msg_id->{}",map.get("msg_id"));
         return new TaskResponse(map);
     }
 
@@ -518,9 +514,9 @@ public class WulaiClient {
         params.put("extra", syncRequest.getExtra());
         params.put("msg_ts", syncRequest.getMsgTs());
 
-
         CloseableHttpResponse httpResponse = excuteRequest("/msg/sync", params);
         map = getEntityMapFromResponse(httpResponse);
+        logger.info("msgSync:msg_id->{}",map.get("msg_id"));
 
         return new SyncResponse(map);
     }
@@ -535,7 +531,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/user/user-attribute/create", params);
         int httpCode = httpResponse.getStatusLine().getStatusCode();
-
+        logger.info("userAttributeCreate:{}",httpCode);
         return httpCode;
     }
 
@@ -561,7 +557,7 @@ public class WulaiClient {
         CloseableHttpResponse httpResponse = excuteRequest("/user-attribute/list", params);
         Map map = null;
         map = getEntityMapFromResponse(httpResponse);
-
+        logger.info("userAttributeList:page_count->{}",map.get("page_count"));
         return new UserAttributeListResponse(map);
     }
 
@@ -589,7 +585,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/history", params);
         map = getEntityMapFromResponse(httpResponse);
-
+        logger.info("msgHistory:hasMore{}",map.get("has_more"));
         return new HistoryResponse(map);
     }
 
@@ -615,6 +611,7 @@ public class WulaiClient {
 
         CloseableHttpResponse httpResponse = excuteRequest("/msg/receive", params);
         map = getEntityMapFromResponse(httpResponse);
+        logger.info("msgReceive:msg_id->{}",map.get("msg_id"));
 
         return new ReceiveResponse(map);
     }
