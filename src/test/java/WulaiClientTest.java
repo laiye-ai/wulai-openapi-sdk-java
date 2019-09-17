@@ -1,7 +1,5 @@
-import com.alibaba.fastjson.JSONObject;
 import exceptions.ClientException;
 import exceptions.ServerException;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,21 +9,19 @@ import response.msg.*;
 import response.user.UserAttributeListResponse;
 
 import java.net.URI;
-import java.util.logging.Logger;
-
 
 public class WulaiClientTest {
     private static WulaiClient wulaiClient;
-    private Logger logger = Logger.getLogger("WulaiClientTest");
 
     @Before
     public void setEnv() throws ClientException {
         wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                System.getenv("secret"), "v2", false);
+                System.getenv("secret"), "v2");
         wulaiClient.setRetryTimes(1);
         wulaiClient.setTimeout(10);
 
         wulaiClient.setEndpoint(URI.create("https://preopenapi.wul.ai/"));
+
     }
 
     @Test
@@ -140,7 +136,7 @@ public class WulaiClientTest {
     }
 
     @Test
-    public void TestGoogle() throws ClientException, ServerException {
+    public void TestPreOpenApi() throws ClientException, ServerException {
         wulaiClient.setEndpoint(URI.create("https://preopenapi.wul.ai/"));
         wulaiClient.setTimeout(1);
         UserCreateRequest userCreateRequest = new UserCreateRequest("zhangtao@test");

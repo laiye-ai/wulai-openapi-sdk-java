@@ -9,15 +9,14 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 public class Scene1 {
+    static Logger logger = Logger.getLogger("Scene1");
     private static WulaiClient wulaiClient;
-
-    static Logger logger=Logger.getLogger("Scene1");
 
     static {
         try {
             // 创建client 传入正确的验证信息
             wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                        System.getenv("secret"),"v2",false);
+                    System.getenv("secret"), "v2");
             // 设置正确的域名
             wulaiClient.setEndpoint(URI.create("https://openapi.wul.ai/"));
         } catch (ClientException e) {
@@ -26,9 +25,9 @@ public class Scene1 {
     }
 
     public static void main(String[] args) {
-        String userId="laiye@test";
-        UserCreateRequest userCreateRequest= null;
-        int result= 0;
+        String userId = "laiye@test";
+        UserCreateRequest userCreateRequest = null;
+        int result = 0;
         try {
             userCreateRequest = new UserCreateRequest("");
             result = wulaiClient.userCreate(userCreateRequest);
@@ -36,17 +35,17 @@ public class Scene1 {
             logger.severe("userCreate error");
         }
 
-        if (200==result){
-            Text text =new Text("你好");
-            MsgBody msgBody=new MsgBody(text);
-            BotResponseRequest botResponseRequest=null;
+        if (200 == result) {
+            Text text = new Text("你好");
+            MsgBody msgBody = new MsgBody(text);
+            BotResponseRequest botResponseRequest = null;
             try {
-                botResponseRequest=new BotResponseRequest(userId,msgBody);
+                botResponseRequest = new BotResponseRequest(userId, msgBody);
                 wulaiClient.getBotResponse(botResponseRequest);
             } catch (ClientException | ServerException e) {
                 logger.severe("getBotResponse error");
             }
-        }else {
+        } else {
             logger.info("userCreate error, skip getBotResponse ,please check the userCreate response");
         }
     }

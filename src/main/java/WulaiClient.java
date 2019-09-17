@@ -18,6 +18,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import request.msg.BotResponseRequest;
 import request.msg.HistoryRequest;
 import request.msg.ReceiveRequest;
@@ -40,8 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Laiye Wulai SDK for Java Programming Language
@@ -51,7 +51,11 @@ public class WulaiClient {
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 300;
     private static MessageDigest md = null;
-    private static Logger logger = Logger.getLogger("wulaiClient");
+    private static Logger logger= LoggerFactory.getLogger(WulaiClient.class);
+
+    public static void setLogger(Logger logger) {
+        WulaiClient.logger = logger;
+    }
 
     static {
         try {
@@ -65,15 +69,11 @@ public class WulaiClient {
     private int retryTimes = 5;
     private PoolingHttpClientConnectionManager cm = null;
     private CloseableHttpClient httpClient = null;
-    private URI endpoint = URI.create("https://oepnapi.wul.ai/");
+    private URI endpoint = URI.create("https://openapi.wul.ai/");
     private String PUBKEY = null;
     private String SECRET = null;
     private String ApiVersion = null;
     private HashMap<String, Object> params = new HashMap<String, Object>();
-    ;
-
-    private WulaiClient() {
-    }
 
     /**
      * 初始化SDK对象，需要传入公钥密钥信息及对应的SDK版本和是否开启debug模式
@@ -81,10 +81,9 @@ public class WulaiClient {
      * @param pubkey     每个开放平台渠道有一组 Pubkey 和 Secret，可从吾来平台-渠道设置-开放平台新版(v2)页面上查询。
      * @param secret     每个开放平台渠道有一组 Pubkey 和 Secret，可从吾来平台-渠道设置-开放平台新版(v2)页面上查询。
      * @param apiVersion 当前支持v2模式
-     * @param debug      是否开启debug模式,debug模式下会在console中打印相关运行信息
      * @throws ClientException 客户端错误
      */
-    public WulaiClient(String pubkey, String secret, String apiVersion, boolean debug) throws ClientException {
+    public WulaiClient(String pubkey, String secret, String apiVersion) throws ClientException {
         try {
             assert null != pubkey;
             assert null != secret;
@@ -96,11 +95,6 @@ public class WulaiClient {
         this.PUBKEY = pubkey;
         this.SECRET = secret;
         this.ApiVersion = apiVersion;
-        if (debug) {
-            logger.setLevel(Level.INFO);
-        } else {
-            logger.setLevel(Level.SEVERE);
-        }
 
     }
 
@@ -118,7 +112,7 @@ public class WulaiClient {
             }
             return buffer.toString().toLowerCase();
         } catch (CloneNotSupportedException e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, "getSign方法错误");
         }
     }
@@ -141,13 +135,13 @@ public class WulaiClient {
                 if (e instanceof SSLHandshakeException) {
                     return false;
                 }
-                if (e instanceof InterruptedIOException) {
+                if (e instanceof ConnectTimeoutException) {
                     return false;
                 }
                 if (e instanceof UnknownHostException) {
                     return true;
                 }
-                if (e instanceof ConnectTimeoutException) {
+                if (e instanceof InterruptedIOException) {
                     return false;
                 }
                 if (e instanceof SSLException) {
@@ -182,12 +176,12 @@ public class WulaiClient {
         try {
             body = EntityUtils.toString(entity, "UTF-8");
         } catch (IOException e) {
-            logger.severe("EntityUtils toString exception");
-            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
         map = JSONObject.parseObject(body, HashMap.class);
         if (map == null) {
-            logger.info("EntityMap is null");
+            logger.error("EntityMap is null");
         }
         return map;
     }
@@ -257,12 +251,13 @@ public class WulaiClient {
         request.setHeader("Api-Auth-sign", getSign(nonce, timestamp, SECRET));
         request.setHeader("Content-Type", CONTENT_TYPE);
 
-        if (logger.getLevel() == Level.INFO) {
+        if (logger.isDebugEnabled()) {
             for (Header header : request.getAllHeaders()) {
-                logger.info(header.getName() + " : " + header.getValue());
+                logger.debug(header.getName() + " : " + header.getValue());
             }
+            logger.debug("url:" + request.getURI().toString());
         }
-        logger.info("url:" + request.getURI().toString());
+
     }
 
     /**
@@ -283,7 +278,7 @@ public class WulaiClient {
         }
         // 获取request 对象，设置参数
         postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
-        logger.info(data);
+        logger.debug(data);
         postrequest.setEntity(new StringEntity(data, "UTF-8"));
         setRequestParams(postrequest);
         try {
@@ -300,26 +295,26 @@ public class WulaiClient {
             try {
                 responseBody = EntityUtils.toString(httpEntity, "UTF-8");
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR,e.getMessage());
             }
         }
 
-        logger.info("HttpEntity" + responseBody);
+        logger.debug("HttpEntity" + responseBody);
         Map map = (Map) JSONObject.parseObject(responseBody, Map.class);
         ArrayList list = new ArrayList();
         for (Object obj : map.keySet()) {
-            logger.info(obj.toString() + ":" + map.get(obj));
+            logger.debug(obj.toString() + ":" + map.get(obj));
             list.add(map.get(obj));
         }
 
-        if (logger.getLevel() == Level.INFO) {
-            logger.info("responseEntity:" + list.toString());
-            logger.info(responseBody);
+        if (logger.isDebugEnabled()) {
+            logger.debug("responseEntity:" + list.toString());
+            logger.debug(responseBody);
             for (Header header : httpResponse.getAllHeaders()) {
-                logger.info(header.getName() + " : " + header.getValue());
+                logger.debug(header.getName() + " : " + header.getValue());
             }
         }
-        logger.info("httpcode:" + httpCode + "  " + "responseBody: " + responseBody);
+        logger.debug("httpCode:" + httpCode + "  " + "responseBody: " + responseBody);
         return responseBody;
     }
 
@@ -340,7 +335,7 @@ public class WulaiClient {
         postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
         setRequestParams(postrequest);
         body = JSONObject.toJSON(data).toString();
-        logger.info(body);
+        logger.debug(body);
         postrequest.setEntity(new StringEntity(body, "UTF-8"));
         HttpContext context = HttpClientContext.create();
         try {
@@ -400,7 +395,7 @@ public class WulaiClient {
      * nickname 用户昵称 <= 128 characters
      */
     public int userCreate(UserCreateRequest userCreateRequest) throws ClientException, ServerException {
-        params = new HashMap<String, Object>();
+        params.clear();
         params.put("user_id", userCreateRequest.getUserId());
         params.put("avatar_url", userCreateRequest.getAvatarUrl());
         params.put("nickname", userCreateRequest.getNickname());
@@ -492,6 +487,7 @@ public class WulaiClient {
     public TaskResponse getTaskBotResponse(BotResponseRequest botResponseRequest) throws ClientException, ServerException {
         params.clear();
         Map map = null;
+
         params.put("user_id", botResponseRequest.getUserId());
         params.put("msg_body", botResponseRequest.getMsgBody());
         params.put("extra", botResponseRequest.getExtra());

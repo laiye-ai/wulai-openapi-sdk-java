@@ -33,7 +33,7 @@
     <dependency>
         <groupId>com.wulai.laiye.javasdk</groupId>
         <artifactId>wulaiSDK</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </dependency>
 </dependencies>
 ```
@@ -42,10 +42,24 @@
 在您开始之前，您需要注册帐户并获取您的[凭证](https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#section/%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81)。
 
 ### 创建 WulaiClient 客户端
-```
-//为避免泄漏公钥密钥等信息，建议将相关配置写到环境变量后使用System类的getenv方法获取环境变量。
-WulaiCLient wulaiClient=new WulaiClient(System.getenv("pubkey"),
-System.getenv("secret"), "v2", true);
+```java
+
+public class Test {
+
+    public static void main(String[] args) throws ClientException, ServerException {
+
+        //为避免泄漏公钥密钥等信息，建议将相关配置写到环境变量后使用System类的getenv方法获取环境变量。
+        WulaiClient wulaiClient=new WulaiClient(System.getenv("pubkey"),System.getenv("secret"),"v2");
+        //若要启动日志功能，请传入实现了org.slf4j.Logger接口的对象
+        Logger logger= LoggerFactory.getLogger(Test.class);
+        WulaiClient.setLogger(logger);
+
+        //设置域名
+        wulaiClient.setEndpoint(URI.create("https://openapi.wul.ai/"));
+        
+    }
+}
+
 ```
 
 ### 使用通用方法processCommonRequest发送请求
@@ -64,7 +78,7 @@ wulaiClient.processCommonRequest("/msg/bot-response",data2);
 
 ```
 ### 使用Wulai Java API发送请求
-```java
+```
 // 创建requestBean 对象
 UserCreateRequest userCreateRequest = new UserCreateRequest("wulai@test");
 userCreateRequest.setNickname("Tom");
