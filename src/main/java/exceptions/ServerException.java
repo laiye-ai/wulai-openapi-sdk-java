@@ -19,4 +19,15 @@ public class ServerException extends Exception {
         this.errorType = errorType;
     }
 
+    public String getErrCode() {
+        return errCode;
+    }
+
+    public int getHttp_code() {
+        return http_code;
+    }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
 }

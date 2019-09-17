@@ -8,16 +8,10 @@
 <p align="center">
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.laiye.wulai.javasdk/wulaiSDK.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.laiye.wulai.javasdk%22%20AND%20a:%22wulaiSDK%22)
-[![build status][travis-image]][travis-url]
-[![codecov][cov-image]][cov-url]
-[![Codacy Badge][codacy-image]][codacy-url]
+[![build status](https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java.svg?branch=develop)](https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java)
+[![codecov](https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java/branch/master/graph/badge.svg)](https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7f135c2b356542fb86de1a96fe16ffa4)](https://www.codacy.com/manual/zuiyuqingfeng/wulai-openapi-sdk-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zuiyuqingfeng/wulai-openapi-sdk-java&amp;utm_campaign=Badge_Grade)
 
-[travis-image]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java.svg?branch=develop
-[travis-url]: https://travis-ci.org/laiye-ai/wulai-openapi-sdk-java
-[cov-image]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java/branch/master/graph/badge.svg
-[cov-url]: https://codecov.io/gh/zuiyuqingfeng/wulai-openapi-sdk-java
-[codacy-image]: https://api.codacy.com/project/badge/Grade/877660309403463dbab6a3393d7291d5
-[codacy-url]: https://www.codacy.com/app/zuiyuqingfeng/wulai-openapi-sdk-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zuiyuqingfeng/wulai-openapi-sdk-java&amp;utm_campaign=Badge_Grade
 </p>
 
 欢迎使用 Wulai Openapi SDK for Java。

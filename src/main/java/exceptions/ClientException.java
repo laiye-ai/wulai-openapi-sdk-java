@@ -13,9 +13,6 @@ public class ClientException extends Exception {
         this.setErrorType(ErrorType.Client);
     }
 
-    public ClientException(String errMsg) {
-    }
-
     public String getErrCode() {
         return errCode;
     }
@@ -24,7 +21,7 @@ public class ClientException extends Exception {
         return errorType;
     }
 
-    protected void setErrorType(ErrorType errorType) {
+    private void setErrorType(ErrorType errorType) {
         this.errorType = errorType;
     }
 
