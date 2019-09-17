@@ -1,4 +1,4 @@
-package request.msg;
+package module.request.msg;
 
 import exceptions.ClientException;
 import util.ParamsCheck;

@@ -1,4 +1,4 @@
-package request.user;
+package module.request.user;
 
 
 public class UserAttributeUserAttributeValue {

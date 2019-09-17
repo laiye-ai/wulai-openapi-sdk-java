@@ -1,4 +1,4 @@
-package request.msg;
+package module.request.msg;
 
 public class MsgBody {
     private Text text;

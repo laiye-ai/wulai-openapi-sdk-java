@@ -1,4 +1,4 @@
-package response.user;
+package module.response.user;
 
 import com.alibaba.fastjson.JSONArray;
 

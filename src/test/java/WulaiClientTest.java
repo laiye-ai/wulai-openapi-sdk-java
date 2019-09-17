@@ -1,12 +1,12 @@
 import exceptions.ClientException;
 import exceptions.ServerException;
+import module.request.msg.*;
+import module.request.user.*;
+import module.response.msg.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import request.msg.*;
-import request.user.*;
-import response.msg.*;
-import response.user.UserAttributeListResponse;
+import module.response.user.UserAttributeListResponse;
 
 import java.net.URI;
 

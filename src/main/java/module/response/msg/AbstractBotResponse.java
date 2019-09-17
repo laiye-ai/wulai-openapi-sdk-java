@@ -1,4 +1,4 @@
-package response.msg;
+package module.response.msg;
 
 import java.util.Map;
 
