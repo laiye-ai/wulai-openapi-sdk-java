@@ -1,36 +1,26 @@
-import exceptions.ClientException;
-import exceptions.ServerException;
-import request.msg.BotResponseRequest;
-import request.msg.MsgBody;
-import request.msg.Text;
-import request.user.UserCreateRequest;
+import com.DefaultClient;
+import com.exceptions.ClientException;
+import com.exceptions.ServerException;
+import com.module.request.msg.BotResponseRequest;
+import com.module.request.MsgBody;
+import com.module.request.Text;
+import com.wulai.msg.GetBotResponse;
+import com.wulai.user.UserCreate;
 
-import java.net.URI;
 import java.util.logging.Logger;
 
 public class Scene1 {
     static Logger logger = Logger.getLogger("Scene1");
-    private static WulaiClient wulaiClient;
 
-    static {
-        try {
-            // 创建client 传入正确的验证信息
-            wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                    System.getenv("secret"), "v2");
-            // 设置正确的域名
-            wulaiClient.setEndpoint(URI.create("https://openapi.wul.ai/"));
-        } catch (ClientException e) {
-            logger.severe("init error");
-        }
-    }
 
     public static void main(String[] args) {
         String userId = "laiye@test";
-        UserCreateRequest userCreateRequest = null;
+        UserCreate userCreate = null;
         int result = 0;
+        DefaultClient defaultClient=new DefaultClient();
         try {
-            userCreateRequest = new UserCreateRequest("");
-            result = wulaiClient.userCreate(userCreateRequest);
+            userCreate.setUserId("laiye@test");
+            result =userCreate.request(defaultClient);
         } catch (ClientException | ServerException e) {
             logger.severe("userCreate error");
         }
@@ -40,8 +30,10 @@ public class Scene1 {
             MsgBody msgBody = new MsgBody(text);
             BotResponseRequest botResponseRequest = null;
             try {
-                botResponseRequest = new BotResponseRequest(userId, msgBody);
-                wulaiClient.getBotResponse(botResponseRequest);
+                GetBotResponse getBotResponse = new GetBotResponse();
+                getBotResponse.setUserId("laiye@test");
+                getBotResponse.setMsgBody(msgBody);
+                getBotResponse.request(defaultClient);
             } catch (ClientException | ServerException e) {
                 logger.severe("getBotResponse error");
             }

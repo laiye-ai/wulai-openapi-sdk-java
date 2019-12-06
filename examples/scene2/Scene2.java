@@ -1,40 +1,31 @@
-import exceptions.ClientException;
-import exceptions.ServerException;
-import request.msg.BotResponseRequest;
-import request.msg.MsgBody;
-import request.msg.Text;
-import request.user.*;
-import response.msg.BotResponse;
+import com.DefaultClient;
+import com.exceptions.ClientException;
+import com.exceptions.ServerException;
+import com.module.request.MsgBody;
+import com.module.request.Text;
+import com.module.request.user.*;
+import com.module.response.msg.BotResponse;
+import com.wulai.msg.GetBotResponse;
+import com.wulai.user.UserAttributeCreate;
+import com.wulai.user.UserCreate;
 
-import java.net.URI;
 import java.util.logging.Logger;
 
 public class Scene2 {
+    static Logger logger = Logger.getLogger("Scene1");
 
-    private static WulaiClient wulaiClient;
-
-    private static Logger logger = Logger.getLogger("Scene1");
-
-    static {
-        try {
-            // 创建client 传入正确的验证信息
-            wulaiClient = new WulaiClient(System.getenv("pubkey"),
-                    System.getenv("secret"), "v2");
-            // 设置正确的域名
-            wulaiClient.setEndpoint(URI.create("https://openapi.wul.ai/"));
-        } catch (ClientException e) {
-            logger.severe("init error");
-        }
-    }
 
     public static void main(String[] args) {
         String name = "laiye@test";
         int result = 0;
+
+        DefaultClient defaultClient=new DefaultClient();
+
         try {
-            UserCreateRequest userCreateRequest = new UserCreateRequest(name);
-            userCreateRequest.setNickname("Laiye");
-            userCreateRequest.setAvatarUrl("https://www.laiye.com/static/official-website/logo.png");
-            result = wulaiClient.userCreate(userCreateRequest);
+            UserCreate userCreate=new UserCreate();
+            userCreate.setUserId(name);
+            userCreate.setAvatarUrl("https://www.laiye.com/static/official-website/logo.png");
+            result = userCreate.request(defaultClient);
         } catch (ClientException e) {
             logger.severe("userCreate params error");
         } catch (ServerException e) {
@@ -53,7 +44,9 @@ public class Scene2 {
 
                 UserAttributeCreateRequest userAttributeCreateRequest = new UserAttributeCreateRequest(name);
                 userAttributeCreateRequest.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
-                userAttributeCode = wulaiClient.userAttributeCreate(userAttributeCreateRequest);
+                UserAttributeCreate userAttributeCreate=new UserAttributeCreate();
+                userAttributeCode=userAttributeCreate.request(defaultClient);
+
             } catch (ClientException e) {
                 logger.severe("userAttribute params error");
             } catch (ServerException e) {
@@ -65,8 +58,11 @@ public class Scene2 {
             Text text = new Text("你是复读机吗"); // 设置对话内容
             MsgBody msgBody = new MsgBody(text);
             try {
-                BotResponseRequest botResponseRequest = new BotResponseRequest(name, msgBody);
-                botResponse = wulaiClient.getBotResponse(botResponseRequest);
+                GetBotResponse getBotResponse =new GetBotResponse();
+                getBotResponse.setUserId(name);
+                getBotResponse.setMsgBody(msgBody);
+                botResponse =getBotResponse.request(defaultClient);
+
                 Object[] objects = botResponse.getSuggestedResponse();
                 System.out.println(objects[0].toString());
                 /*Console print

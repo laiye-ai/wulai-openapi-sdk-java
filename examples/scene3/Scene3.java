@@ -1,4 +1,5 @@
-import exceptions.ClientException;
+import com.WulaiClient;
+import com.exceptions.ClientException;
 
 import java.net.URI;
 import java.util.logging.Logger;

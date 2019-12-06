@@ -25,7 +25,7 @@
 <dependencies>
     ...
     <dependency>
-        <groupId>com.wulai.laiye.javasdk</groupId>
+        <groupId>com.com.wulai.laiye.javasdk</groupId>
         <artifactId>wulaiSDK</artifactId>
         <version>1.0.3</version>
     </dependency>
@@ -35,10 +35,10 @@
 ## 快速使用
 在您开始之前，您需要注册帐户并获取您的[凭证](https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#section/%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81)。
 
-### 创建 WulaiClient 客户端
+### 创建 com.WulaiClient 客户端
 ```java
 
-public class Test {
+import com.WulaiClient;public class Test {
 
     public static void main(String[] args) throws ClientException, ServerException {
 
@@ -84,12 +84,12 @@ Text text =new Text("你是谁");
 MsgBody msgBody =new MsgBody(text);
 BotResponseRequest botResponseRequest = new BotResponseRequest("laiye@test",msgBody); //创建对象时传入必选参数
 botResponseRequest.setExtra("readme"); //set可选参数
-BotResponse botResponse = wulaiClient.getBotResponse(botResponseRequest); //得到responseBean
+com.wulai.msg.GetBotResponse getBotResponse = wulaiClient.getBotResponse(botResponseRequest); //得到responseBean
 
 // 获取回复内容
-System.out.println(botResponse.getMsgId()); 
-System.out.println(botResponse.isDispatch());
-for (Object object : botResponse.getSuggestedResponse()) {
+System.out.println(getBotResponse.getMsgId()); 
+System.out.println(getBotResponse.isDispatch());
+for (Object object : getBotResponse.getSuggestedResponse()) {
     System.out.println(object.toString());
 }
 ```      
