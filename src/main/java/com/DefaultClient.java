@@ -41,7 +41,7 @@ public class DefaultClient {
 
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 5;
-    private static Logger logger = LoggerFactory.getLogger(WulaiClient.class);
+    private static Logger logger = LoggerFactory.getLogger(DefaultClient.class);
     private static MessageDigest md = null;
     private Credentials credentials;
     private CloseableHttpClient httpClient = null;
