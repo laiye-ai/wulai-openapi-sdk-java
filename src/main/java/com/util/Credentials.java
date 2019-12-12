@@ -4,8 +4,8 @@ import java.net.URI;
 
 public class Credentials {
 
-    private String pubkey = "84Mb38jJR6Bg7qB3MT09cSHPdrEImIgv00362b370af3cc02eb";
-    private String secret = "x9xBAnz8JHrI8GdsdVoJ";
+    private String pubkey = "G2qcOW4lnwAUHlKq7WKOaJ1Obww4fQCf00205e7cc49ca502b1";
+    private String secret = "x79ATwIV4dM7H2GiVLj7";
 
     public Credentials() {
 

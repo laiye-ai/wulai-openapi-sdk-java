@@ -1,4 +1,6 @@
-package com.module.request;
+package com.module.request.knowledge;
+
+import com.module.request.MsgBody;
 
 public class Answer {
     private String knowledge_id;
@@ -15,5 +17,17 @@ public class Answer {
 
     public void setMsg_body(MsgBody msg_body) {
         this.msg_body = msg_body;
+    }
+
+    public MsgBody getMsg_body() {
+        return msg_body;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getKnowledge_id() {
+        return knowledge_id;
     }
 }

@@ -1,4 +1,4 @@
-package com.module.request;
+package com.module.request.dictionary;
 
 public class IntentEntity {
     private String standard_value;

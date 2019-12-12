@@ -1,7 +1,8 @@
-package com.module.request;
+package com.module.request.knowledge;
 
-public class EnumEntity {
-    private String name ;
+public class UserAttributeGroup {
+
+    private String name;
 
     public void setName(String name) {
         this.name = name;
@@ -10,4 +11,6 @@ public class EnumEntity {
     public String getName() {
         return name;
     }
+
+
 }

@@ -1,22 +1,22 @@
-package com.module.request;
+package com.module.request.knowledge;
 
 public class Knowledge {
     private boolean status;
     private String standard_question;
-    private boolean respondAll;
+    private boolean respond_all;
     private String id ;
-    private boolean maintainedByUserAttributeGroup;
+    private boolean maintained_by_user_attribute_group;
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setMaintainedByUserAttributeGroup(boolean maintainedByUserAttributeGroup) {
-        this.maintainedByUserAttributeGroup = maintainedByUserAttributeGroup;
+    public void setMaintained_by_user_attribute_group(boolean maintained_by_user_attribute_group) {
+        this.maintained_by_user_attribute_group = maintained_by_user_attribute_group;
     }
 
-    public void setRespondAll(boolean respondAll) {
-        this.respondAll = respondAll;
+    public void setRespond_all(boolean respond_all) {
+        this.respond_all = respond_all;
     }
 
     public void setStandard_question(String standard_question) {
@@ -35,12 +35,12 @@ public class Knowledge {
         return standard_question;
     }
 
-    public boolean isMaintainedByUserAttributeGroup() {
-        return maintainedByUserAttributeGroup;
+    public boolean isMaintained_by_user_attribute_group() {
+        return maintained_by_user_attribute_group;
     }
 
-    public boolean isRespondAll() {
-        return respondAll;
+    public boolean isRespond_all() {
+        return respond_all;
     }
 
     public boolean isStatus() {

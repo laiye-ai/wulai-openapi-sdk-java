@@ -3,8 +3,7 @@ package com.wulai.knowledge;
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.Knowledge;
-import com.module.request.KnowledgeTagKnowledge;
+import com.module.request.knowledge.KnowledgeTagKnowledge;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;

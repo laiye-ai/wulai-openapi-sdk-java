@@ -1,4 +1,6 @@
-package com.module.request;
+package com.module.request.dictionary;
+
+import com.module.request.dictionary.Term;
 
 import java.util.ArrayList;
 import java.util.List;

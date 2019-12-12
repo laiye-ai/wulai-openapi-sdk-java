@@ -3,7 +3,7 @@ package com.wulai.dictionary;
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.EnumEntity;
+import com.module.request.dictionary.EnumEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;

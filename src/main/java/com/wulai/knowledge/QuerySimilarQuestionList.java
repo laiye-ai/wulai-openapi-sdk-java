@@ -32,7 +32,7 @@ public class QuerySimilarQuestionList {
         this.similarQuestionId = similarQuestionId;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException, IOException {
+    public Map request(DefaultClient defaultClient) throws ServerException, ClientException{
         HashMap<String,Object> params=new HashMap<String, Object>();
         params.put("knowledge_id",knowledgeId);
         params.put("page",page);

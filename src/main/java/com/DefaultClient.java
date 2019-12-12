@@ -140,6 +140,7 @@ public class DefaultClient {
         setRequestParams(postrequest);
         body = JSONObject.toJSON(data).toString();
         logger.debug(body);
+        System.out.println(body);
         postrequest.setEntity(new StringEntity(body, "UTF-8"));
         HttpContext context = HttpClientContext.create();
         try {

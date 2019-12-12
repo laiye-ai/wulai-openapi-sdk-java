@@ -30,6 +30,9 @@ public class CreateEntityIntentValue {
         return entityId;
     }
 
+    public void addSynonyms(String synonym){
+        synonyms.add(synonym);
+    }
 
     public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String,Object> params=new HashMap<>();

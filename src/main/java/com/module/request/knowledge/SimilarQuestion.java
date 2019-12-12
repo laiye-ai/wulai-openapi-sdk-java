@@ -1,4 +1,4 @@
-package com.module.request;
+package com.module.request.knowledge;
 
 
 public class SimilarQuestion{

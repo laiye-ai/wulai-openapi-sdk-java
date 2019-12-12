@@ -1,4 +1,4 @@
-package com.module.request;
+package com.module.request.dictionary;
 
 import java.util.ArrayList;
 import java.util.List;

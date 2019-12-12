@@ -3,7 +3,7 @@ package com.wulai.knowledge;
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.UserAttributeGroupAnswer;
+import com.module.request.knowledge.UserAttributeGroupAnswer;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;

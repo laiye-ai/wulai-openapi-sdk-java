@@ -3,7 +3,7 @@ package com.wulai.knowledge;
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.SimilarQuestion;
+import com.module.request.knowledge.SimilarQuestion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;

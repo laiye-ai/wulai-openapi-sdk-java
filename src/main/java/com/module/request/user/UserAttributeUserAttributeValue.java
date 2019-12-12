@@ -14,6 +14,7 @@ public class UserAttributeUserAttributeValue {
         this.user_attribute = user_attribute;
     }
 
+
     public UserAttributeValue getUser_attribute_value() {
         return user_attribute_value;
     }
