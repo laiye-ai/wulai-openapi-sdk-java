@@ -1,11 +1,11 @@
-package com.module.request;
+package com.module.request.scene;
 
 public class Scene {
     private String description;
     private int id ;
     private float smart_slot_filling_threshold;
     private String name ;
-    private String intent_switch_mode;
+    private String intent_switch_mode="INTENT_SWITCH_MODE_NOTSET";
 
     public void setIntent_switch_mode(String intent_switch_mode) {
         this.intent_switch_mode = intent_switch_mode;

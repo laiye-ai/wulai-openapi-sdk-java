@@ -1,6 +1,12 @@
-package com.module.request;
+package com.module.request.scene;
+
+import com.module.request.Action;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Block {
+    private int id;
     private int intent_id;
     private String name ;
     private String mode="RESPONSE_ERROR";
@@ -9,6 +15,47 @@ public class Block {
     private Action action;
     private String default_slot_value;
     private int request_count=3;
+    private int slot_id;
+    private List<Connection> connections=new ArrayList<>();
+    private List<Response> responses=new ArrayList<>();
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setResponses(List<Response> responses) {
+        this.responses = responses;
+    }
+
+    public List<Response> getResponses() {
+        return responses;
+    }
+    public void addResponse(Response response){
+        responses.add(response);
+    }
+
+    public void setConnections(List<Connection> connections) {
+        this.connections = connections;
+    }
+
+    public List<Connection> getConnections() {
+        return connections;
+    }
+
+    public void addConnection(Connection connection){
+        connections.add(connection);
+    }
+    public void setSlot_id(int slot_id) {
+        this.slot_id = slot_id;
+    }
+
+    public int getSlot_id() {
+        return slot_id;
+    }
 
     public void setSlot_filling_when_asked(boolean slot_filling_when_asked) {
         this.slot_filling_when_asked = slot_filling_when_asked;

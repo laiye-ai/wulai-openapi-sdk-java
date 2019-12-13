@@ -1,16 +1,16 @@
-package com.module.request;
+package com.module.request.scene;
 
 public class IntentTrigger {
     private String text;
     private int intent_id;
-    private String type;
-    private String id ;
+    private String type="TRIGGER_TYPE_ERROR";
+    private int id ;
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

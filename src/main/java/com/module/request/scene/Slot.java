@@ -1,9 +1,19 @@
-package com.module.request;
+package com.module.request.scene;
 
 public class Slot {
     private int id ;
     private String name ;
     private boolean query_slot_filling;
+    private int scene_id;
+
+
+    public void setScene_id(int scene_id) {
+        this.scene_id = scene_id;
+    }
+
+    public int getScene_id() {
+        return scene_id;
+    }
 
     public void setId(int id) {
         this.id = id;

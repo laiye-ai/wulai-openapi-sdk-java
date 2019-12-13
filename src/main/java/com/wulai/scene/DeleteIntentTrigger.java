@@ -19,12 +19,12 @@ public class DeleteIntentTrigger {
         return id;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/delete", params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        return httpResponse.getStatusLine().getStatusCode();
 
     }
 }

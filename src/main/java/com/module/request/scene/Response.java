@@ -1,4 +1,6 @@
-package com.module.request;
+package com.module.request.scene;
+
+import com.module.request.MsgBody;
 
 public class Response {
     private int id ;

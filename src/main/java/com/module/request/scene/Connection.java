@@ -1,6 +1,6 @@
-package com.module.request;
+package com.module.request.scene;
 
-public class Connections {
+public class Connection {
     private int from_block_id;
     private int to_block_id;
     private Condition condition;

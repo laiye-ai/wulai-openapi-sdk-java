@@ -3,7 +3,7 @@ package com.wulai.scene;
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.Response;
+import com.module.request.scene.Response;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;

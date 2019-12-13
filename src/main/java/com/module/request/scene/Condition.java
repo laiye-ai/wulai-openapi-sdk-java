@@ -1,4 +1,4 @@
-package com.module.request;
+package com.module.request.scene;
 
 public class Condition {
     private InEntity in_entity=new InEntity();

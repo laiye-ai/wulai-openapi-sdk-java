@@ -128,6 +128,20 @@ public class DefaultClient {
         }
         return map;
     }
+    public String getBodyFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
+        Map map = null;
+        HttpEntity entity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(entity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+
+        return body;
+    }
+
     public synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
             throws ClientException, ServerException {
         HttpEntityEnclosingRequestBase postrequest = null;
