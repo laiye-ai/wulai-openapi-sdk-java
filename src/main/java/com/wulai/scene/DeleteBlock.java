@@ -8,22 +8,22 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.util.HashMap;
 
 public class DeleteBlock {
-    private int id;
+    private long id;
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
 
-        params.put("id",id);
+        params.put("id", id);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/scene/block/delete",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/block/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

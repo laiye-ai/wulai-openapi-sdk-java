@@ -1,12 +1,14 @@
 package com.wulai.knowledge;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.knowledge.KnowledgeTag;
+import com.module.response.knowledge.KnowledgeTagsList;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class QueryKnowledgeTagsList {
     private int page;
@@ -37,18 +39,22 @@ public class QueryKnowledgeTagsList {
         return parentKTagId;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
+    public KnowledgeTagsList request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
 
-        params.put("page",page);
-        params.put("page_size",pageSize);
-        params.put("parent_k_tag_id",parentKTagId);
+        params.put("page", page);
+        params.put("page_size", pageSize);
+        params.put("parent_k_tag_id", parentKTagId);
 
-        CloseableHttpResponse closeableHttpResponse=defaultClient.excuteRequest("/qa/knowledge-tags/list",params);
-        return defaultClient.getEntityMapFromResponse(closeableHttpResponse);
+        CloseableHttpResponse closeableHttpResponse = defaultClient.excuteRequest("/qa/knowledge-tags/list", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(closeableHttpResponse);
+        KnowledgeTagsList knowledgeTagsList = new KnowledgeTagsList();
+        knowledgeTagsList.setPageCount(Integer.parseInt(jsonObject.get("page_count").toString()));
+        knowledgeTagsList.setKnowledgeTags(JSONObject.parseArray(jsonObject.get("knowledge_tags").toString(), KnowledgeTag.class));
+        return knowledgeTagsList;
+
 
     }
-
 
 
 }

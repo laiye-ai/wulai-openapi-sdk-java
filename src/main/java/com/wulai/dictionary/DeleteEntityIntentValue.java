@@ -12,7 +12,7 @@ import java.util.List;
 public class DeleteEntityIntentValue {
     private int entityId;
 
-    private List<String> synonyms =new ArrayList<>();
+    private List<String> synonyms = new ArrayList<>();
 
     public void setSynonyms(List<String> synonyms) {
         this.synonyms = synonyms;
@@ -22,7 +22,7 @@ public class DeleteEntityIntentValue {
         return synonyms;
     }
 
-    public void addSynonym(String synonym){
+    public void addSynonym(String synonym) {
         synonyms.add(synonym);
     }
 
@@ -35,11 +35,11 @@ public class DeleteEntityIntentValue {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("entity_id",entityId);
-        params.put("synonyms",synonyms);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("entity_id", entityId);
+        params.put("synonyms", synonyms);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/dictionary/entity/intent/value/delete",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/intent/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

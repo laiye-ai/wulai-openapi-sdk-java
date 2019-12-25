@@ -1,12 +1,10 @@
 package com.module.request.dictionary;
 
-import com.module.request.dictionary.Term;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TermItem {
-    private List<String> synonyms =new ArrayList<>();
+    private List<String> synonyms = new ArrayList<>();
 
     private Term term;
 
@@ -18,7 +16,7 @@ public class TermItem {
         return synonyms;
     }
 
-    public void addSynonym(String synonym){
+    public void addSynonym(String synonym) {
         synonyms.add(synonym);
     }
 

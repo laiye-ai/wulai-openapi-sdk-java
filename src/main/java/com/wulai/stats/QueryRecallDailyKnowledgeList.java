@@ -1,8 +1,11 @@
 package com.wulai.stats;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.stats.QARecallDailylKnowledgeList;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
@@ -47,15 +50,15 @@ public class QueryRecallDailyKnowledgeList {
         return startDate;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("page",page);
-        params.put("page_size",pageSize);
-        params.put("start_date",startDate);
-        params.put("end_date",endDate);
+    public QARecallDailylKnowledgeList request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("page_size", pageSize);
+        params.put("start_date", startDate);
+        params.put("end_date", endDate);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/stats/qa/recall/daily/knowledge/list",params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
-
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/knowledge/list", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.get("qa_recall_knowledge_stats").toString(), QARecallDailylKnowledgeList.class);
     }
 }

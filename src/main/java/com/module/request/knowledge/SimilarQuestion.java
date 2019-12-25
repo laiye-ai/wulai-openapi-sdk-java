@@ -1,13 +1,16 @@
 package com.module.request.knowledge;
 
 
-public class SimilarQuestion{
-    private String knowledge_id;
-    private String question;
-    private String id ;
+import com.alibaba.fastjson.annotation.JSONField;
 
-    public void setKnowledge_id(String knowledge_id) {
-        this.knowledge_id = knowledge_id;
+public class SimilarQuestion {
+    private String knowledgeId;
+    private String question;
+    private String id;
+
+    @JSONField(name = "knowledge_id")
+    public void setKnowledgeId(String knowledgeId) {
+        this.knowledgeId = knowledgeId;
     }
 
     public void setId(String id) {
@@ -22,8 +25,9 @@ public class SimilarQuestion{
         return id;
     }
 
-    public String getKnowledge_id() {
-        return knowledge_id;
+    @JSONField(name = "knowledge_id")
+    public String getKnowledgeId() {
+        return knowledgeId;
     }
 
     public String getQuestion() {

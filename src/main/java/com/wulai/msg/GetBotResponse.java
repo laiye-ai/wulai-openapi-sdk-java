@@ -1,9 +1,10 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.MsgBody;
+import com.module.request.msg.MsgBody;
 import com.module.response.msg.BotResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -42,15 +43,15 @@ public class GetBotResponse {
 
 
     public BotResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params= new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         Map map = null;
         params.put("msg_body", msgBody);
         params.put("user_id", userId);
         params.put("extra", extra);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response", params);
-        map = defaultClient.getEntityMapFromResponse(httpResponse);
-        return new BotResponse(map);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.toString(), BotResponse.class);
 
     }
 

@@ -1,13 +1,13 @@
 package com.wulai.knowledge;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.SimilarQuestion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateSimilarQuestion {
     private SimilarQuestion similarQuestion;
@@ -21,12 +21,15 @@ public class UpdateSimilarQuestion {
     }
 
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("similar_question",similarQuestion);
+    public SimilarQuestion request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("similar_question", similarQuestion);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/qa/similar-question/update",params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/similar-question/update", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        String response = jsonObject.get("similar_question").toString();
 
+        SimilarQuestion similarQuestion = JSONObject.parseObject(response, SimilarQuestion.class);
+        return similarQuestion;
     }
 }

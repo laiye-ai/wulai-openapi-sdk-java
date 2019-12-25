@@ -1,6 +1,7 @@
 package com.wulai.scene;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Block;
@@ -20,12 +21,13 @@ public class UpdateBlockInformBlock {
         return block;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Block request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("block", block);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/block/inform-block/update", params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.get("block").toString(),Block.class);
 
     }
 

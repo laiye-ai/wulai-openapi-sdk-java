@@ -1,16 +1,19 @@
 package com.module.request.scene;
 
-import com.module.request.MsgBody;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.module.request.msg.MsgBody;
 
 public class Response {
-    private int id ;
+    private int id;
     private MsgBody response;
     private int blockId;
 
+    @JSONField(name = "block_id")
     public void setBlockId(int blockId) {
         this.blockId = blockId;
     }
 
+    @JSONField(name = "block_id")
     public int getBlockId() {
         return blockId;
     }

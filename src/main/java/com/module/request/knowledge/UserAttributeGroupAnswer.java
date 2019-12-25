@@ -1,10 +1,10 @@
 package com.module.request.knowledge;
 
-import com.module.request.knowledge.Answer;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class UserAttributeGroupAnswer {
     private Answer answer;
-    private String user_attribute_group_id;
+    private String userAttributeGroupId;
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
@@ -14,12 +14,14 @@ public class UserAttributeGroupAnswer {
         return answer;
     }
 
-    public String getUser_attribute_group_id() {
-        return user_attribute_group_id;
+    @JSONField(name = "user_attribute_group_id")
+    public String getUserAttributeGroupId() {
+        return userAttributeGroupId;
     }
 
-    public void setUser_attribute_group_id(String user_attribute_group_id) {
-        this.user_attribute_group_id = user_attribute_group_id;
+    @JSONField(name = "user_attribute_group_id")
+    public void setUserAttributeGroupId(String userAttributeGroupId) {
+        this.userAttributeGroupId = userAttributeGroupId;
     }
 
 

@@ -1,23 +1,27 @@
 package com.module.request.dictionary;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class IntentEntity {
-    private String standard_value;
-    private String name ;
+    private String standardValue;
+    private String name;
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setStandard_value(String standard_value) {
-        this.standard_value = standard_value;
+    @JSONField(name = "standard_value")
+    public void setStandardValue(String standardValue) {
+        this.standardValue = standardValue;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getStandard_value() {
-        return standard_value;
+    @JSONField(name = "standard_value")
+    public String getStandardValue() {
+        return standardValue;
     }
 
 }

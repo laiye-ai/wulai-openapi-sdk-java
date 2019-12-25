@@ -1,12 +1,14 @@
 package com.wulai.nlp;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.nlp.Token;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class Tokenize {
     private String query;
@@ -19,14 +21,15 @@ public class Tokenize {
         return query;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
+    public List<Token> request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
 
-        params.put("query",query);
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/nlp/tokenize",params);
+        params.put("query", query);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/nlp/Tokenize", params);
 
-        return defaultClient.getEntityMapFromResponse(httpResponse);
-
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        List<Token> tokens = JSONObject.parseArray(jsonObject.get("tokens").toString(), Token.class);
+        return tokens;
     }
 
 }

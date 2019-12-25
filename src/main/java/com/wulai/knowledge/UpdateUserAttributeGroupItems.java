@@ -1,13 +1,13 @@
 package com.wulai.knowledge;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.UserAttributeGroupItem;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateUserAttributeGroupItems {
 
@@ -22,12 +22,15 @@ public class UpdateUserAttributeGroupItems {
     }
 
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("user_attribute_group_item",user_attribute_group_item);
+    public UserAttributeGroupItem request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("user_attribute_group_item", user_attribute_group_item);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/qa/user-attribute-group-items/update",params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-items/update", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        UserAttributeGroupItem userAttributeGroupItem = JSONObject.parseObject(
+                jsonObject.get("user_attribute_group_item").toString(), UserAttributeGroupItem.class);
+        return userAttributeGroupItem;
     }
 }
 

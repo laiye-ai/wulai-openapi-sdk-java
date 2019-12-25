@@ -1,18 +1,21 @@
 package com.module.request.scene;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class Slot {
-    private int id ;
-    private String name ;
-    private boolean query_slot_filling;
-    private int scene_id;
+    private int id;
+    private String name;
+    private boolean querySlotFilling;
+    private int sceneId;
 
-
-    public void setScene_id(int scene_id) {
-        this.scene_id = scene_id;
+    @JSONField(name = "scene_id")
+    public void setSceneId(int sceneId) {
+        this.sceneId = sceneId;
     }
 
-    public int getScene_id() {
-        return scene_id;
+    @JSONField(name = "scene_id")
+    public int getSceneId() {
+        return sceneId;
     }
 
     public void setId(int id) {
@@ -31,11 +34,13 @@ public class Slot {
         return name;
     }
 
-    public void setQuery_slot_filling(boolean query_slot_filling) {
-        this.query_slot_filling = query_slot_filling;
+    @JSONField(name = "query_slot_filling")
+    public void setQuerySlotFilling(boolean querySlotFilling) {
+        this.querySlotFilling = querySlotFilling;
     }
 
-    public boolean isQuery_slot_filling() {
-        return query_slot_filling;
+    @JSONField(name = "query_slot_filling")
+    public boolean isQuerySlotFilling() {
+        return querySlotFilling;
     }
 }

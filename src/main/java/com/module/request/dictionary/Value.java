@@ -1,29 +1,33 @@
 package com.module.request.dictionary;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Value {
-    private List<String> synonyms=new ArrayList<>();
-    private String standard_value;
+    private List<String> synonyms = new ArrayList<>();
+    private String standardValue;
 
     public void setSynonyms(List<String> synonyms) {
         this.synonyms = synonyms;
     }
 
-    public void setStandard_value(String standard_value) {
-        this.standard_value = standard_value;
+    @JSONField(name = "standard_value")
+    public void setStandardValue(String standardValue) {
+        this.standardValue = standardValue;
     }
 
     public List<String> getSynonyms() {
         return synonyms;
     }
 
-    public String getStandard_value() {
-        return standard_value;
+    @JSONField(name = "standard_value")
+    public String getStandardValue() {
+        return standardValue;
     }
 
-    public void addSynonym(String synonym){
+    public void addSynonym(String synonym) {
         this.synonyms.add(synonym);
     }
 }

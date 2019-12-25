@@ -1,26 +1,31 @@
 package com.module.request.user;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class UserAttributeUserAttributeValue {
 
-    private UserAttribute user_attribute;
-    private UserAttributeValue user_attribute_value;
+    private UserAttribute userAttribute;
+    private UserAttributeValue userAttributeValue;
 
-    public UserAttribute getUser_attribute() {
-        return user_attribute;
+    @JSONField(name = "user_attribute")
+    public UserAttribute getUserAttribute() {
+        return userAttribute;
     }
 
-    public void setUser_attribute(UserAttribute user_attribute) {
-        this.user_attribute = user_attribute;
+    @JSONField(name = "user_attribute")
+    public void setUserAttribute(UserAttribute userAttribute) {
+        this.userAttribute = userAttribute;
     }
 
-
-    public UserAttributeValue getUser_attribute_value() {
-        return user_attribute_value;
+    @JSONField(name = "user_attribute_value")
+    public UserAttributeValue getUserAttributeValue() {
+        return userAttributeValue;
     }
 
-    public void setUser_attribute_value(UserAttributeValue user_attribute_value) {
-        this.user_attribute_value = user_attribute_value;
+    @JSONField(name = "user_attribute_value")
+    public void setUserAttributeValue(UserAttributeValue userAttributeValue) {
+        this.userAttributeValue = userAttributeValue;
     }
 }
 

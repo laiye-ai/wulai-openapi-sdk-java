@@ -1,9 +1,10 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.MsgBody;
+import com.module.request.msg.MsgBody;
 import com.module.response.msg.QaResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -40,18 +41,16 @@ public class GetQABotResponse {
     }
 
     public QaResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params= new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         Map map = null;
 
         params.put("user_id", userId);
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response/qa", params);
-        map = defaultClient.getEntityMapFromResponse(httpResponse);
-        return new QaResponse(map);
-
-
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/qa", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.toString(), QaResponse.class);
 
     }
 }

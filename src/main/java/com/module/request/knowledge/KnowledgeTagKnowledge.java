@@ -1,13 +1,14 @@
 package com.module.request.knowledge;
 
-import com.module.request.knowledge.Knowledge;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class KnowledgeTagKnowledge {
     private Knowledge knowledge;
-    private String knowledge_tag_id;
+    private String knowledgeTagId;
 
-    public void setKnowledge_tag_id(String knowledge_tag_id) {
-        this.knowledge_tag_id = knowledge_tag_id;
+    @JSONField(name = "knowledge_tag_id")
+    public void setKnowledgeTagId(String knowledgeTagId) {
+        this.knowledgeTagId = knowledgeTagId;
     }
 
     public Knowledge getKnowledge() {
@@ -18,7 +19,8 @@ public class KnowledgeTagKnowledge {
         this.knowledge = knowledge;
     }
 
-    public String getKnowledge_tag_id() {
-        return knowledge_tag_id;
+    @JSONField(name = "knowledge_tag_id")
+    public String getKnowledgeTagId() {
+        return knowledgeTagId;
     }
 }

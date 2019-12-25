@@ -1,25 +1,52 @@
 package com.module.response.msg;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
-public class QaResponse extends AbstractBotResponse implements Serializable {
-    private static final long serialVersionUID = 1761016338123346254L;
-    private Object[] qaSuggestedResponse;
+public class QaResponse implements Serializable {
 
-    public QaResponse(Map map) {
-        super(map);
-        setQaSuggestedResponse(JSONArray.parseArray(map.get("qa_suggested_response").toString()).toArray());
+    private boolean isDispatch;
+    private String msgId;
+    private String extra;
+    private List<SuggestedResponse> suggestedResponse;
 
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
-    public Object[] getQaSuggestedResponse() {
-        return qaSuggestedResponse;
+    public String getExtra() {
+        return extra;
     }
 
-    private void setQaSuggestedResponse(Object[] qaSuggestedResponse) {
-        this.qaSuggestedResponse = qaSuggestedResponse;
+    @JSONField(name = "qa_suggested_response")
+    public void setSuggestedResponse(List<SuggestedResponse> suggestedResponse) {
+        this.suggestedResponse = suggestedResponse;
+    }
+
+    @JSONField(name = "is_dispatch")
+    public void setDispatch(boolean dispatch) {
+        isDispatch = dispatch;
+    }
+
+    @JSONField(name = "is_dispatch")
+    public boolean isDispatch() {
+        return isDispatch;
+    }
+
+    @JSONField(name = "msg_id")
+    public String getMsgId() {
+        return msgId;
+    }
+
+    @JSONField(name = "msg_id")
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    @JSONField(name = "qa_suggested_response")
+    public List<SuggestedResponse> getSuggestedResponse() {
+        return suggestedResponse;
     }
 }

@@ -1,26 +1,55 @@
 package com.module.response.msg;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.annotation.JSONField;
 
-import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
-public class TaskResponse extends AbstractBotResponse implements Serializable {
+public class TaskResponse {
 
-    private static final long serialVersionUID = -3723078169848220650L;
-    private Object[] taskSuggestedResponse;
 
-    public TaskResponse(Map map) {
-        super(map);
-        setTaskSuggestedResponse(JSONArray.parseArray(map.get("task_suggested_response")
-                .toString()).toArray());
+
+    private boolean isDispatch;
+    private String msgId;
+    private String extra;
+    private List<TaskSuggestedResponse> taskSuggestedResponse;
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
-    public Object[] getTaskSuggestedResponse() {
+    public String getExtra() {
+        return extra;
+    }
+
+    @JSONField(name = "is_dispatch")
+    public void setDispatch(boolean dispatch) {
+        isDispatch = dispatch;
+    }
+
+    @JSONField(name = "is_dispatch")
+    public boolean isDispatch() {
+        return isDispatch;
+    }
+
+    @JSONField(name = "task_suggested_response")
+    public void setTaskSuggestedResponse(List<TaskSuggestedResponse> taskSuggestedResponse) {
+        this.taskSuggestedResponse = taskSuggestedResponse;
+    }
+
+    @JSONField(name = "task_suggested_response")
+    public List<TaskSuggestedResponse> getTaskSuggestedResponse() {
         return taskSuggestedResponse;
     }
 
-    private void setTaskSuggestedResponse(Object[] taskSuggestedResponse) {
-        this.taskSuggestedResponse = taskSuggestedResponse;
+    @JSONField(name = "msg_id")
+    public String getMsgId() {
+        return msgId;
     }
+
+    @JSONField(name = "msg_id")
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+
 }

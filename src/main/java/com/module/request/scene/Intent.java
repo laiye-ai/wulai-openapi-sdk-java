@@ -1,17 +1,30 @@
 package com.module.request.scene;
 
-public class Intent {
-    private int lifespan_mins;
-    private int id ;
-    private int scene_id;
-    private String name ;
+import com.alibaba.fastjson.annotation.JSONField;
 
-    public void setScene_id(int scene_id) {
-        this.scene_id = scene_id;
+public class Intent {
+    private int lifespanMins;
+    private int id;
+    private int sceneId;
+    private String name;
+    private boolean status;
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
-    public int getScene_id() {
-        return scene_id;
+    public boolean isStatus() {
+        return status;
+    }
+
+    @JSONField(name = "scene_id")
+    public void setSceneId(int sceneId) {
+        this.sceneId = sceneId;
+    }
+
+    @JSONField(name = "scene_id")
+    public int getSceneId() {
+        return sceneId;
     }
 
     public void setId(int id) {
@@ -22,8 +35,9 @@ public class Intent {
         this.name = name;
     }
 
-    public void setLifespan_mins(int lifespan_mins) {
-        this.lifespan_mins = lifespan_mins;
+    @JSONField(name = "lifespan_mins")
+    public void setLifespanMins(int lifespanMins) {
+        this.lifespanMins = lifespanMins;
     }
 
     public int getId() {
@@ -34,7 +48,8 @@ public class Intent {
         return name;
     }
 
-    public int getLifespan_mins() {
-        return lifespan_mins;
+    @JSONField(name = "lifespan_mins")
+    public int getLifespanMins() {
+        return lifespanMins;
     }
 }

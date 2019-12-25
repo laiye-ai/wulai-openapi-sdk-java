@@ -8,7 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.util.HashMap;
 
 public class DeleteUserAttriButeGroupAnswer {
-    private String id ;
+    private String id;
 
     public void setId(String id) {
         this.id = id;
@@ -19,10 +19,10 @@ public class DeleteUserAttriButeGroupAnswer {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("id",id);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
 
-        CloseableHttpResponse closeableHttpResponse=defaultClient.excuteRequest("/qa/user-attribute-group-answer/delete",params);
+        CloseableHttpResponse closeableHttpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answer/delete", params);
         return closeableHttpResponse.getStatusLine().getStatusCode();
 
     }

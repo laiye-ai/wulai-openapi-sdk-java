@@ -1,22 +1,20 @@
 package com.module.response.msg;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
-import java.util.Map;
 
 public class ReceiveResponse implements Serializable {
-    private static final long serialVersionUID = -7873376951237664553L;
 
-    private String msg_id;
+    private String msgId;
 
-    public ReceiveResponse(Map map) {
-        setMsg_id(map.get("msg_id").toString());
+    @JSONField(name = "msg_id")
+    public String getMsgId() {
+        return msgId;
     }
 
-    public String getMsg_id() {
-        return msg_id;
-    }
-
-    private void setMsg_id(String msg_id) {
-        this.msg_id = msg_id;
+    @JSONField(name = "msg_id")
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 }

@@ -1,10 +1,12 @@
 package com.module.request.scene;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class IntentTrigger {
     private String text;
-    private int intent_id;
-    private String type="TRIGGER_TYPE_ERROR";
-    private int id ;
+    private int intentId;
+    private String type = "TRIGGER_TYPE_ERROR";
+    private int id;
 
     public void setId(int id) {
         this.id = id;
@@ -18,12 +20,14 @@ public class IntentTrigger {
         this.text = text;
     }
 
-    public int getIntent_id() {
-        return intent_id;
+    @JSONField(name = "intent_id")
+    public int getIntentId() {
+        return intentId;
     }
 
-    public void setIntent_id(int intent_id) {
-        this.intent_id = intent_id;
+    @JSONField(name = "intent_id")
+    public void setIntentId(int intentId) {
+        this.intentId = intentId;
     }
 
     public String getText() {

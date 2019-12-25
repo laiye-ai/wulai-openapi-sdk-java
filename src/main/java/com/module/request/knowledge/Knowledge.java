@@ -1,26 +1,32 @@
 package com.module.request.knowledge;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class Knowledge {
     private boolean status;
-    private String standard_question;
-    private boolean respond_all;
-    private String id ;
-    private boolean maintained_by_user_attribute_group;
+    private String standardQuestion;
+    private boolean respondAll;
+    private String id;
+    private boolean maintainedByUserAttributeGroup;
+    private String update_time;
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setMaintained_by_user_attribute_group(boolean maintained_by_user_attribute_group) {
-        this.maintained_by_user_attribute_group = maintained_by_user_attribute_group;
+    @JSONField(name = "maintained_by_user_attribute_group")
+    public void setMaintainedByUserAttributeGroup(boolean maintainedByUserAttributeGroup) {
+        this.maintainedByUserAttributeGroup = maintainedByUserAttributeGroup;
     }
 
-    public void setRespond_all(boolean respond_all) {
-        this.respond_all = respond_all;
+    @JSONField(name = "respond_all")
+    public void setRespondAll(boolean respondAll) {
+        this.respondAll = respondAll;
     }
 
-    public void setStandard_question(String standard_question) {
-        this.standard_question = standard_question;
+    @JSONField(name = "standard_question")
+    public void setStandardQuestion(String standardQuestion) {
+        this.standardQuestion = standardQuestion;
     }
 
     public void setStatus(boolean status) {
@@ -31,16 +37,19 @@ public class Knowledge {
         return id;
     }
 
-    public String getStandard_question() {
-        return standard_question;
+    @JSONField(name = "standard_question")
+    public String getStandardQuestion() {
+        return standardQuestion;
     }
 
-    public boolean isMaintained_by_user_attribute_group() {
-        return maintained_by_user_attribute_group;
+    @JSONField(name = "maintained_by_user_attribute_group")
+    public boolean isMaintainedByUserAttributeGroup() {
+        return maintainedByUserAttributeGroup;
     }
 
-    public boolean isRespond_all() {
-        return respond_all;
+    @JSONField(name = "respond_all")
+    public boolean isRespondAll() {
+        return respondAll;
     }
 
     public boolean isStatus() {

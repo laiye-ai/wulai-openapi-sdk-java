@@ -6,7 +6,6 @@ import com.exceptions.ServerException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class DeleteIntentTrigger {
     private int id;

@@ -1,13 +1,13 @@
 package com.wulai.knowledge;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.UserAttributeGroupAnswer;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateUserAttributeGroupAnswer {
     private UserAttributeGroupAnswer user_attribute_group_answer;
@@ -21,12 +21,13 @@ public class UpdateUserAttributeGroupAnswer {
         return user_attribute_group_answer;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
+    public UserAttributeGroupAnswer request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
         params.put("user_attribute_group_answer", user_attribute_group_answer);
 
-        CloseableHttpResponse closeableHttpResponse=defaultClient.excuteRequest("/qa/user-attribute-group-answer/update",params);
-        return defaultClient.getEntityMapFromResponse(closeableHttpResponse);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answer/update", params);
+        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(response.get("user_attribute_group_answer").toString(), UserAttributeGroupAnswer.class);
 
     }
 

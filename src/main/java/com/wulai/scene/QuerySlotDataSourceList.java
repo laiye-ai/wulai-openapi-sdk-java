@@ -1,34 +1,35 @@
 package com.wulai.scene;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.scene.DataSource;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class QuerySlotDataSourceList {
-    private int slot_id;
+    private int slotId;
 
-    public void setSlot_id(int slot_id) {
-        this.slot_id = slot_id;
+    public void setSlotId(int slotId) {
+        this.slotId = slotId;
     }
 
-    public int getSlot_id() {
-        return slot_id;
+    public int getSlotId() {
+        return slotId;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<DataSource> request(DefaultClient defaultClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
 
-        params.put("slot_id", slot_id);
+        params.put("slot_id", slotId);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/data-source/list", params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
-
-
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseArray(jsonObject.get("data_sources").toString(), DataSource.class);
     }
 
 }

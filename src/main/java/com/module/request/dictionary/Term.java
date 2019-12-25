@@ -1,8 +1,8 @@
 package com.module.request.dictionary;
 
 public class Term {
-    private int id ;
-    private String name ;
+    private int id;
+    private String name;
 
     public void setName(String name) {
         this.name = name;

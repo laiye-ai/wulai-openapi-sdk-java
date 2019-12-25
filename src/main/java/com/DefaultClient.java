@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ClientExceptionConstant;
 import com.exceptions.ServerException;
+import com.util.Credentials;
 import com.util.DefaultProfile;
 import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -23,7 +24,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.util.Credentials;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
@@ -112,34 +112,43 @@ public class DefaultClient {
         return request;
     }
 
-    public Map getEntityMapFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
-        Map map = null;
-        HttpEntity entity = httpResponse.getEntity();
-        String body = null;
-        try {
-            body = EntityUtils.toString(entity, "UTF-8");
-        } catch (IOException e) {
-            logger.error("EntityUtils toString exception");
-            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
-        }
-        map = JSONObject.parseObject(body, HashMap.class);
-        if (map == null) {
-            logger.error("EntityMap is null");
-        }
-        return map;
-    }
-    public String getBodyFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
-        Map map = null;
-        HttpEntity entity = httpResponse.getEntity();
-        String body = null;
-        try {
-            body = EntityUtils.toString(entity, "UTF-8");
-        } catch (IOException e) {
-            logger.error("EntityUtils toString exception");
-            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
-        }
 
-        return body;
+    public JSONObject getJsonFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(httpEntity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+        System.out.println(body);
+        return JSONObject.parseObject(body, JSONObject.class);
+    }
+
+    public <T> T getResponse(CloseableHttpResponse httpResponse,Class<T> T) throws ClientException,ServerException{
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(httpEntity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+        return JSONObject.parseObject(body,T);
+    }
+    public <T> T getResponse(CloseableHttpResponse httpResponse,Class<T> T,String key) throws ClientException,ServerException{
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(httpEntity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+        JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
+
+        return JSONObject.parseObject(jsonObject.get(key).toString(),T);
     }
 
     public synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
@@ -170,85 +179,41 @@ public class DefaultClient {
 
     private void checkHttpCode(CloseableHttpResponse response) throws ClientException, ServerException {
         int httpCode;
-        Map map = null;
+        JSONObject jsonObject = null;
         httpCode = response.getStatusLine().getStatusCode();
-        if (httpCode != 200) {
-            map = getEntityMapFromResponse(response);
+        if (httpCode == 200) {
+            return;
+        } else {
+            jsonObject = getJsonFromResponse(response);
         }
         switch (httpCode) {
             case 400:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_PARAMS, jsonObject.get("message").toString());
             case 401:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_CREDENTIAL, jsonObject.get("message").toString());
             case 403:
             case 429:
             case 404:
-                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_INVALID_REQUEST, jsonObject.get("message").toString());
             case 409:
             case 499:
-                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, map.get("message").toString());
+                throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, jsonObject.get("message").toString());
             case 500:
             case 501:
             case 504:
             case 503:
-                throw new ServerException(map.get("code").toString(), map.get("message").toString(), httpCode);
+                throw new ServerException(jsonObject.get("code").toString(), jsonObject.get("message").toString(), httpCode);
             default:
                 break;
         }
     }
 
-    public synchronized String processCommonRequest(String action, String data) throws ClientException, ServerException {
-        HttpEntity httpEntity = null;
-        HttpEntityEnclosingRequestBase postrequest = null;
-        String responseBody = "";
-        CloseableHttpResponse httpResponse = null;
-        HttpContext context = HttpClientContext.create();
-        int httpCode = 0;
+    public synchronized JSONObject processCommonRequest(String action, JSONObject data) throws ClientException, ServerException {
 
-        if (httpClient == null) {
-            initPools();
-        }
-        // 获取request 对象，设置参数
-        postrequest = (HttpEntityEnclosingRequestBase) getRequest(action, timeout);
-        System.out.println(postrequest.getURI());
-        logger.debug(data);
-        postrequest.setEntity(new StringEntity(data, "UTF-8"));
-        setRequestParams(postrequest);
-        try {
-            httpResponse = httpClient.execute(postrequest, context);
-        } catch (ConnectTimeoutException | HttpHostConnectException | UnknownHostException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_SERVER_UNREACHABLE, e.getMessage());
-        } catch (IOException e) {
-            throw new ClientException(ClientExceptionConstant.SDK_HTTP_ERROR, e.getMessage());
-        }
-        httpCode = httpResponse.getStatusLine().getStatusCode();
-        checkHttpCode(httpResponse);
-        httpEntity = httpResponse.getEntity();
-        if (httpEntity != null) {
-            try {
-                responseBody = EntityUtils.toString(httpEntity, "UTF-8");
-            } catch (IOException e) {
-                throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
-            }
-        }
+        HashMap params=JSONObject.parseObject(data.toString(),HashMap.class);
+        CloseableHttpResponse httpResponse=excuteRequest(action,params);
+        return getJsonFromResponse(httpResponse);
 
-        logger.debug("HttpEntity:{}", responseBody);
-        Map map = (Map) JSONObject.parseObject(responseBody, Map.class);
-        ArrayList list = new ArrayList();
-        for (Object obj : map.keySet()) {
-            logger.debug(obj.toString() + ":" + map.get(obj));
-            list.add(map.get(obj));
-        }
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("responseEntity:" + list.toString());
-            logger.debug(responseBody);
-            for (Header header : httpResponse.getAllHeaders()) {
-                logger.debug(header.getName() + " : " + header.getValue());
-            }
-        }
-        logger.debug("httpCode:{}, responseBody:{}", httpCode, responseBody);
-        return responseBody;
     }
 
     private void setRequestParams(HttpEntityEnclosingRequestBase request)

@@ -1,7 +1,5 @@
 package com.util;
 
-import java.net.URI;
-
 public class Credentials {
 
     private String pubkey = "G2qcOW4lnwAUHlKq7WKOaJ1Obww4fQCf00205e7cc49ca502b1";
@@ -11,9 +9,9 @@ public class Credentials {
 
     }
 
-    public Credentials(String pubkey,String secret){
-        this.pubkey=pubkey;
-        this.secret=secret;
+    public Credentials(String pubkey, String secret) {
+        this.pubkey = pubkey;
+        this.secret = secret;
     }
 
     public String getSecret() {

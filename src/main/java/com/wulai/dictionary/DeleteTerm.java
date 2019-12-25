@@ -19,10 +19,10 @@ public class DeleteTerm {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("id",id);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/dictionary/term/delete",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/delete", params);
 
         return httpResponse.getStatusLine().getStatusCode();
     }

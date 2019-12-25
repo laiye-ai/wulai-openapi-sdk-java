@@ -1,10 +1,15 @@
 package com.module.request.user;
 
 public class UserAttributeValue {
+    private String id;
     private String name;
 
-    public UserAttributeValue(String name) {
-        setName(name);
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {

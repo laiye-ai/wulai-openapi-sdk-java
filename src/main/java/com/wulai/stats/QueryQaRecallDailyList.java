@@ -1,12 +1,14 @@
 package com.wulai.stats;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.stats.QARecallDailyStat;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class QueryQaRecallDailyList {
     private String start_date;
@@ -28,12 +30,12 @@ public class QueryQaRecallDailyList {
         return start_date;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params =new HashMap<>();
-        params.put("start_date",start_date);
-        params.put("end_date",end_date);
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/stats/qa/recall/daily/list",params);
+    public List<QARecallDailyStat> request(DefaultClient defaultClient) throws ServerException, ClientException {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("start_date", start_date);
+        params.put("end_date", end_date);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/list", params);
 
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        return JSONObject.parseArray(defaultClient.getJsonFromResponse(httpResponse).toString(), QARecallDailyStat.class);
     }
 }

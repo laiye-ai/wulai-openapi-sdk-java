@@ -26,14 +26,10 @@ public class CreateSlot {
         params.put("slot", slot);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/create", params);
-        Map map=defaultClient.getEntityMapFromResponse(httpResponse);
-        JSONObject jsonObject=JSONObject.parseObject(map.get("slot").toString());
-        Slot returnslot=new Slot();
-        returnslot.setId(Integer.valueOf(jsonObject.get("id").toString()));
-        returnslot.setQuery_slot_filling(Boolean.valueOf(jsonObject.get("query_slot_filling").toString()));
-        returnslot.setName(jsonObject.get("name").toString());
-        returnslot.setScene_id(Integer.valueOf(jsonObject.get("scene_id").toString()));
-        return returnslot;
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.get("slot").toString(),Slot.class);
+
+
     }
 
 

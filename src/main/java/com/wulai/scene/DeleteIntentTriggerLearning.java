@@ -8,7 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.util.HashMap;
 
 public class DeleteIntentTriggerLearning {
-    private int id ;
+    private int id;
 
     public void setId(int id) {
         this.id = id;
@@ -19,11 +19,11 @@ public class DeleteIntentTriggerLearning {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params= new HashMap<>();
-        params.put("id",id);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
 
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/scene/intent/trigger-learning/delete",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger-learning/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

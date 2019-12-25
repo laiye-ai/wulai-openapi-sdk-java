@@ -19,7 +19,7 @@ public class DeleteSimilarQuestion {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/similar-question/delete", params);
         return httpResponse.getStatusLine().getStatusCode();

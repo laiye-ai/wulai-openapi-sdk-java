@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class CreateSatisfaction {
     private String userId;
     private String msgId;
-    private String satisfaction="DEFAULT_SATISFACTION";
+    private String satisfaction = "DEFAULT_SATISFACTION";
     private Bot botId;
 
     public void setUserId(String userId) {
@@ -47,13 +47,13 @@ public class CreateSatisfaction {
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
 
-        HashMap<String ,Object> params=new HashMap<>();
-        params.put("user_id",userId);
-        params.put("msgId",msgId);
-        params.put("satisfaction",satisfaction);
-        params.put("bot_id",botId);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("user_id", userId);
+        params.put("msgId", msgId);
+        params.put("satisfaction", satisfaction);
+        params.put("bot_id", botId);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/qa/satisfaction/create",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/satisfaction/create", params);
 
         return httpResponse.getStatusLine().getStatusCode();
     }

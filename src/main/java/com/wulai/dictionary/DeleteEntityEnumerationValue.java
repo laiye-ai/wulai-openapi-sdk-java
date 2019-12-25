@@ -31,11 +31,11 @@ public class DeleteEntityEnumerationValue {
     }
 
     public int request(DefaultClient defaultClient) throws ServerException, ClientException {
-        HashMap<String,Object> params=new HashMap<>();
-        params.put("entity_id",entityId);
-        params.put("value",value);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("entity_id", entityId);
+        params.put("value", value);
 
-        CloseableHttpResponse httpResponse=defaultClient.excuteRequest("/dictionary/entity/enumeration/value/delete",params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/enumeration/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

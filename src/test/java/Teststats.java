@@ -1,109 +1,73 @@
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.MsgBody;
-import com.module.request.Text;
+import com.module.request.msg.MsgBody;
+import com.module.request.msg.Text;
 import com.module.response.msg.BotResponse;
+import com.module.response.stats.QARecallDailyStat;
+import com.module.response.stats.SatisfactionDailyKnowledgeList;
 import com.wulai.msg.GetBotResponse;
-import com.wulai.stats.QuerySatisfactionDailyKnowledgeList;
 import com.wulai.stats.QueryQaRecallDailyList;
+import com.wulai.stats.QuerySatisfactionDailyKnowledgeList;
 import org.junit.Test;
 
-import java.util.Map;
+import java.util.List;
 
 public class Teststats {
 
 
-
-    DefaultClient defaultClient=new DefaultClient();
-
-
+    private DefaultClient defaultClient = new DefaultClient();
 
 
     @Test
-    public void TestSatisfactionDailyKnowledgeList(){
-        QuerySatisfactionDailyKnowledgeList satisfactionDailyKnowledgeList=new QuerySatisfactionDailyKnowledgeList();
-        satisfactionDailyKnowledgeList.setPageSize(4);
-        satisfactionDailyKnowledgeList.setPage(1);
-        satisfactionDailyKnowledgeList.setStartDate("20191111");
-        satisfactionDailyKnowledgeList.setEndDate("20191202");
-        try {
-            Map map=satisfactionDailyKnowledgeList.request(defaultClient);
+    public void TestSatisfactionDailyKnowledgeList() throws ServerException, ClientException {
+        QuerySatisfactionDailyKnowledgeList qasatisfactionDailyKnowledgeList = new QuerySatisfactionDailyKnowledgeList();
+        qasatisfactionDailyKnowledgeList.setPageSize(4);
+        qasatisfactionDailyKnowledgeList.setPage(1);
+        qasatisfactionDailyKnowledgeList.setStartDate("20191111");
+        qasatisfactionDailyKnowledgeList.setEndDate("20191202");
 
-            for (Object o :map.keySet()
-                 ) {
-                System.out.println(o);
-                System.out.println(map.get(o));
-            }
-        } catch (ServerException | ClientException e) {
-            e.printStackTrace();
-        }
+        SatisfactionDailyKnowledgeList satisfactionDailyKnowledgeList = qasatisfactionDailyKnowledgeList.request(defaultClient);
+
     }
 
     @Test
-    public void TestStatsQaRecallDailyList(){
+    public void TestStatsQaRecallDailyList() throws ServerException, ClientException {
 
-        QueryQaRecallDailyList queryQaRecallDailyList =new QueryQaRecallDailyList();
+        QueryQaRecallDailyList queryQaRecallDailyList = new QueryQaRecallDailyList();
         queryQaRecallDailyList.setStart_date("20191111");
         queryQaRecallDailyList.setEnd_date("20191121");
-        try {
-            Map map= queryQaRecallDailyList.request(defaultClient);
-            for (Object o :map.keySet()
-            ) {
-                System.out.println(o);
-                System.out.println(map.get(o));
-            }
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
+
+        List<QARecallDailyStat> qaRecallDailyStatList = queryQaRecallDailyList.request(defaultClient);
+        System.out.println(qaRecallDailyStatList.get(0).getDate());
     }
 
     @Test
-    public void TestQueryQaRecallDailyList(){
-        QueryQaRecallDailyList qaRecallDailyList=new QueryQaRecallDailyList();
+    public void TestQueryQaRecallDailyList() throws ServerException, ClientException {
+        QueryQaRecallDailyList qaRecallDailyList = new QueryQaRecallDailyList();
         qaRecallDailyList.setStart_date("20191111");
         qaRecallDailyList.setEnd_date("20191121");
-        try {
-            Map map =qaRecallDailyList.request(defaultClient);
-            for (Object o :map.keySet()
-            ) {
-                System.out.println(o);
-                System.out.println(map.get(o));
-            }
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
+
+        List<QARecallDailyStat> qaRecallDailyStats = qaRecallDailyList.request(defaultClient);
 
 
     }
-    @Test
-    public void TestCreateSatisfaction(){
-        Text text=new Text("怀孕适合去哪里旅游");
-        MsgBody msgBody=new MsgBody(text);
 
-        GetBotResponse getBotResponse=new GetBotResponse();
+    @Test
+    public void TestCreateSatisfaction() throws ServerException, ClientException {
+        Text text = new Text("怀孕适合去哪里旅游");
+        MsgBody msgBody = new MsgBody();
+        msgBody.setText(text);
+
+        GetBotResponse getBotResponse = new GetBotResponse();
         getBotResponse.setUserId("zhangtao@test");
         getBotResponse.setMsgBody(msgBody);
-        BotResponse botResponse=null;
-        try {
-            botResponse=getBotResponse.request(defaultClient);
-        }catch (ServerException|ClientException e){
-            e.printStackTrace();
-        }
+        BotResponse botResponse = null;
+        botResponse = getBotResponse.request(defaultClient);
+        System.out.println(botResponse.getSuggestedResponse().get(0).getScore());
 
-        for (Object o:botResponse.getSuggestedResponse()
-        ) {
-            System.out.println(o);
-        }
-
-        System.out.println("hello");
 
     }
-
 
 
 }

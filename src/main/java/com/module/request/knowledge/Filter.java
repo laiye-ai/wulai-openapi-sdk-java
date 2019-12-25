@@ -1,22 +1,28 @@
 package com.module.request.knowledge;
 
-public class Filter{
-    String knowledge_id;
-    String user_attribute_group_id;
+import com.alibaba.fastjson.annotation.JSONField;
 
-    public void setKnowledge_id(String knowledge_id) {
-        this.knowledge_id = knowledge_id;
+public class Filter {
+    private String knowledgeId;
+    private String userAttributeGroupId;
+
+    @JSONField(name = "knowledge_id")
+    public void setKnowledgeId(String knowledgeId) {
+        this.knowledgeId = knowledgeId;
     }
 
-    public String getKnowledge_id() {
-        return knowledge_id;
+    @JSONField(name = "knowledge_id")
+    public String getKnowledgeId() {
+        return knowledgeId;
     }
 
-    public void setUser_attribute_group_id(String user_attribute_group_id) {
-        this.user_attribute_group_id = user_attribute_group_id;
+    @JSONField(name = "user_attribute_group_id")
+    public void setUserAttributeGroupId(String userAttributeGroupId) {
+        this.userAttributeGroupId = userAttributeGroupId;
     }
 
-    public String getUser_attribute_group_id() {
-        return user_attribute_group_id;
+    @JSONField(name = "user_attribute_group_id")
+    public String getUserAttributeGroupId() {
+        return userAttributeGroupId;
     }
 }

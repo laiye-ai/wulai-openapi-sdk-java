@@ -1,20 +1,25 @@
 package com.wulai.scene;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.request.scene.IntentTrigger;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class QueryIntentTriggerList {
-    private int intent_id;
+    private int intentId;
     private int page;
     private int page_size;
 
-    public void setIntent_id(int intent_id) {
-        this.intent_id = intent_id;
+    @JSONField(name = "intent_id")
+    public void setIntentId(int intentId) {
+        this.intentId = intentId;
     }
 
     public void setPage(int page) {
@@ -25,8 +30,9 @@ public class QueryIntentTriggerList {
         this.page_size = page_size;
     }
 
-    public int getIntent_id() {
-        return intent_id;
+    @JSONField(name = "intent_id")
+    public int getIntentId() {
+        return intentId;
     }
 
     public int getPage() {
@@ -38,14 +44,15 @@ public class QueryIntentTriggerList {
     }
 
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<IntentTrigger> request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("intent_id", intent_id);
+        params.put("intent_id", intentId);
         params.put("page", page);
         params.put("page_size", page_size);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/list", params);
-        return defaultClient.getEntityMapFromResponse(httpResponse);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseArray(jsonObject.get("intent_triggers").toString(), IntentTrigger.class);
 
     }
 }

@@ -1,33 +1,38 @@
 package com.module.request.knowledge;
 
-import com.module.request.MsgBody;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.module.request.msg.MsgBody;
 
 public class Answer {
-    private String knowledge_id;
-    private MsgBody msg_body;
-    private String id ;
+    private String knowledgeId;
+    private MsgBody msgBody;
+    private String id;
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setKnowledge_id(String knowledge_id) {
-        this.knowledge_id = knowledge_id;
+    @JSONField(name = "knowledgeId")
+    public void setKnowledgeId(String knowledgeId) {
+        this.knowledgeId = knowledgeId;
     }
 
-    public void setMsg_body(MsgBody msg_body) {
-        this.msg_body = msg_body;
+    @JSONField(name = "msg_body")
+    public void setMsgBody(MsgBody msgBody) {
+        this.msgBody = msgBody;
     }
 
-    public MsgBody getMsg_body() {
-        return msg_body;
+    @JSONField(name = "msg_body")
+    public MsgBody getMsgBody() {
+        return msgBody;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getKnowledge_id() {
-        return knowledge_id;
+    @JSONField(name = "knowledgeId")
+    public String getKnowledgeId() {
+        return knowledgeId;
     }
 }

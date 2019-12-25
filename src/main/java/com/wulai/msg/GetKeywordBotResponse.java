@@ -1,9 +1,10 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
+import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.MsgBody;
+import com.module.request.msg.MsgBody;
 import com.module.response.msg.KeywordResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -36,8 +37,8 @@ public class GetKeywordBotResponse {
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response/keyword", params);
-        map = defaultClient.getEntityMapFromResponse(httpResponse);
-        return new KeywordResponse(map);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/keyword", params);
+        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return JSONObject.parseObject(jsonObject.toString(), KeywordResponse.class);
     }
 }
