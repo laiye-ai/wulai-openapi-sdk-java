@@ -55,7 +55,7 @@ public class QuerySatisfactionDailyKnowledgeList {
         params.put("page_size", pageSize);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/satisfaction/daily/knowledge/list", params);
+        return defaultClient.getResponse(httpResponse,SatisfactionDailyKnowledgeList.class);
 
-        return JSONObject.parseObject(defaultClient.getJsonFromResponse(httpResponse).toString(), SatisfactionDailyKnowledgeList.class);
     }
 }

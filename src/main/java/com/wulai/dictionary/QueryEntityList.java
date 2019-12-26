@@ -4,6 +4,7 @@ import com.DefaultClient;
 import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.dictionary.Entity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class QueryEntityList {
         return pageSize;
     }
 
-    public List<Map> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<Entity> request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("page", page);
@@ -38,11 +39,7 @@ public class QueryEntityList {
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/list", params);
 
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-
-        String object = jsonObject.get("entities").toString();
-        List<Map> maps = JSONObject.parseArray(object, Map.class);
-        return maps;
+        return defaultClient.getResponseArray(httpResponse, Entity.class,"entities");
 
     }
 

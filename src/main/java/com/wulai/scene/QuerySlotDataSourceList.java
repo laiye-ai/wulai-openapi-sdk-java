@@ -28,8 +28,8 @@ public class QuerySlotDataSourceList {
         params.put("slot_id", slotId);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/data-source/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseArray(jsonObject.get("data_sources").toString(), DataSource.class);
+        return defaultClient.getResponseArray(httpResponse,DataSource.class,"data_sources");
+
     }
 
 }

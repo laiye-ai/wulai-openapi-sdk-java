@@ -29,12 +29,7 @@ public class QueryKnowledgeItemsList {
         params.put("page_size", pageSize);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge-items/list", params);
-        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
-        KnowledgeItemsList knowledgeItemsList = new KnowledgeItemsList();
-        knowledgeItemsList.setPageCount(Integer.parseInt(response.get("page_count").toString()));
-        List<KnowledgeItems> knowledgeItems = JSONObject.parseArray(response.get("knowledge_items").toString(), KnowledgeItems.class);
-        knowledgeItemsList.setKnowledgeItems(knowledgeItems);
-        return knowledgeItemsList;
+        return defaultClient.getResponse(httpResponse, KnowledgeItemsList.class);
 
     }
 }

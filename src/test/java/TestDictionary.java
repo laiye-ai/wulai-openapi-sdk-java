@@ -28,8 +28,8 @@ public class TestDictionary {
         QueryEntityList queryEntityList = new QueryEntityList();
         queryEntityList.setPage(1);
         queryEntityList.setPageSize(100);
-        List<Map> maps = queryEntityList.request(defaultClient);
-        if (maps == null) {
+        List<com.module.response.dictionary.Entity> entities = queryEntityList.request(defaultClient);
+        if (entities.get(0)==null) {
             throw new ServerException("1", " QueryEntityList error", 1);
         }
         //2.获取实体详情
@@ -119,7 +119,8 @@ public class TestDictionary {
         updateTerm.setTermItem(termItem);
 
         TermItem termItem1 = updateTerm.request(defaultClient);
-        if (termItem1.getTerm() == null) {
+
+        if (termItem1.getSynonyms() == null||termItem1.getTerm()==null) {
             throw new ServerException("1", "UpdateTerm error", 1);
         }
 

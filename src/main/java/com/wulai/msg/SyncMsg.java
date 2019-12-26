@@ -89,7 +89,7 @@ public class SyncMsg {
         params.put("msg_ts", msgTs);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/sync", params);
-        return defaultClient.getJsonFromResponse(httpResponse).get("msg_id").toString();
+        return defaultClient.getResponse(httpResponse,String.class,"msg_id");
 
     }
 

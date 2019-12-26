@@ -53,9 +53,8 @@ public class QuerySlotList {
         params.put("page_size", pageSize);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseArray(jsonObject.get("slots").toString(), Slot.class);
 
+        return defaultClient.getResponseArray(httpResponse,Slot.class,"slots");
 
     }
 

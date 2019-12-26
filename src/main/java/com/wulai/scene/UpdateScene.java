@@ -27,7 +27,6 @@ public class UpdateScene {
         params.put("scene", scene);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/update", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("scene").toString(),Scene.class);
+        return defaultClient.getResponse(httpResponse,Scene.class);
     }
 }

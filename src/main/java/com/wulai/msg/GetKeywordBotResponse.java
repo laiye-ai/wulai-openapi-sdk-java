@@ -1,7 +1,6 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -38,7 +37,6 @@ public class GetKeywordBotResponse {
         params.put("extra", extra);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/keyword", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), KeywordResponse.class);
+        return defaultClient.getResponse(httpResponse, KeywordResponse.class);
     }
 }

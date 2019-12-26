@@ -67,8 +67,8 @@ public class QueryMsgHistory {
         params.put("msg_id", msgId);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/msgHistory", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(),MsgHistory.class);
+        return defaultClient.getResponse(httpResponse,MsgHistory.class);
+
     }
 
 }

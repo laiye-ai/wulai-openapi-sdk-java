@@ -27,8 +27,8 @@ public class UpdateBlockEndBlock {
 
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/block/end-block/update", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return  JSONObject.parseObject(jsonObject.get("block").toString(),Block.class);
+
+        return defaultClient.getResponse(httpResponse, Block.class,"block");
     }
 
 }

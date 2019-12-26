@@ -26,9 +26,8 @@ public class QueryEntity {
 
         params.put("id", id);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/get", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        Entity entity = JSONObject.parseObject(jsonObject.get("entity").toString(), Entity.class);
-        return entity;
+        return defaultClient.getResponse(httpResponse, Entity.class,"entity");
+
     }
 
 

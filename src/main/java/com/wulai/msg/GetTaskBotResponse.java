@@ -37,8 +37,7 @@ public class GetTaskBotResponse {
         params.put("extra", extra);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/task", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
+        return defaultClient.getResponse(httpResponse,TaskResponse.class);
 
-        return JSONObject.parseObject(jsonObject.toString(), TaskResponse.class);
     }
 }

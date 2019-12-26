@@ -35,7 +35,7 @@ public class QueryQaRecallDailyList {
         params.put("start_date", start_date);
         params.put("end_date", end_date);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/list", params);
+        return defaultClient.getResponseArray(httpResponse,QARecallDailyStat.class,"qa_recall_daily_stats");
 
-        return JSONObject.parseArray(defaultClient.getJsonFromResponse(httpResponse).toString(), QARecallDailyStat.class);
     }
 }

@@ -58,7 +58,6 @@ public class QueryRecallDailyKnowledgeList {
         params.put("end_date", endDate);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/knowledge/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("qa_recall_knowledge_stats").toString(), QARecallDailylKnowledgeList.class);
-    }
+
+        return defaultClient.getResponse(httpResponse,QARecallDailylKnowledgeList.class,"qa_recall_knowledge_stats");    }
 }

@@ -49,8 +49,8 @@ public class GetQABotResponse {
         params.put("extra", extra);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/qa", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), QaResponse.class);
+        return defaultClient.getResponse(httpResponse,QaResponse.class);
+
 
     }
 }

@@ -78,8 +78,7 @@ public class SendMsg {
 
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/send", params);
-        return defaultClient.getJsonFromResponse(httpResponse).get("msg_id").toString();
-
+        return defaultClient.getResponse(httpResponse,String.class,"msg_id");
 
     }
 

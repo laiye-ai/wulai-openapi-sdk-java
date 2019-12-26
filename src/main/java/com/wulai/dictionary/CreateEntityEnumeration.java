@@ -27,8 +27,8 @@ public class CreateEntityEnumeration {
         params.put("enum_entity", enumEntity);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/enumeration/create", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("enum_entity").toString(), EnumEntity.class);
+
+        return defaultClient.getResponse(httpResponse,EnumEntity.class,"enum_entity");
 
     }
 }

@@ -32,10 +32,7 @@ import java.io.InterruptedIOException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class DefaultClient {
 
@@ -137,6 +134,7 @@ public class DefaultClient {
         }
         return JSONObject.parseObject(body,T);
     }
+
     public <T> T getResponse(CloseableHttpResponse httpResponse,Class<T> T,String key) throws ClientException,ServerException{
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
@@ -150,6 +148,36 @@ public class DefaultClient {
 
         return JSONObject.parseObject(jsonObject.get(key).toString(),T);
     }
+
+    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T) throws ClientException{
+
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(httpEntity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+        return JSONObject.parseArray(body,T);
+
+    }
+    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T,String params) throws ClientException{
+
+        HttpEntity httpEntity = httpResponse.getEntity();
+        String body = null;
+        try {
+            body = EntityUtils.toString(httpEntity, "UTF-8");
+        } catch (IOException e) {
+            logger.error("EntityUtils toString exception");
+            throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
+        }
+        JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
+        return JSONObject.parseArray(jsonObject.get(params).toString(),T);
+
+    }
+
+
 
     public synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
             throws ClientException, ServerException {

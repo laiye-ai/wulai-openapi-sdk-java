@@ -37,8 +37,8 @@ public class QueryTermList {
         params.put("page_size", pageSize);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), TermListResponse.class);
+        return defaultClient.getResponse(httpResponse,TermListResponse.class);
+
 
 
     }

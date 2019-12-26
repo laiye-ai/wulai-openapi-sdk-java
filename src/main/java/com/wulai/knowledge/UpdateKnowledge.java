@@ -24,10 +24,9 @@ public class UpdateKnowledge {
         HashMap<String, Object> params = new HashMap<>();
         params.put("knowledge", knowledge);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge/update", params);
-        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
 
-        Knowledge knowledge = JSONObject.parseObject(response.get("knowledge").toString(), Knowledge.class);
-        return knowledge;
+        return defaultClient.getResponse(httpResponse,Knowledge.class,"knowledge");
+
 
     }
 }

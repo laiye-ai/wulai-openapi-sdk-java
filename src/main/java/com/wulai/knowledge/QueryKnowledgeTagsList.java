@@ -46,12 +46,8 @@ public class QueryKnowledgeTagsList {
         params.put("page_size", pageSize);
         params.put("parent_k_tag_id", parentKTagId);
 
-        CloseableHttpResponse closeableHttpResponse = defaultClient.excuteRequest("/qa/knowledge-tags/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(closeableHttpResponse);
-        KnowledgeTagsList knowledgeTagsList = new KnowledgeTagsList();
-        knowledgeTagsList.setPageCount(Integer.parseInt(jsonObject.get("page_count").toString()));
-        knowledgeTagsList.setKnowledgeTags(JSONObject.parseArray(jsonObject.get("knowledge_tags").toString(), KnowledgeTag.class));
-        return knowledgeTagsList;
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge-tags/list", params);
+        return defaultClient.getResponse(httpResponse,KnowledgeTagsList.class);
 
 
     }

@@ -51,8 +51,9 @@ public class QueryIntentTriggerList {
         params.put("page_size", page_size);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseArray(jsonObject.get("intent_triggers").toString(), IntentTrigger.class);
+
+        return defaultClient.getResponseArray(httpResponse,IntentTrigger.class,"intent_triggers");
+
 
     }
 }

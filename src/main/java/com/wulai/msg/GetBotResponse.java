@@ -50,8 +50,9 @@ public class GetBotResponse {
         params.put("extra", extra);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), BotResponse.class);
+
+        return defaultClient.getResponse(httpResponse, BotResponse.class);
+
 
     }
 

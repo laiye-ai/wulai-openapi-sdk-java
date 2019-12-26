@@ -28,8 +28,10 @@ public class QueryIntentList {
         params.put("scene_id", scene_id);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/list", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseArray(jsonObject.get("intents").toString(), Intent.class);
+
+       // return defaultClient.getResponse(httpResponse,Intent.class,"intents");
+        return defaultClient.getResponseArray(httpResponse,Intent.class,"intents");
+
     }
 
 }

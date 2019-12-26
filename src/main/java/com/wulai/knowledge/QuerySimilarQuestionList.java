@@ -40,11 +40,7 @@ public class QuerySimilarQuestionList {
         params.put("similar_question_id", similarQuestionId);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/similar-question/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        SimilarQuestionList similarQuestionList = new SimilarQuestionList();
-        similarQuestionList.setPageCount(Integer.parseInt(jsonObject.get("page_count").toString()));
-        similarQuestionList.setSimilarQuestions(JSONObject.parseArray(jsonObject.get("similar_questions").toString(), SimilarQuestion.class));
-        return similarQuestionList;
+        return defaultClient.getResponse(httpResponse,SimilarQuestionList.class);
 
     }
 

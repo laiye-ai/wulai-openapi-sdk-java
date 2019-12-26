@@ -1,7 +1,6 @@
 package com.wulai.knowledge;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.UserAttributeGroupAnswer;
@@ -26,8 +25,8 @@ public class CreateUserAttributeGroupAnswer {
         params.put("user_attribute_group_answer", userAttributeGroupAnswer);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answer/create", params);
-        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(response.get("user_attribute_group_answer").toString(), UserAttributeGroupAnswer.class);
+
+        return defaultClient.getResponse(httpResponse, UserAttributeGroupAnswer.class, "user_attribute_group_answer");
 
     }
 

@@ -92,7 +92,7 @@ public class ReceiveMsg {
         params.put("answer_id", answerID);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/receive", params);
-        return defaultClient.getJsonFromResponse(httpResponse).get("msg_id").toString();
+        return defaultClient.getResponse(httpResponse,String.class,"msg_id");
 
     }
 }

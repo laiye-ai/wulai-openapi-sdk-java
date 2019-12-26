@@ -25,8 +25,8 @@ public class CreateIntent {
         params.put("intent", intent);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/create", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("intent").toString(),Intent.class);
+        return defaultClient.getResponse(httpResponse,Intent.class,"intent");
+
 
     }
 }

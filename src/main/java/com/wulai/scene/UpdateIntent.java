@@ -26,9 +26,8 @@ public class UpdateIntent {
         params.put("intent", intent);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/update", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("intent").toString(), Intent.class);
 
+        return defaultClient.getResponse(httpResponse,Intent.class,"intent");
     }
 
 }

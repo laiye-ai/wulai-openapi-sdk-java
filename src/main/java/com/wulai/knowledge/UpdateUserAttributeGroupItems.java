@@ -27,10 +27,8 @@ public class UpdateUserAttributeGroupItems {
         params.put("user_attribute_group_item", user_attribute_group_item);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-items/update", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        UserAttributeGroupItem userAttributeGroupItem = JSONObject.parseObject(
-                jsonObject.get("user_attribute_group_item").toString(), UserAttributeGroupItem.class);
-        return userAttributeGroupItem;
+
+        return defaultClient.getResponse(httpResponse,UserAttributeGroupItem.class,"user_attribute_group_item");
     }
 }
 

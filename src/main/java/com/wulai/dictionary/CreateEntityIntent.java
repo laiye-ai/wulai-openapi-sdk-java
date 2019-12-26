@@ -28,8 +28,8 @@ public class CreateEntityIntent {
         params.put("intent_entity", intentEntity);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/intent/create", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("intent_entity").toString(), IntentResponse.class);
+
+        return defaultClient.getResponse(httpResponse,IntentResponse.class,"intent_entity");
 
     }
 }

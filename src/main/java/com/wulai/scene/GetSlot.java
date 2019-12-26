@@ -27,7 +27,7 @@ public class GetSlot {
         params.put("id", id);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/get", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("slot").toString(), Slot.class);
+
+        return defaultClient.getResponse(httpResponse,Slot.class,"slot");
     }
 }

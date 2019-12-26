@@ -51,11 +51,6 @@ public class QueryUserAttributeList {
         params.put("filter", filter);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/user-attribute/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        UserAttributeList userAttributeList = new UserAttributeList();
-        userAttributeList.setPageCount(Integer.parseInt(jsonObject.get("page_count").toString()));
-        List<UserAttributeUserAttributeValue> userAttributeUserAttributeValues = JSONObject.parseArray(jsonObject.get("user_attribute_user_attribute_values").toString(), UserAttributeUserAttributeValue.class);
-        userAttributeList.setUserAttributeUserAttributeValues(userAttributeUserAttributeValues);
-        return userAttributeList;
+        return defaultClient.getResponse(httpResponse,UserAttributeList.class);
     }
 }

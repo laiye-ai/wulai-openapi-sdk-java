@@ -36,8 +36,7 @@ public class QueryIntentTriggerLearningList {
         params.put("page_size", pageSize);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger-learning/list", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseArray(jsonObject.get("query_items").toString(), QueryItem.class);
+        return defaultClient.getResponseArray(httpResponse,QueryItem.class,"query_items");
 
     }
 

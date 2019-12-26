@@ -25,8 +25,8 @@ public class CreateUserAttributeGroupItems {
         params.put("user_attribute_group_item", userattributeGroupItem);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-items/create", params);
-        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(response.get("user_attribute_group_item").toString(), UserAttributeGroupItem.class);
+        return defaultClient.getResponse(httpResponse,UserAttributeGroupItem.class,"user_attribute_group_item");
+
 
     }
 

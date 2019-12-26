@@ -4,6 +4,7 @@ import com.DefaultClient;
 import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.request.scene.Intent;
 import com.module.request.scene.IntentTrigger;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -24,9 +25,9 @@ public class CreateIntentTrigger {
     public IntentTrigger request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_trigger", intentTrigger);
-        CloseableHttpResponse closeableHttpResponse = defaultClient.excuteRequest("/scene/intent/trigger/create", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(closeableHttpResponse);
-        return JSONObject.parseObject(jsonObject.get("intent_trigger").toString(),IntentTrigger.class);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/create", params);
+        return defaultClient.getResponse(httpResponse, IntentTrigger.class,"intent_trigger");
+
 
 
     }

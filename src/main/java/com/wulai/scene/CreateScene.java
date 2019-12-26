@@ -26,9 +26,8 @@ public class CreateScene {
         params.put("scene", scene);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/create", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("scene").toString(),Scene.class);
 
+        return defaultClient.getResponse(httpResponse,Scene.class,"scene");
     }
 
 }

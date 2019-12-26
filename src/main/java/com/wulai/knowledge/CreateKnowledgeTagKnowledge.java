@@ -25,10 +25,8 @@ public class CreateKnowledgeTagKnowledge {
         params.put("knowledge_tag_knowledge", knowledgeTagKnowledge);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge-tag-knowledge/create", params);
-        JSONObject response = defaultClient.getJsonFromResponse(httpResponse);
 
-        KnowledgeTagKnowledge knowledgeTagKnowledge = JSONObject.parseObject(response.get("knowledge_tag_knowledge").toString(), KnowledgeTagKnowledge.class);
+        return defaultClient.getResponse(httpResponse,KnowledgeTagKnowledge.class,"knowledge_tag_knowledge");
 
-        return knowledgeTagKnowledge;
     }
 }

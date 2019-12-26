@@ -26,8 +26,8 @@ public class CreateTerm {
         params.put("term_item", termItem);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/create", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("term_item").toString(), TermItem.class);
+        return defaultClient.getResponse(httpResponse,TermItem.class,"term_item");
+
 
     }
 }

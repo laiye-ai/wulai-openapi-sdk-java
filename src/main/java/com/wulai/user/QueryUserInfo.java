@@ -1,7 +1,6 @@
 package com.wulai.user;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -29,8 +28,8 @@ public class QueryUserInfo {
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/user/get", params);
 
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), UserInfo.class);
+
+        return defaultClient.getResponse(httpResponse,UserInfo.class);
     }
 
 

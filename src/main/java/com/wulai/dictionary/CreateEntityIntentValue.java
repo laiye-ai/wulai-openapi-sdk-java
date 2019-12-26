@@ -41,8 +41,7 @@ public class CreateEntityIntentValue {
         params.put("synonyms", synonyms);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/intent/value/create", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("intent_entity").toString(), IntentResponse.class);
+        return defaultClient.getResponse(httpResponse, IntentResponse.class, "intent_entity");
     }
 
 }

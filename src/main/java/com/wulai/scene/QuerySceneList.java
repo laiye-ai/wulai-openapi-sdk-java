@@ -17,8 +17,8 @@ public class QuerySceneList {
         HashMap<String, Object> params = new HashMap<>();
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/list", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return  JSONObject.parseArray(jsonObject.get("scenes").toString(), Scene.class);
+
+        return defaultClient.getResponseArray(httpResponse,Scene.class,"scenes");
 
     }
 }

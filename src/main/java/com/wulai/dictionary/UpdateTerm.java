@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.TermItem;
@@ -27,8 +26,9 @@ public class UpdateTerm {
         params.put("term_item", termItem);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/update", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("term_item").toString(), TermItem.class);
+
+        return defaultClient.getResponse(httpResponse,TermItem.class,"term_item");
+
 
     }
 

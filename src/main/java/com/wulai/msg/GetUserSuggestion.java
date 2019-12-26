@@ -39,8 +39,8 @@ public class GetUserSuggestion {
         params.put("user_id", userId);
         params.put("query", query);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/user-suggestion/get", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.get("user_suggestions").toString(), UserSuggestions.class);
+        return defaultClient.getResponse(httpResponse,UserSuggestions.class);
+
 
     }
 }

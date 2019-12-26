@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Intent;
+import com.module.response.scene.IntentStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
@@ -39,15 +40,15 @@ public class UpdateIntentStatus {
         return status;
     }
 
-    public Map request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public IntentStatus request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("status", status);
         params.put("first_block_id", firstBlockId);
         params.put("intent_id", intentId);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/status/update", params);
-        JSONObject jsonObject= defaultClient.getJsonFromResponse(httpResponse);
-        return JSONObject.parseObject(jsonObject.toString(), Map.class);
+        return defaultClient.getResponse(httpResponse, IntentStatus.class);
+
     }
 
 
