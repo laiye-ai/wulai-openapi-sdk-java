@@ -12,7 +12,7 @@ public class Answer {
         this.id = id;
     }
 
-    @JSONField(name = "knowledgeId")
+    @JSONField(name = "knowledge_id")
     public void setKnowledgeId(String knowledgeId) {
         this.knowledgeId = knowledgeId;
     }
@@ -31,7 +31,7 @@ public class Answer {
         return id;
     }
 
-    @JSONField(name = "knowledgeId")
+    @JSONField(name = "knowledge_id")
     public String getKnowledgeId() {
         return knowledgeId;
     }

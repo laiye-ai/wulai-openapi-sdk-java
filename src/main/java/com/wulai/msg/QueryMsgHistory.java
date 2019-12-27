@@ -1,16 +1,13 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.response.msg.Msg;
 import com.module.response.msg.MsgHistory;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class QueryMsgHistory {
     private String userId;
@@ -60,13 +57,12 @@ public class QueryMsgHistory {
 
     public MsgHistory request(DefaultClient defaultClient) throws ClientException, ServerException {
         HashMap<String, Object> params = new HashMap<>();
-        Map map = null;
         params.put("user_id", userId);
         params.put("num", Num);
         params.put("direction", direction);
         params.put("msg_id", msgId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/msgHistory", params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/history", params);
         return defaultClient.getResponse(httpResponse,MsgHistory.class);
 
     }

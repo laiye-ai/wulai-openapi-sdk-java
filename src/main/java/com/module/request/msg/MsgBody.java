@@ -12,6 +12,13 @@ public class MsgBody {
     private File file;
     private Voice voice;
 
+    public MsgBody(){
+
+    }
+    public MsgBody(Text text){
+        this.text=text;
+    }
+
     public void setVoice(Voice voice) {
         this.voice = voice;
     }

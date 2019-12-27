@@ -9,7 +9,7 @@ public class TaskSuggestedResponse {
     private boolean isSend;
     private double score;
     private Task task;
-    private String quickReply;
+    private List<String> quickReply;
     private List<Response> response;
 
 
@@ -27,7 +27,7 @@ public class TaskSuggestedResponse {
     }
 
     @JSONField(name = "quick_reply")
-    public void setQuickReply(String quickReply) {
+    public void setQuickReply(List<String> quickReply) {
         this.quickReply = quickReply;
     }
 
@@ -48,7 +48,7 @@ public class TaskSuggestedResponse {
     }
 
     @JSONField(name = "quick_reply")
-    public String getQuickReply() {
+    public List<String> getQuickReply() {
         return quickReply;
     }
 

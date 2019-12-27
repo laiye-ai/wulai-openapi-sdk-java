@@ -4,9 +4,11 @@ import com.DefaultClient;
 import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
+import com.module.response.nlp.EntityElement;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ExtractEntities {
     private String query;
@@ -19,14 +21,12 @@ public class ExtractEntities {
         return query;
     }
 
-    public JSONObject request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<EntityElement> request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("query", query);
 
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/nlp/entities/extract", params);
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        return jsonObject;
-
+        return defaultClient.getResponseArray(httpResponse, EntityElement.class,"entities");
 
     }
 }

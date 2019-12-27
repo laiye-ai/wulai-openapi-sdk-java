@@ -4,26 +4,26 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.List;
 
-public class QaSuggestedResponse {
+public class QASuggestedResponse {
 
     private QA Qa;
     private boolean isSend;
     private double score;
-    private List<Object> response;
-    private List<Object> quickReply;
+    private List<Response> response;
+    private List<String> quickReply;
 
-    @JSONField(name = "QA")
+    @JSONField(name = "qa")
     public QA getQa() {
         return Qa;
     }
 
-    @JSONField(name = "QA")
+    @JSONField(name = "qa")
     public void setQa(QA value) {
         this.Qa = value;
     }
 
     @JSONField(name = "is_send")
-    public boolean getIsSend() {
+    public boolean isSend() {
         return isSend;
     }
 
@@ -43,22 +43,22 @@ public class QaSuggestedResponse {
     }
 
     @JSONField(name = "response")
-    public List<Object> getResponse() {
+    public List<Response> getResponse() {
         return response;
     }
 
     @JSONField(name = "response")
-    public void setResponse(List<Object> value) {
+    public void setResponse(List<Response> value) {
         this.response = value;
     }
 
     @JSONField(name = "quick_reply")
-    public List<Object> getQuickReply() {
+    public List<String> getQuickReply() {
         return quickReply;
     }
 
     @JSONField(name = "quick_reply")
-    public void setQuickReply(List<Object> value) {
+    public void setQuickReply(List<String> value) {
         this.quickReply = value;
     }
 }

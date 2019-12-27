@@ -1,7 +1,6 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -9,7 +8,6 @@ import com.module.response.msg.BotResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class GetBotResponse {
@@ -44,7 +42,7 @@ public class GetBotResponse {
 
     public BotResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-        Map map = null;
+
         params.put("msg_body", msgBody);
         params.put("user_id", userId);
         params.put("extra", extra);

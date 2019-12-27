@@ -6,6 +6,9 @@ public class Text {
     public Text(String content) {
         this.content = content;
     }
+    public Text(){
+
+    }
 
     public String getContent() {
         return content;

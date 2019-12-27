@@ -1,7 +1,6 @@
 package com.wulai.msg;
 
 import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -9,7 +8,6 @@ import com.module.response.msg.TaskResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class GetTaskBotResponse {
     private String userId;
@@ -30,13 +28,12 @@ public class GetTaskBotResponse {
 
     public TaskResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-        Map map = null;
 
         params.put("user_id", userId);
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/task", params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response/task", params);
         return defaultClient.getResponse(httpResponse,TaskResponse.class);
 
     }

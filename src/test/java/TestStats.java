@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class Teststats {
+public class TestStats {
 
 
     private DefaultClient defaultClient = new DefaultClient();

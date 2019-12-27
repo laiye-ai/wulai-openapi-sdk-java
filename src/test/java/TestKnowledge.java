@@ -13,15 +13,12 @@ import com.wulai.knowledge.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 public class TestKnowledge {
 
     private static DefaultClient defaultClient = new DefaultClient();
-    private static int knowledgeId;
-    private static String similarQuestionId;
-    private static String answerId;
-
     @Test
     public void TestCreateSimilarQuestionList() throws ServerException, ClientException {
 
@@ -38,21 +35,22 @@ public class TestKnowledge {
             throw new ServerException("1", "QuerySimilarQuestionList error", 500);
         }
 
+        String k_id="1583014";
         // CreateSimilarQuestion
         CreateSimilarQuestion createSimilarQuestion = new CreateSimilarQuestion();
         SimilarQuestion similarQuestion = new SimilarQuestion();
-        similarQuestion.setKnowledgeId("1583014");
+        similarQuestion.setKnowledgeId(k_id);
         similarQuestion.setQuestion("nihaowa");
         createSimilarQuestion.setSimilarQuestion(similarQuestion);
         SimilarQuestion similarQuestion1 = createSimilarQuestion.request(defaultClient);
         if (!similarQuestion1.getKnowledgeId().equals("1583014")) {
             throw new ServerException("1", " CreateSimilarQuestion error", 500);
         }
-        similarQuestionId = similarQuestion1.getId();
+        String similarQuestionId = similarQuestion1.getId();
 
 
-        similarQuestion.setId(similarQuestion1.getId());
-        similarQuestion.setQuestion("buhaowa");
+        similarQuestion.setId(similarQuestionId);
+        similarQuestion.setQuestion("buhaowan");
 
         //UpdateSimilarQuestion
         UpdateSimilarQuestion updateSimilarQuestion = new UpdateSimilarQuestion();
@@ -62,6 +60,15 @@ public class TestKnowledge {
             throw new ServerException("1", "UpdateSimilarQuestion error", 500);
         }
 
+        //deleteSimilarQuestion
+        DeleteSimilarQuestion deleteSimilarQuestion = new DeleteSimilarQuestion();
+        deleteSimilarQuestion.setId(similarQuestionId);
+        int code2 = deleteSimilarQuestion.request(defaultClient);
+        if (200 != code2) {
+            throw new ServerException("1", "deleteSimilarQuestion error", 500);
+        } else {
+            System.out.println("delete SimilarQuestion success");
+        }
 
     }
 
@@ -112,7 +119,7 @@ public class TestKnowledge {
             throw new ServerException("1", "create KnowledgeItemsList error", 1);
         }
         String id = knowledgeTagKnowledge1.getKnowledge().getId();
-        knowledgeId = Integer.valueOf(id);
+        int knowledgeId = Integer.valueOf(id);
 
         //4.update knowledge
         knowledge.setRespondAll(false);
@@ -124,6 +131,15 @@ public class TestKnowledge {
         Knowledge knowledge1 = updateKnowledge.request(defaultClient);
         if (!knowledge1.getId().equals(knowledgeId + "")) {
             throw new ServerException("1", "update knowledge error", 1);
+        }
+
+        DeleteKnowledge deleteKnowledge = new DeleteKnowledge();
+        deleteKnowledge.setId(knowledgeId);
+        int code1 = deleteKnowledge.request(defaultClient);
+        if (200 != code1) {
+            throw new ServerException("1", "delete knowledge error", 1);
+        } else {
+            System.out.println("delete knowledge success");
         }
 
         System.out.println("Test knowledge finished");
@@ -152,10 +168,10 @@ public class TestKnowledge {
         //2.创建用户属性组
         //创建用户属性id
         UserAttribute userAttribute = new UserAttribute();
-        userAttribute.setId("101945");
+        userAttribute.setId("101946");
         //创建用户属性值
         UserAttributeValue userAttributeValue = new UserAttributeValue();
-        userAttributeValue.setName("测试测试");
+        userAttributeValue.setName("吃肉"+new Date().getTime());
         //创建用户属性组对象
         UserAttributeUserAttributeValue userAttributeUserAttributeValue = new UserAttributeUserAttributeValue();
 
@@ -165,7 +181,7 @@ public class TestKnowledge {
 
         UserAttributeGroupItem userAttributeGroupItem1 = new UserAttributeGroupItem();
         UserAttributeGroup userAttributeGroup = new UserAttributeGroup();
-        userAttributeGroup.setName("接口测试");
+        userAttributeGroup.setName("接口测试"+new Date().getTime());
 
         userAttributeGroupItem1.setUserAttributeGroup(userAttributeGroup);
         userAttributeGroupItem1.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
@@ -232,6 +248,7 @@ public class TestKnowledge {
         //3.UpdateUserAttributeGroupAnswer
         UpdateUserAttributeGroupAnswer updateUserAttributeGroupAnswer = new UpdateUserAttributeGroupAnswer();
         answer.setId(userAttributeGroupAnswer1.getAnswer().getId());
+        answer.setKnowledgeId(userAttributeGroupAnswer1.getAnswer().getKnowledgeId());
         MsgBody msgBody1=new MsgBody();
         msgBody1.setText(new Text("更新测试回复"));
         answer.setMsgBody(msgBody1);
@@ -242,32 +259,7 @@ public class TestKnowledge {
         if (userAttributeGroupAnswer2.getAnswer() == null) {
             throw new ServerException("1", "Update UserAttributeGroupAnswer error", 1);
         }
-        answerId = userAttributeGroupAnswer2.getAnswer().getId();
-
-    }
-
-    @AfterClass
-    public static void TestDelete() throws ServerException, ClientException {
-
-        //1.删除知识点
-        DeleteKnowledge deleteKnowledge = new DeleteKnowledge();
-        deleteKnowledge.setId(knowledgeId);
-        int code1 = deleteKnowledge.request(defaultClient);
-        if (200 != code1) {
-            throw new ServerException("1", "delete knowledge error", 1);
-        } else {
-            System.out.println("delete knowledge success");
-        }
-
-        //2.deleteSimilarQuestion
-        DeleteSimilarQuestion deleteSimilarQuestion = new DeleteSimilarQuestion();
-        deleteSimilarQuestion.setId(similarQuestionId);
-        int code2 = deleteSimilarQuestion.request(defaultClient);
-        if (200 != code2) {
-            throw new ServerException("1", "deleteSimilarQuestion error", 500);
-        } else {
-            System.out.println("delete SimilarQuestion success");
-        }
+        String answerId = userAttributeGroupAnswer2.getAnswer().getId();
 
         // 3.DeleteUserAttriButeGroupAnswer
         DeleteUserAttriButeGroupAnswer deleteUserAttriButeGroupAnswer = new DeleteUserAttriButeGroupAnswer();

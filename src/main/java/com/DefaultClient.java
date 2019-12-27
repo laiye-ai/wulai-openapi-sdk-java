@@ -15,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -110,7 +109,7 @@ public class DefaultClient {
     }
 
 
-    public JSONObject getJsonFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
+    private JSONObject getJsonFromResponse(CloseableHttpResponse httpResponse) throws ClientException {
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
         try {
@@ -132,6 +131,7 @@ public class DefaultClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         return JSONObject.parseObject(body,T);
     }
 
@@ -238,7 +238,7 @@ public class DefaultClient {
 
     public synchronized JSONObject processCommonRequest(String action, JSONObject data) throws ClientException, ServerException {
 
-        HashMap params=JSONObject.parseObject(data.toString(),HashMap.class);
+        HashMap<String,Object> params=JSONObject.parseObject(data.toString(),HashMap.class);
         CloseableHttpResponse httpResponse=excuteRequest(action,params);
         return getJsonFromResponse(httpResponse);
 

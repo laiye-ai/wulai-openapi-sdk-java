@@ -9,7 +9,6 @@ import com.module.response.msg.Bot;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ReceiveMsg {
     private String userId;
@@ -17,7 +16,7 @@ public class ReceiveMsg {
     private Bot bot;
     private String msgTs;
     private MsgBody msgBody;
-    private long answerID;
+    private int answerID;
 
     @JSONField(name = "user_id")
     public String getUserId() {
@@ -70,19 +69,18 @@ public class ReceiveMsg {
     }
 
     @JSONField(name = "answer_id")
-    public long getAnswerID() {
+    public int getAnswerID() {
         return answerID;
     }
 
     @JSONField(name = "answer_id")
-    public void setAnswerID(long value) {
+    public void setAnswerID(int value) {
         this.answerID = value;
     }
 
 
     public String request(DefaultClient defaultClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-        Map map = null;
 
         params.put("user_id", userId);
         params.put("msg_body", msgBody);

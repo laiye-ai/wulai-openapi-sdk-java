@@ -9,7 +9,7 @@ public class UserAttribute {
     private String type;
     private String valueType;
     private boolean useInUserAttributeGroup;
-    private long lifespan;
+    private int lifespan;
 
     public void setType(String type) {
         this.type = type;
@@ -35,12 +35,12 @@ public class UserAttribute {
     }
 
     @JSONField(name = "lifespan")
-    public long getLifespan() {
+    public int getLifespan() {
         return lifespan;
     }
 
     @JSONField(name = "lifespan")
-    public void setLifespan(long lifespan) {
+    public void setLifespan(int lifespan) {
         this.lifespan = lifespan;
     }
 

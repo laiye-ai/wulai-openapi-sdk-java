@@ -17,7 +17,7 @@ public class SyncMsg {
     private Bot bot;
     private String msgTs;
     private MsgBody msgBody;
-    private long answerID;
+    private int answerID;
 
     @JSONField(name = "user_id")
     public String getUserID() {
@@ -70,12 +70,12 @@ public class SyncMsg {
     }
 
     @JSONField(name = "answer_id")
-    public long getAnswerID() {
+    public int getAnswerID() {
         return answerID;
     }
 
     @JSONField(name = "answer_id")
-    public void setAnswerID(long value) {
+    public void setAnswerID(int value) {
         this.answerID = value;
     }
 

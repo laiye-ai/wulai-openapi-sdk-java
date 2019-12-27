@@ -8,7 +8,6 @@ import com.module.response.msg.KeywordResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class GetKeywordBotResponse {
     private String userId;
@@ -30,13 +29,12 @@ public class GetKeywordBotResponse {
     public KeywordResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
-        Map map = null;
 
         params.put("user_id", userId);
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-dictionary/keyword", params);
+        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response/keyword", params);
         return defaultClient.getResponse(httpResponse, KeywordResponse.class);
     }
 }

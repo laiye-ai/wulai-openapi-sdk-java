@@ -32,6 +32,7 @@ public class TestUser {
             throw new ServerException("1", "query userinfo error ", 1);
         }
 
+
         UpdateUser updateUser = new UpdateUser();
         updateUser.setUserId(userId);
         updateUser.setNickname("Tom");
@@ -41,19 +42,18 @@ public class TestUser {
             throw new ServerException("1", "update user error", 1);
         }
 
+
         QueryUserAttribute queryUserAttribute = new QueryUserAttribute();
         queryUserAttribute.setUserId(userId);
         List<UserAttributeUserAttributeValue> list = queryUserAttribute.request(defaultClient);
         UserAttributeUserAttributeValue userAttributeUserAttributeValue = list.get(0);
         UserAttribute userAttribute = userAttributeUserAttributeValue.getUserAttribute();
         UserAttributeValue userAttributeValue = userAttributeUserAttributeValue.getUserAttributeValue();
-        System.out.println(userAttribute.getId());
-        System.out.println(userAttribute.getValueType());
-        System.out.println(userAttribute.getLifespan());
-        System.out.println(userAttribute.getName());
-        System.out.println(userAttribute.getType());
-        System.out.println(userAttributeValue.getId());
-        System.out.println(userAttributeValue.getName());
+        if (userAttribute.getId() == null || userAttribute.getValueType() == null || userAttribute.getName() == null
+                || userAttribute.getType() == null || userAttributeValue.getId() == null | userAttributeValue.getName() == null) {
+            throw new ServerException("", "Query UserAttribute error", 1);
+        }
+
 
         CreateUserAttribute createUserAttribute = new CreateUserAttribute();
         createUserAttribute.setUserId(userId);

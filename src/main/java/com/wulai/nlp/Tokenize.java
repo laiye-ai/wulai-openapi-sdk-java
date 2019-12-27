@@ -27,9 +27,7 @@ public class Tokenize {
         params.put("query", query);
         CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/nlp/Tokenize", params);
 
-        JSONObject jsonObject = defaultClient.getJsonFromResponse(httpResponse);
-        List<Token> tokens = JSONObject.parseArray(jsonObject.get("tokens").toString(), Token.class);
-        return tokens;
+        return defaultClient.getResponseArray(httpResponse,Token.class,"tokens");
     }
 
 }

@@ -8,7 +8,7 @@ public class KeywordSuggestedResponse {
     private boolean isSend;
     private double score;
     private Keyword keyword;
-    private String quickReply;
+    private List<String> quickReply;
     private List<Response> response;
 
     public void setKeyword(Keyword keyword) {
@@ -29,7 +29,7 @@ public class KeywordSuggestedResponse {
     }
 
     @JSONField(name = "quick_reply")
-    public void setQuickReply(String quickReply) {
+    public void setQuickReply(List<String> quickReply) {
         this.quickReply = quickReply;
     }
 
@@ -46,7 +46,7 @@ public class KeywordSuggestedResponse {
     }
 
     @JSONField(name = "quick_reply")
-    public String getQuickReply() {
+    public List<String> getQuickReply() {
         return quickReply;
     }
 

@@ -5,12 +5,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.io.Serializable;
 import java.util.List;
 
-public class QaResponse implements Serializable {
+public class QAResponse implements Serializable {
 
     private boolean isDispatch;
     private String msgId;
     private String extra;
-    private List<SuggestedResponse> suggestedResponse;
+    private List<QASuggestedResponse> qaSuggestedResponses;
 
     public void setExtra(String extra) {
         this.extra = extra;
@@ -21,8 +21,8 @@ public class QaResponse implements Serializable {
     }
 
     @JSONField(name = "qa_suggested_response")
-    public void setSuggestedResponse(List<SuggestedResponse> suggestedResponse) {
-        this.suggestedResponse = suggestedResponse;
+    public void setQASuggestedResponse(List<QASuggestedResponse> qaSuggestedResponses) {
+        this.qaSuggestedResponses = qaSuggestedResponses;
     }
 
     @JSONField(name = "is_dispatch")
@@ -46,7 +46,7 @@ public class QaResponse implements Serializable {
     }
 
     @JSONField(name = "qa_suggested_response")
-    public List<SuggestedResponse> getSuggestedResponse() {
-        return suggestedResponse;
+    public List<QASuggestedResponse> getQASuggestedResponse() {
+        return qaSuggestedResponses;
     }
 }

@@ -4,13 +4,13 @@ import java.util.List;
 
 public class UserSuggestions {
 
-    private List<String> suggestion;
+    private List<Suggestion> suggestion;
 
-    public void setSuggestion(List<String> suggestion) {
+    public void setSuggestion(List<Suggestion> suggestion) {
         this.suggestion = suggestion;
     }
 
-    public List<String> getSuggestion() {
+    public List<Suggestion> getSuggestion() {
         return suggestion;
     }
 }
