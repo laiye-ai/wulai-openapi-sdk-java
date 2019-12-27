@@ -21,40 +21,18 @@ public class TestMsg {
         getBotResponse.setUserId(userId);
         getBotResponse.setMsgBody(new MsgBody(new Text(question)));
         BotResponse botResponse = getBotResponse.request(wulaiClient);
-        if (botResponse.getMsgId() == null) {
+        if (botResponse.getMsgId() == null||botResponse.getSuggestedResponse()==null) {
             throw new ServerException("1", "get botresponse error", 1);
         }
-        List<SuggestedResponse> list = botResponse.getSuggestedResponse();
-        Iterator<SuggestedResponse> iterator = list.iterator();
 
-        while (iterator.hasNext()) {
-            SuggestedResponse suggestedResponse = iterator.next();
-            if (suggestedResponse.isSend()) {
-                List<Response> responses = suggestedResponse.getResponse();
-                Iterator<Response> iterator1 = responses.iterator();
-                while (iterator1.hasNext()) {
-                    System.out.println(iterator1.next().getMsgBody().getText().getContent());
-                }
-            }
-        }
         GetKeywordBotResponse getKeywordBotResponse = new GetKeywordBotResponse();
         getKeywordBotResponse.setMsgBody(new MsgBody(new Text("你好")));
         getKeywordBotResponse.setUserId("zhangtao@test");
         KeywordResponse keywordResponse = getKeywordBotResponse.request(wulaiClient);
-        if (keywordResponse.getMsgId() == null) {
+        if (keywordResponse.getMsgId() == null||keywordResponse.getKeywordSuggestedResponse()==null) {
             throw new ServerException("1", "get botresponse error", 1);
         }
-        List<KeywordSuggestedResponse> keywordSuggestedResponses = keywordResponse.getKeywordSuggestedResponse();
-        Iterator<KeywordSuggestedResponse> keywordSuggestedResponseIterator = keywordSuggestedResponses.iterator();
-        while (keywordSuggestedResponseIterator.hasNext()) {
-            KeywordSuggestedResponse keywordSuggestedResponse = keywordSuggestedResponseIterator.next();
-            if (keywordSuggestedResponse.isSend()) {
-                Iterator<Response> iterator1=keywordSuggestedResponse.getResponse().iterator();
-                while (iterator1.hasNext()) {
-                    System.out.println(iterator1.next().getMsgBody().getText().getContent());
-                }
-            }
-        }
+
         GetQABotResponse getQABotResponse=new GetQABotResponse();
         getQABotResponse.setMsgBody(new MsgBody(new Text(question)));
         getQABotResponse.setUserId(userId);
@@ -62,22 +40,12 @@ public class TestMsg {
         if (qaResponse.getMsgId()==null||qaResponse.getQASuggestedResponse()==null){
             throw new ServerException("1","GetQABotResponse error",1);
         }
-        List<QASuggestedResponse> qaSuggestedResponses = qaResponse.getQASuggestedResponse();
-        Iterator<QASuggestedResponse> qaSuggestedResponsesIterator = qaSuggestedResponses.iterator();
-        while (qaSuggestedResponsesIterator.hasNext()) {
-            QASuggestedResponse qaSuggestedResponse = qaSuggestedResponsesIterator.next();
-            if (qaSuggestedResponse.isSend()) {
-                Iterator<Response> iterator1=qaSuggestedResponse.getResponse().iterator();
-                while (iterator1.hasNext()) {
-                    System.out.println(iterator1.next().getMsgBody().getText().getContent());
-                }
-            }
-        }
+
         GetTaskBotResponse getTaskBotResponse =new GetTaskBotResponse();
         getTaskBotResponse.setUserId(userId);
         getTaskBotResponse.setMsgBody(new MsgBody(new Text("hi")));
         TaskResponse taskResponse=getTaskBotResponse.request(wulaiClient);
-        if (taskResponse.getMsgId()==null){
+        if (taskResponse.getMsgId()==null||taskResponse.getTaskSuggestedResponse()==null){
             throw  new ServerException("","getTaskBotResponse error",1);
         }
 
