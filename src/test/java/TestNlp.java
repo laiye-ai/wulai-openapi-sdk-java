@@ -16,19 +16,21 @@ public class TestNlp {
 
     @Test
     public void TestTokenize() throws ServerException, ClientException {
-
+        String text="周杰伦";
         Tokenize tokenize = new Tokenize();
         tokenize.setQuery("周杰伦");
 
         List<Token> tokens = tokenize.request(wulaiClient);
-        System.out.println(tokens.get(0).getText());
+        if (!tokens.get(0).getText().equals(text)){
+            throw new ServerException("1","Tokenize error",1);
+        }
     }
 
     @Test
     public void TestExtractEntities() throws ServerException, ClientException {
 
         ExtractEntities extractEntities = new ExtractEntities();
-        extractEntities.setQuery("张涛");
+        extractEntities.setQuery("好的");
 
         List<EntityElement> entityElements = extractEntities.request(wulaiClient);
         if (entityElements.get(0).getEntity()==null){
