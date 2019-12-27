@@ -1,6 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,11 +18,11 @@ public class DeleteUserAttriButeGroupAnswer {
         return id;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse closeableHttpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answer/delete", params);
+        CloseableHttpResponse closeableHttpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answer/delete", params);
         return closeableHttpResponse.getStatusLine().getStatusCode();
 
     }

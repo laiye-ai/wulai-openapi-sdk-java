@@ -1,6 +1,6 @@
 package com.wulai.msg;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -40,16 +40,16 @@ public class GetBotResponse {
     }
 
 
-    public BotResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public BotResponse request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("msg_body", msgBody);
         params.put("user_id", userId);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response", params);
 
-        return defaultClient.getResponse(httpResponse, BotResponse.class);
+        return wulaiClient.getResponse(httpResponse, BotResponse.class);
 
 
     }

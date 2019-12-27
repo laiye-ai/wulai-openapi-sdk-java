@@ -1,17 +1,14 @@
 package com.wulai.user;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.Filter;
-import com.module.request.user.UserAttributeUserAttributeValue;
 import com.module.response.user.UserAttributeList;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class QueryUserAttributeList {
     private int page;
@@ -44,13 +41,13 @@ public class QueryUserAttributeList {
         return pageSize;
     }
 
-    public UserAttributeList request(DefaultClient defaultClient) throws ClientException, ServerException {
+    public UserAttributeList request(WulaiClient wulaiClient) throws ClientException, ServerException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("pageSize", pageSize);
         params.put("filter", filter);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/user-attribute/list", params);
-        return defaultClient.getResponse(httpResponse,UserAttributeList.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user-attribute/list", params);
+        return wulaiClient.getResponse(httpResponse,UserAttributeList.class);
     }
 }

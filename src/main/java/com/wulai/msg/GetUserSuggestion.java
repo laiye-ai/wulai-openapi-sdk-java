@@ -1,10 +1,9 @@
 package com.wulai.msg;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.response.msg.UserSuggestions;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
@@ -34,12 +33,12 @@ public class GetUserSuggestion {
         return query;
     }
 
-    public List<String> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<String> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
         params.put("query", query);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/user-suggestion/get", params);
-        return defaultClient.getResponseArray(httpResponse,String.class,"user_suggestions");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/user-suggestion/get", params);
+        return wulaiClient.getResponseArray(httpResponse,String.class,"user_suggestions");
 
     }
 }

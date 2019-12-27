@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -10,7 +9,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QueryIntentTriggerList {
     private int intentId;
@@ -44,15 +42,15 @@ public class QueryIntentTriggerList {
     }
 
 
-    public List<IntentTrigger> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<IntentTrigger> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_id", intentId);
         params.put("page", page);
         params.put("page_size", page_size);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/list", params);
 
-        return defaultClient.getResponseArray(httpResponse,IntentTrigger.class,"intent_triggers");
+        return wulaiClient.getResponseArray(httpResponse,IntentTrigger.class,"intent_triggers");
 
 
     }

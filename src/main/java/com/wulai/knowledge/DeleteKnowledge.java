@@ -1,6 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 
@@ -17,11 +17,11 @@ public class DeleteKnowledge {
         return id;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        return defaultClient.excuteRequest("/qa/knowledge/delete", params).getStatusLine().getStatusCode();
+        return wulaiClient.excuteRequest("/qa/knowledge/delete", params).getStatusLine().getStatusCode();
 
     }
 

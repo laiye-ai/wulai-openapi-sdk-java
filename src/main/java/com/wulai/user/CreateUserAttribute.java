@@ -1,6 +1,6 @@
 package com.wulai.user;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -41,13 +41,13 @@ public class CreateUserAttribute {
         this.userAttributeUserAttributeValues.add(userAttributeUserAttributeValue);
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("user_id", userId);
         params.put("user_attribute_user_attribute_value", userAttributeUserAttributeValues);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/user/user-attribute/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/user-attribute/create", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

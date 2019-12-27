@@ -1,7 +1,6 @@
 package com.wulai.nlp;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.nlp.EntityElement;
@@ -21,12 +20,12 @@ public class ExtractEntities {
         return query;
     }
 
-    public List<EntityElement> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<EntityElement> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("query", query);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/nlp/entities/extract", params);
-        return defaultClient.getResponseArray(httpResponse, EntityElement.class,"entities");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/nlp/entities/extract", params);
+        return wulaiClient.getResponseArray(httpResponse, EntityElement.class,"entities");
 
     }
 }

@@ -1,15 +1,12 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.scene.Intent;
 import com.module.response.scene.IntentStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateIntentStatus {
     private boolean status;
@@ -40,14 +37,14 @@ public class UpdateIntentStatus {
         return status;
     }
 
-    public IntentStatus request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public IntentStatus request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("status", status);
         params.put("first_block_id", firstBlockId);
         params.put("intent_id", intentId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/status/update", params);
-        return defaultClient.getResponse(httpResponse, IntentStatus.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/status/update", params);
+        return wulaiClient.getResponse(httpResponse, IntentStatus.class);
 
     }
 

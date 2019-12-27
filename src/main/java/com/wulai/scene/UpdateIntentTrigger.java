@@ -1,6 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.IntentTrigger;
@@ -19,13 +19,13 @@ public class UpdateIntentTrigger {
         return intent_trigger;
     }
 
-    public IntentTrigger request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public IntentTrigger request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_trigger", intent_trigger);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/update", params);
 
-        return defaultClient.getResponse(httpResponse,IntentTrigger.class,"intent_trigger");
+        return wulaiClient.getResponse(httpResponse,IntentTrigger.class,"intent_trigger");
     }
 
 

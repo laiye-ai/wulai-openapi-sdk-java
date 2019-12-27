@@ -1,6 +1,6 @@
 package com.wulai.user;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -22,14 +22,14 @@ public class QueryUserInfo {
         return userId;
     }
 
-    public UserInfo request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public UserInfo request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/user/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/get", params);
 
 
-        return defaultClient.getResponse(httpResponse,UserInfo.class);
+        return wulaiClient.getResponse(httpResponse,UserInfo.class);
     }
 
 

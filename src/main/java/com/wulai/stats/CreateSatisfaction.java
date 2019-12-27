@@ -1,6 +1,6 @@
 package com.wulai.stats;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -45,7 +45,7 @@ public class CreateSatisfaction {
         return satisfaction;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
@@ -53,7 +53,7 @@ public class CreateSatisfaction {
         params.put("satisfaction", satisfaction);
         params.put("bot_id", botId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/satisfaction/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/satisfaction/create", params);
 
         return httpResponse.getStatusLine().getStatusCode();
     }

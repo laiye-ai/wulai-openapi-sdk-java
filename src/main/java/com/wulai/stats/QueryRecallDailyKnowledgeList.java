@@ -1,15 +1,12 @@
 package com.wulai.stats;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.response.stats.QARecallDailylKnowledgeList;
+import com.module.response.stats.QASatisfactionKnowledgeStats;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class QueryRecallDailyKnowledgeList {
     private String endDate;
@@ -50,14 +47,15 @@ public class QueryRecallDailyKnowledgeList {
         return startDate;
     }
 
-    public QARecallDailylKnowledgeList request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public QASatisfactionKnowledgeStats request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("page_size", pageSize);
         params.put("start_date", startDate);
         params.put("end_date", endDate);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/knowledge/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/stats/qa/satisfaction/daily/knowledge/list", params);
 
-        return defaultClient.getResponse(httpResponse,QARecallDailylKnowledgeList.class,"qa_recall_knowledge_stats");    }
+        return wulaiClient.getResponse(httpResponse, QASatisfactionKnowledgeStats.class);
+    }
 }

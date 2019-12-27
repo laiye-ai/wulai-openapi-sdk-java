@@ -33,11 +33,11 @@ import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.*;
 
-public class DefaultClient {
+public class WulaiClient {
 
     private final static String CONTENT_TYPE = "application/json";
     private final static int DEFAULT_TIME_OUT = 5;
-    private static Logger logger = LoggerFactory.getLogger(DefaultClient.class);
+    private static Logger logger = LoggerFactory.getLogger(WulaiClient.class);
     private static MessageDigest md = null;
     private Credentials credentials;
     private CloseableHttpClient httpClient = null;
@@ -144,6 +144,7 @@ public class DefaultClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
 
         return JSONObject.parseObject(jsonObject.get(key).toString(),T);
@@ -172,6 +173,7 @@ public class DefaultClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
         return JSONObject.parseArray(jsonObject.get(params).toString(),T);
 
@@ -310,12 +312,16 @@ public class DefaultClient {
     }
 
 
-    public DefaultClient() {
+    public WulaiClient() {
         this.endpoint = DefaultProfile.getEndpoint();
         this.credentials = new Credentials();
     }
 
-    public DefaultClient(URI uri, Credentials credentials) {
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public WulaiClient(URI uri, Credentials credentials) {
         this.endpoint = uri;
         this.credentials = credentials;
     }

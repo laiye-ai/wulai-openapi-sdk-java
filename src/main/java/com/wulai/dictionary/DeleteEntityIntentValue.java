@@ -1,6 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -34,12 +34,12 @@ public class DeleteEntityIntentValue {
         return entityId;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("entity_id", entityId);
         params.put("synonyms", synonyms);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/intent/value/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/intent/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

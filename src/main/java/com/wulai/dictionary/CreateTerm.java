@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.TermItem;
@@ -21,12 +20,12 @@ public class CreateTerm {
     }
 
 
-    public TermItem request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public TermItem request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("term_item", termItem);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/create", params);
-        return defaultClient.getResponse(httpResponse,TermItem.class,"term_item");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/create", params);
+        return wulaiClient.getResponse(httpResponse,TermItem.class,"term_item");
 
 
     }

@@ -1,6 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.Value;
@@ -30,12 +30,12 @@ public class DeleteEntityEnumerationValue {
         return value;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("entity_id", entityId);
         params.put("value", value);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/enumeration/value/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/enumeration/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

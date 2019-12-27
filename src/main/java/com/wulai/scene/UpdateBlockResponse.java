@@ -1,6 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Response;
@@ -19,11 +19,11 @@ public class UpdateBlockResponse {
         return response;
     }
 
-    public Response request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Response request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("response", response);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/block/response/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/response/update", params);
 
-        return defaultClient.getResponse(httpResponse,Response.class,"response");
+        return wulaiClient.getResponse(httpResponse,Response.class,"response");
     }
 }

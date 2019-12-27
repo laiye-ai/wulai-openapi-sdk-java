@@ -1,6 +1,6 @@
 package com.wulai.msg;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -79,7 +79,7 @@ public class SyncMsg {
         this.answerID = value;
     }
 
-    public String request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public String request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         Map map = null;
 
@@ -88,8 +88,8 @@ public class SyncMsg {
         params.put("extra", extra);
         params.put("msg_ts", msgTs);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/sync", params);
-        return defaultClient.getResponse(httpResponse,String.class,"msg_id");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/sync", params);
+        return wulaiClient.getResponse(httpResponse,String.class,"msg_id");
 
     }
 

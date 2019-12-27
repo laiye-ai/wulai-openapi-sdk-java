@@ -1,7 +1,6 @@
 package com.wulai.stats;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.stats.QARecallDailyStat;
@@ -30,12 +29,13 @@ public class QueryQaRecallDailyList {
         return start_date;
     }
 
-    public List<QARecallDailyStat> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<QARecallDailyStat> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("start_date", start_date);
         params.put("end_date", end_date);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/stats/qa/recall/daily/list", params);
-        return defaultClient.getResponseArray(httpResponse,QARecallDailyStat.class,"qa_recall_daily_stats");
+
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/stats/qa/recall/daily/list", params);
+        return wulaiClient.getResponseArray(httpResponse,QARecallDailyStat.class,"qa_recall_daily_stats");
 
     }
 }

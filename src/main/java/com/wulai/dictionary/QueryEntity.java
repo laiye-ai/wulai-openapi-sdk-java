@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.Entity;
@@ -20,13 +19,13 @@ public class QueryEntity {
         return id;
     }
 
-    public Entity request(DefaultClient defaultClient) throws ClientException, ServerException {
+    public Entity request(WulaiClient wulaiClient) throws ClientException, ServerException {
         HashMap<String, Object> params = new HashMap<>();
 
 
         params.put("id", id);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/get", params);
-        return defaultClient.getResponse(httpResponse, Entity.class,"entity");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/get", params);
+        return wulaiClient.getResponse(httpResponse, Entity.class,"entity");
 
     }
 

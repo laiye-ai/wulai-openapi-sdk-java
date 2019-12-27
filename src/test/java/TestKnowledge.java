@@ -1,16 +1,14 @@
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.*;
 import com.module.request.msg.MsgBody;
 import com.module.request.msg.Text;
-import com.module.request.scene.Response;
 import com.module.request.user.UserAttribute;
 import com.module.request.user.UserAttributeUserAttributeValue;
 import com.module.request.user.UserAttributeValue;
 import com.module.response.knowledge.*;
 import com.wulai.knowledge.*;
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.Date;
@@ -18,7 +16,7 @@ import java.util.List;
 
 public class TestKnowledge {
 
-    private static DefaultClient defaultClient = new DefaultClient();
+    private static WulaiClient wulaiClient = new WulaiClient();
     @Test
     public void TestCreateSimilarQuestionList() throws ServerException, ClientException {
 
@@ -30,7 +28,7 @@ public class TestKnowledge {
         querySimilarQuestionList.setPageSize(3);
         querySimilarQuestionList.setKnowledgeId("991640");
 
-        SimilarQuestionList similarQuestionList = querySimilarQuestionList.request(defaultClient);
+        SimilarQuestionList similarQuestionList = querySimilarQuestionList.request(wulaiClient);
         if (similarQuestionList.getSimilarQuestions() == null) {
             throw new ServerException("1", "QuerySimilarQuestionList error", 500);
         }
@@ -42,7 +40,7 @@ public class TestKnowledge {
         similarQuestion.setKnowledgeId(k_id);
         similarQuestion.setQuestion("nihaowa");
         createSimilarQuestion.setSimilarQuestion(similarQuestion);
-        SimilarQuestion similarQuestion1 = createSimilarQuestion.request(defaultClient);
+        SimilarQuestion similarQuestion1 = createSimilarQuestion.request(wulaiClient);
         if (!similarQuestion1.getKnowledgeId().equals("1583014")) {
             throw new ServerException("1", " CreateSimilarQuestion error", 500);
         }
@@ -55,7 +53,7 @@ public class TestKnowledge {
         //UpdateSimilarQuestion
         UpdateSimilarQuestion updateSimilarQuestion = new UpdateSimilarQuestion();
         updateSimilarQuestion.setSimilarQuestion(similarQuestion);
-        SimilarQuestion similarQuestion2 = updateSimilarQuestion.request(defaultClient);
+        SimilarQuestion similarQuestion2 = updateSimilarQuestion.request(wulaiClient);
         if (!similarQuestion2.getKnowledgeId().equals("1583014")) {
             throw new ServerException("1", "UpdateSimilarQuestion error", 500);
         }
@@ -63,7 +61,7 @@ public class TestKnowledge {
         //deleteSimilarQuestion
         DeleteSimilarQuestion deleteSimilarQuestion = new DeleteSimilarQuestion();
         deleteSimilarQuestion.setId(similarQuestionId);
-        int code2 = deleteSimilarQuestion.request(defaultClient);
+        int code2 = deleteSimilarQuestion.request(wulaiClient);
         if (200 != code2) {
             throw new ServerException("1", "deleteSimilarQuestion error", 500);
         } else {
@@ -82,7 +80,7 @@ public class TestKnowledge {
         queryKnowledgeTagsList.setPage(1);
         queryKnowledgeTagsList.setPageSize(5);
         queryKnowledgeTagsList.setParentKTagId("116469");
-        KnowledgeTagsList knowledgeTagsList = queryKnowledgeTagsList.request(defaultClient);
+        KnowledgeTagsList knowledgeTagsList = queryKnowledgeTagsList.request(wulaiClient);
         if (knowledgeTagsList.getKnowledgeTags() == null) {
             throw new ServerException("1", "QueryKnowledgeTagsList error", 1);
         }
@@ -94,7 +92,7 @@ public class TestKnowledge {
         queryKnowledgeItemsList.setPageSize(200);
 
 
-        KnowledgeItemsList knowledgeItemsList = queryKnowledgeItemsList.request(defaultClient);
+        KnowledgeItemsList knowledgeItemsList = queryKnowledgeItemsList.request(wulaiClient);
         if (knowledgeItemsList.getKnowledgeItems() == null) {
             throw new ServerException("1", "QueryKnowledgeItemsList error", 1);
         }
@@ -114,7 +112,7 @@ public class TestKnowledge {
         createKnowledgeTagKnowledge.setKnowledgeTagKnowledge(knowledgeTagKnowledge);
 
 
-        KnowledgeTagKnowledge knowledgeTagKnowledge1 = createKnowledgeTagKnowledge.request(defaultClient);
+        KnowledgeTagKnowledge knowledgeTagKnowledge1 = createKnowledgeTagKnowledge.request(wulaiClient);
         if (knowledgeTagKnowledge1.getKnowledge() == null) {
             throw new ServerException("1", "create KnowledgeItemsList error", 1);
         }
@@ -128,14 +126,14 @@ public class TestKnowledge {
         knowledge.setId(knowledgeId + "");
         UpdateKnowledge updateKnowledge = new UpdateKnowledge();
         updateKnowledge.setKnowledge(knowledge);
-        Knowledge knowledge1 = updateKnowledge.request(defaultClient);
+        Knowledge knowledge1 = updateKnowledge.request(wulaiClient);
         if (!knowledge1.getId().equals(knowledgeId + "")) {
             throw new ServerException("1", "update knowledge error", 1);
         }
 
         DeleteKnowledge deleteKnowledge = new DeleteKnowledge();
         deleteKnowledge.setId(knowledgeId);
-        int code1 = deleteKnowledge.request(defaultClient);
+        int code1 = deleteKnowledge.request(wulaiClient);
         if (200 != code1) {
             throw new ServerException("1", "delete knowledge error", 1);
         } else {
@@ -154,7 +152,7 @@ public class TestKnowledge {
         QueryUserAttributeGroupItemsList queryUserAttributeGroupItemsList = new QueryUserAttributeGroupItemsList();
         queryUserAttributeGroupItemsList.setPageSize(20);
         queryUserAttributeGroupItemsList.setPage(1);
-        UserAttributeGroupItemsList userAttributeGroupItemsList = queryUserAttributeGroupItemsList.request(defaultClient);
+        UserAttributeGroupItemsList userAttributeGroupItemsList = queryUserAttributeGroupItemsList.request(wulaiClient);
         if (userAttributeGroupItemsList.getUserAttributeGroupItems() == null) {
             throw new ServerException("1", "Query UserAttributeGroupItemsList error", 1);
         }
@@ -189,7 +187,7 @@ public class TestKnowledge {
         CreateUserAttributeGroupItems createUserAttributeGroupItems = new CreateUserAttributeGroupItems();
         createUserAttributeGroupItems.setUserattributeGroupItem(userAttributeGroupItem1);
 
-        UserAttributeGroupItem userAttributeGroupItem3 = createUserAttributeGroupItems.request(defaultClient);
+        UserAttributeGroupItem userAttributeGroupItem3 = createUserAttributeGroupItems.request(wulaiClient);
         if (userAttributeGroupItem3.getUserAttributeGroup() == null) {
             throw new ServerException("1", "Create UserAttributeGroupItems error", 1);
         }
@@ -199,7 +197,7 @@ public class TestKnowledge {
         UpdateUserAttributeGroupItems updateUserAttributeGroupItems = new UpdateUserAttributeGroupItems();
         userAttributeGroupItem.setUserAttributeGroup(userAttributeGroup2);
         updateUserAttributeGroupItems.setUser_attribute_group_item(userAttributeGroupItem);
-        UserAttributeGroupItem userAttributeGroupItem2 = updateUserAttributeGroupItems.request(defaultClient);
+        UserAttributeGroupItem userAttributeGroupItem2 = updateUserAttributeGroupItems.request(wulaiClient);
         if (userAttributeGroupItem2.getUserAttributeGroup() == null) {
             throw new ServerException("1", "Update UserAttributeGroupItems error", 1);
         }
@@ -219,7 +217,7 @@ public class TestKnowledge {
         filter.setKnowledgeId("990308");
         filter.setUserAttributeGroupId("0");
         queryUserAttributeGroupAnswersList.setFilter(filter);
-        UserAttributeGroupAnswersList attributeGroupAnswersList = queryUserAttributeGroupAnswersList.request(defaultClient);
+        UserAttributeGroupAnswersList attributeGroupAnswersList = queryUserAttributeGroupAnswersList.request(wulaiClient);
         if (attributeGroupAnswersList.getUser_attribute_group_answers() == null) {
             throw new ServerException("1", "Query UserAttributeGroupAnswersList error", 1);
         }
@@ -239,7 +237,7 @@ public class TestKnowledge {
 
         CreateUserAttributeGroupAnswer createUserAttributeGroupAnswer = new CreateUserAttributeGroupAnswer();
         createUserAttributeGroupAnswer.setUserAttributeGroupAnswer(userAttributeGroupAnswer);
-        UserAttributeGroupAnswer userAttributeGroupAnswer1 = createUserAttributeGroupAnswer.request(defaultClient);
+        UserAttributeGroupAnswer userAttributeGroupAnswer1 = createUserAttributeGroupAnswer.request(wulaiClient);
         if (userAttributeGroupAnswer1.getAnswer() == null) {
             throw new ServerException("1", "Create UserAttributeGroupAnswer error", 1);
         }
@@ -255,7 +253,7 @@ public class TestKnowledge {
         userAttributeGroupAnswer.setAnswer(answer);
         updateUserAttributeGroupAnswer.setUser_attribute_group_answer(userAttributeGroupAnswer);
 
-        UserAttributeGroupAnswer userAttributeGroupAnswer2 = updateUserAttributeGroupAnswer.request(defaultClient);
+        UserAttributeGroupAnswer userAttributeGroupAnswer2 = updateUserAttributeGroupAnswer.request(wulaiClient);
         if (userAttributeGroupAnswer2.getAnswer() == null) {
             throw new ServerException("1", "Update UserAttributeGroupAnswer error", 1);
         }
@@ -264,7 +262,7 @@ public class TestKnowledge {
         // 3.DeleteUserAttriButeGroupAnswer
         DeleteUserAttriButeGroupAnswer deleteUserAttriButeGroupAnswer = new DeleteUserAttriButeGroupAnswer();
         deleteUserAttriButeGroupAnswer.setId(answerId);
-        int code3 = deleteUserAttriButeGroupAnswer.request(defaultClient);
+        int code3 = deleteUserAttriButeGroupAnswer.request(wulaiClient);
         if (200 != code3) {
             throw new ServerException("1", "Delete UserAttributeGroupAnswer error", 1);
         } else {

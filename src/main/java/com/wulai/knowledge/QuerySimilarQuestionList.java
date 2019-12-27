@@ -1,10 +1,8 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.knowledge.SimilarQuestion;
 import com.module.response.knowledge.SimilarQuestionList;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -32,15 +30,15 @@ public class QuerySimilarQuestionList {
         this.similarQuestionId = similarQuestionId;
     }
 
-    public SimilarQuestionList request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public SimilarQuestionList request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("knowledge_id", knowledgeId);
         params.put("page", page);
         params.put("page_size", pageSize);
         params.put("similar_question_id", similarQuestionId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/similar-question/list", params);
-        return defaultClient.getResponse(httpResponse,SimilarQuestionList.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/list", params);
+        return wulaiClient.getResponse(httpResponse,SimilarQuestionList.class);
 
     }
 

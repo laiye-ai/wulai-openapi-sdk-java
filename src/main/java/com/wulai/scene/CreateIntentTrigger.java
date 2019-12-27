@@ -1,10 +1,8 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.scene.Intent;
 import com.module.request.scene.IntentTrigger;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -22,11 +20,11 @@ public class CreateIntentTrigger {
     }
 
 
-    public IntentTrigger request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public IntentTrigger request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_trigger", intentTrigger);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger/create", params);
-        return defaultClient.getResponse(httpResponse, IntentTrigger.class,"intent_trigger");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/create", params);
+        return wulaiClient.getResponse(httpResponse, IntentTrigger.class,"intent_trigger");
 
 
 

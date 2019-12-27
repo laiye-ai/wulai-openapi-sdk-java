@@ -1,7 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.Knowledge;
@@ -20,12 +19,12 @@ public class UpdateKnowledge {
         return knowledge;
     }
 
-    public Knowledge request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Knowledge request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("knowledge", knowledge);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge/update", params);
 
-        return defaultClient.getResponse(httpResponse,Knowledge.class,"knowledge");
+        return wulaiClient.getResponse(httpResponse,Knowledge.class,"knowledge");
 
 
     }

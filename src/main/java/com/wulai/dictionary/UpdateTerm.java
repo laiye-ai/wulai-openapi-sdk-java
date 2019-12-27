@@ -1,6 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.TermItem;
@@ -20,14 +20,14 @@ public class UpdateTerm {
         return termItem;
     }
 
-    public TermItem request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public TermItem request(WulaiClient wulaiClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("term_item", termItem);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/update", params);
 
-        return defaultClient.getResponse(httpResponse,TermItem.class,"term_item");
+        return wulaiClient.getResponse(httpResponse,TermItem.class,"term_item");
 
 
     }

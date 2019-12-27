@@ -1,5 +1,4 @@
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.*;
@@ -7,10 +6,8 @@ import com.wulai.scene.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 public class TestScene {
-    private static DefaultClient defaultClient = new DefaultClient();
+    private static WulaiClient wulaiClient = new WulaiClient();
     private static int blockId;
     private static int scene_id;
     private static int intent_id;
@@ -27,7 +24,7 @@ public class TestScene {
         //1.create scene
         CreateScene createScene = new CreateScene();
         createScene.setScene(scene);
-        Scene scene1 = createScene.request(defaultClient);
+        Scene scene1 = createScene.request(wulaiClient);
 
         scene_id = scene1.getId();
         //2.create intent
@@ -37,7 +34,7 @@ public class TestScene {
         intent.setName("测试意图");
         intent.setLifespanMins(2);
         createIntent.setIntent(intent);
-        Intent intent1 = createIntent.request(defaultClient);
+        Intent intent1 = createIntent.request(wulaiClient);
 
         intent_id = intent1.getId();
 
@@ -49,7 +46,7 @@ public class TestScene {
         intentTrigger.setText("测试触发器");
         intentTrigger.setType("TRIGGER_TYPE_EXACT_MATCH_KEYWORD");
         createIntentTrigger.setIntentTrigger(intentTrigger);
-        IntentTrigger intentTrigger1 = createIntentTrigger.request(defaultClient);
+        IntentTrigger intentTrigger1 = createIntentTrigger.request(wulaiClient);
         trigger_id = intentTrigger1.getId();
 
         //4.create slot
@@ -61,7 +58,7 @@ public class TestScene {
 
         CreateSlot createSlot = new CreateSlot();
         createSlot.setSlot(slot);
-        Slot slot1 = createSlot.request(defaultClient);
+        Slot slot1 = createSlot.request(wulaiClient);
         slot_id=slot1.getId();
 
 
@@ -74,7 +71,7 @@ public class TestScene {
         block.setMode("RESPONSE_RANDOM");
 
         createBlockRequestBlock.setBlock(block);
-        Block block1 = createBlockRequestBlock.request(defaultClient);
+        Block block1 = createBlockRequestBlock.request(wulaiClient);
         blockId=block1.getID();
 
 
@@ -87,7 +84,7 @@ public class TestScene {
         //delete request block
         DeleteBlock deleteBlock = new DeleteBlock();
         deleteBlock.setId(blockId);
-        if (200 == deleteBlock.request(defaultClient)) {
+        if (200 == deleteBlock.request(wulaiClient)) {
             System.out.println("delete request block ok");
         }
 
@@ -95,14 +92,14 @@ public class TestScene {
         DeleteSlot deleteSlot = new DeleteSlot();
         deleteSlot.setId(slot_id);
 
-        if (deleteSlot.request(defaultClient) == 200) {
+        if (deleteSlot.request(wulaiClient) == 200) {
             System.out.println("delete slot ok");
         }
 
         //delete trigger
         DeleteIntentTrigger deleteIntentTrigger = new DeleteIntentTrigger();
         deleteIntentTrigger.setId(trigger_id);
-        if (200 == deleteIntentTrigger.request(defaultClient)) {
+        if (200 == deleteIntentTrigger.request(wulaiClient)) {
             System.out.println("delete trigger ok");
         }
 
@@ -111,14 +108,14 @@ public class TestScene {
         DeleteIntent deleteIntent = new DeleteIntent();
         deleteIntent.setId(intent_id);
 
-        if (200 == deleteIntent.request(defaultClient)) {
+        if (200 == deleteIntent.request(wulaiClient)) {
             System.out.println("delete intent ok");
         }
 
         //delete scene
         DeleteScene deleteScene = new DeleteScene();
         deleteScene.setId(scene_id);
-        if (200 == deleteScene.request(defaultClient)) {
+        if (200 == deleteScene.request(wulaiClient)) {
             System.out.println("delete scene ok");
         }
     }

@@ -1,4 +1,4 @@
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.*;
@@ -10,11 +10,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TestDictionary {
 
-    private static DefaultClient defaultClient = new DefaultClient();
+    private static WulaiClient wulaiClient = new WulaiClient();
     private static int entityId;
     private static int intentId;
     private static int termId;
@@ -28,14 +27,14 @@ public class TestDictionary {
         QueryEntityList queryEntityList = new QueryEntityList();
         queryEntityList.setPage(1);
         queryEntityList.setPageSize(100);
-        List<com.module.response.dictionary.Entity> entities = queryEntityList.request(defaultClient);
+        List<com.module.response.dictionary.Entity> entities = queryEntityList.request(wulaiClient);
         if (entities.get(0)==null) {
             throw new ServerException("1", " QueryEntityList error", 1);
         }
         //2.获取实体详情
         QueryEntity queryEntity = new QueryEntity();
         queryEntity.setId(39750);
-        Entity entity = queryEntity.request(defaultClient);
+        Entity entity = queryEntity.request(wulaiClient);
         if (entity.getValue().getEnumerationEntityValue().getValues() == null) {
             throw new ServerException("1", " QueryEntity error", 1);
         }
@@ -47,7 +46,7 @@ public class TestDictionary {
 
         CreateEntityEnumeration createEntityEnumeration = new CreateEntityEnumeration();
         createEntityEnumeration.setEnumEntity(enumEntity);
-        EnumEntity enumEntity1 = createEntityEnumeration.request(defaultClient);
+        EnumEntity enumEntity1 = createEntityEnumeration.request(wulaiClient);
         if (enumEntity1.getName() == null) {
             throw new ServerException("1", " CreateEntityEnumeration error", 1);
         }
@@ -62,7 +61,7 @@ public class TestDictionary {
         value.addSynonym("三星");
         value.addSynonym("小米");
         createEntityEnumerationValue.setValue(value);
-        EnumEntity enumEntity2 = createEntityEnumerationValue.request(defaultClient);
+        EnumEntity enumEntity2 = createEntityEnumerationValue.request(wulaiClient);
         if (enumEntity2.getValues() == null) {
             throw new ServerException("1", " CreateEntityEnumerationValue error", 1);
         }
@@ -73,7 +72,7 @@ public class TestDictionary {
         intentEntity.setName("肯定答复");
         intentEntity.setStandardValue("嗯嗯");
         createEntityIntent.setIntentEntity(intentEntity);
-        IntentResponse intentResponse = createEntityIntent.request(defaultClient);
+        IntentResponse intentResponse = createEntityIntent.request(wulaiClient);
         intentId = intentResponse.getId();
         if (intentResponse.getValue() == null) {
             throw new ServerException("1", "CreateEntityIntent error", 1);
@@ -86,7 +85,7 @@ public class TestDictionary {
         createEntityIntentValue.addSynonyms("可以");
         createEntityIntentValue.addSynonyms("牛逼");
         createEntityIntentValue.addSynonyms("OJBK");
-        IntentResponse intentValue = createEntityIntentValue.request(defaultClient);
+        IntentResponse intentValue = createEntityIntentValue.request(wulaiClient);
         if (intentValue == null) {
             throw new ServerException("1", "CreateEntityIntentValue error", 1);
         }
@@ -104,7 +103,7 @@ public class TestDictionary {
         TermItem termItem = new TermItem();
         termItem.setTerm(term);
         createTerm.setTermItem(termItem);
-        TermItem createTermMap = createTerm.request(defaultClient);
+        TermItem createTermMap = createTerm.request(wulaiClient);
 
         termId = createTermMap.getTerm().getId();
 
@@ -118,7 +117,7 @@ public class TestDictionary {
         UpdateTerm updateTerm = new UpdateTerm();
         updateTerm.setTermItem(termItem);
 
-        TermItem termItem1 = updateTerm.request(defaultClient);
+        TermItem termItem1 = updateTerm.request(wulaiClient);
 
         if (termItem1.getSynonyms() == null||termItem1.getTerm()==null) {
             throw new ServerException("1", "UpdateTerm error", 1);
@@ -129,7 +128,7 @@ public class TestDictionary {
         QueryTermList queryTermList = new QueryTermList();
         queryTermList.setPage(1);
         queryTermList.setPageSize(20);
-        TermListResponse termListResponse = queryTermList.request(defaultClient);
+        TermListResponse termListResponse = queryTermList.request(wulaiClient);
         if (termListResponse.getTermItem() == null) {
             throw new ServerException("1", "QueryTermList error", 1);
         }
@@ -147,7 +146,7 @@ public class TestDictionary {
         synonyms.remove(1);
         value.setSynonyms(synonyms);
         deleteEntityEnumerationValue.setValue(value);
-        int httpcode = deleteEntityEnumerationValue.request(defaultClient);
+        int httpcode = deleteEntityEnumerationValue.request(wulaiClient);
         if (200 != httpcode) {
             throw new ServerException("1", " DeleteEntityEnumerationValue error", 1);
         }
@@ -155,7 +154,7 @@ public class TestDictionary {
         //删除枚举实体
         DeleteEntity deleteEntity = new DeleteEntity();
         deleteEntity.setId(entityId);
-        int code = deleteEntity.request(defaultClient);
+        int code = deleteEntity.request(wulaiClient);
         if (200 != code) {
             throw new ServerException("1", " DeleteEntity error", 1);
         }
@@ -164,11 +163,11 @@ public class TestDictionary {
         DeleteEntityIntentValue deleteEntityIntentValue = new DeleteEntityIntentValue();
         deleteEntityIntentValue.setEntityId(intentId);
         deleteEntityIntentValue.addSynonym("可以");
-        deleteEntityIntentValue.request(defaultClient);
+        deleteEntityIntentValue.request(wulaiClient);
 
         //删除实体
         deleteEntity.setId(intentId);
-        int code2 = deleteEntity.request(defaultClient);
+        int code2 = deleteEntity.request(wulaiClient);
         if (200 != code2) {
             throw new ServerException("1", "DeleteEntityIntentValue error", 1);
         }
@@ -176,7 +175,7 @@ public class TestDictionary {
         //删除专有词汇
         DeleteTerm deleteTerm = new DeleteTerm();
         deleteTerm.setId("" + termId);
-        int code3 = deleteTerm.request(defaultClient);
+        int code3 = deleteTerm.request(wulaiClient);
         if (200 != code3) {
             throw new ServerException("1", "Delete Term error", 1);
         }

@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.scene.DataSource;
@@ -21,14 +20,14 @@ public class QuerySlotDataSourceList {
         return slotId;
     }
 
-    public List<DataSource> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<DataSource> request(WulaiClient wulaiClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("slot_id", slotId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/data-source/list", params);
-        return defaultClient.getResponseArray(httpResponse,DataSource.class,"data_sources");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/data-source/list", params);
+        return wulaiClient.getResponseArray(httpResponse,DataSource.class,"data_sources");
 
     }
 

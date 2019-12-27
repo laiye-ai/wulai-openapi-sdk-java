@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Block;
@@ -20,13 +19,13 @@ public class CreateBlockInformBlock {
         return block;
     }
 
-    public Block request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Block request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("block", block);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/block/inform-block/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/inform-block/create", params);
 
-        return defaultClient.getResponse(httpResponse,Block.class,"block");
+        return wulaiClient.getResponse(httpResponse,Block.class,"block");
 
 
     }

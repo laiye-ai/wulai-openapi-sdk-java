@@ -1,7 +1,6 @@
 package com.wulai.nlp;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.nlp.Token;
@@ -21,13 +20,13 @@ public class Tokenize {
         return query;
     }
 
-    public List<Token> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<Token> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("query", query);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/nlp/Tokenize", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/nlp/Tokenize", params);
 
-        return defaultClient.getResponseArray(httpResponse,Token.class,"tokens");
+        return wulaiClient.getResponseArray(httpResponse,Token.class,"tokens");
     }
 
 }

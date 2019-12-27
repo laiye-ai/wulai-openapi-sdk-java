@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.dictionary.IntentResponse;
@@ -35,13 +34,13 @@ public class CreateEntityIntentValue {
         synonyms.add(synonym);
     }
 
-    public IntentResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public IntentResponse request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("entity_id", entityId);
         params.put("synonyms", synonyms);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/intent/value/create", params);
-        return defaultClient.getResponse(httpResponse, IntentResponse.class, "intent_entity");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/intent/value/create", params);
+        return wulaiClient.getResponse(httpResponse, IntentResponse.class, "intent_entity");
     }
 
 }

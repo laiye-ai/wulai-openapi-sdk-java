@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.scene.QueryItem;
@@ -30,13 +29,13 @@ public class QueryIntentTriggerLearningList {
         return pageSize;
     }
 
-    public List<QueryItem> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<QueryItem> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/intent/trigger-learning/list", params);
-        return defaultClient.getResponseArray(httpResponse,QueryItem.class,"query_items");
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger-learning/list", params);
+        return wulaiClient.getResponseArray(httpResponse,QueryItem.class,"query_items");
 
     }
 

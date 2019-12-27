@@ -1,6 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.UserAttributeGroupAnswer;
@@ -19,14 +19,14 @@ public class CreateUserAttributeGroupAnswer {
         return userAttributeGroupAnswer;
     }
 
-    public UserAttributeGroupAnswer request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public UserAttributeGroupAnswer request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("user_attribute_group_answer", userAttributeGroupAnswer);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answer/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answer/create", params);
 
-        return defaultClient.getResponse(httpResponse, UserAttributeGroupAnswer.class, "user_attribute_group_answer");
+        return wulaiClient.getResponse(httpResponse, UserAttributeGroupAnswer.class, "user_attribute_group_answer");
 
     }
 

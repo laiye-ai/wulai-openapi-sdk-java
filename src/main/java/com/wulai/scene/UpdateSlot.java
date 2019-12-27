@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Slot;
@@ -20,11 +19,11 @@ public class UpdateSlot {
         return slot;
     }
 
-    public Slot request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Slot request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("slot", slot);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/update", params);
-        return defaultClient.getResponse(httpResponse,Slot.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/update", params);
+        return wulaiClient.getResponse(httpResponse,Slot.class);
     }
 }

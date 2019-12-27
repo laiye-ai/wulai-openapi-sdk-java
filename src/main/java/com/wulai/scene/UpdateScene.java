@@ -1,14 +1,12 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.scene.Scene;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateScene {
     private Scene scene;
@@ -22,11 +20,11 @@ public class UpdateScene {
     }
 
 
-    public Scene request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public Scene request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("scene", scene);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/update", params);
-        return defaultClient.getResponse(httpResponse,Scene.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/update", params);
+        return wulaiClient.getResponse(httpResponse,Scene.class);
     }
 }

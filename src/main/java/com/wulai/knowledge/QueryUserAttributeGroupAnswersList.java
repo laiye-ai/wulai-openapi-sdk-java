@@ -1,6 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.Filter;
@@ -30,15 +30,15 @@ public class QueryUserAttributeGroupAnswersList {
         return filter;
     }
 
-    public UserAttributeGroupAnswersList request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public UserAttributeGroupAnswersList request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("page_size", pageSize);
         params.put("filter", filter);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/user-attribute-group-answers/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answers/list", params);
 
-        return defaultClient.getResponse(httpResponse, UserAttributeGroupAnswersList.class);
+        return wulaiClient.getResponse(httpResponse, UserAttributeGroupAnswersList.class);
     }
 
 

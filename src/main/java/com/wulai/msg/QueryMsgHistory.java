@@ -1,6 +1,6 @@
 package com.wulai.msg;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -55,15 +55,15 @@ public class QueryMsgHistory {
         this.direction = direction;
     }
 
-    public MsgHistory request(DefaultClient defaultClient) throws ClientException, ServerException {
+    public MsgHistory request(WulaiClient wulaiClient) throws ClientException, ServerException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
         params.put("num", Num);
         params.put("direction", direction);
         params.put("msg_id", msgId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/history", params);
-        return defaultClient.getResponse(httpResponse,MsgHistory.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/history", params);
+        return wulaiClient.getResponse(httpResponse,MsgHistory.class);
 
     }
 

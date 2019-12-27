@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.dictionary.TermListResponse;
@@ -31,13 +30,13 @@ public class QueryTermList {
     }
 
 
-    public TermListResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public TermListResponse request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/term/list", params);
-        return defaultClient.getResponse(httpResponse,TermListResponse.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/list", params);
+        return wulaiClient.getResponse(httpResponse,TermListResponse.class);
 
 
 

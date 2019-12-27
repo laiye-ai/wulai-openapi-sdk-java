@@ -1,4 +1,4 @@
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TestMsg {
-    private DefaultClient defaultClient = new DefaultClient();
+    private WulaiClient wulaiClient = new WulaiClient();
 
     @Test
     public void TestMsg() throws ServerException, ClientException {
@@ -20,7 +20,7 @@ public class TestMsg {
         GetBotResponse getBotResponse = new GetBotResponse();
         getBotResponse.setUserId(userId);
         getBotResponse.setMsgBody(new MsgBody(new Text(question)));
-        BotResponse botResponse = getBotResponse.request(defaultClient);
+        BotResponse botResponse = getBotResponse.request(wulaiClient);
         if (botResponse.getMsgId() == null) {
             throw new ServerException("1", "get botresponse error", 1);
         }
@@ -40,7 +40,7 @@ public class TestMsg {
         GetKeywordBotResponse getKeywordBotResponse = new GetKeywordBotResponse();
         getKeywordBotResponse.setMsgBody(new MsgBody(new Text("你好")));
         getKeywordBotResponse.setUserId("zhangtao@test");
-        KeywordResponse keywordResponse = getKeywordBotResponse.request(defaultClient);
+        KeywordResponse keywordResponse = getKeywordBotResponse.request(wulaiClient);
         if (keywordResponse.getMsgId() == null) {
             throw new ServerException("1", "get botresponse error", 1);
         }
@@ -58,7 +58,7 @@ public class TestMsg {
         GetQABotResponse getQABotResponse=new GetQABotResponse();
         getQABotResponse.setMsgBody(new MsgBody(new Text(question)));
         getQABotResponse.setUserId(userId);
-        QAResponse qaResponse=getQABotResponse.request(defaultClient);
+        QAResponse qaResponse=getQABotResponse.request(wulaiClient);
         if (qaResponse.getMsgId()==null||qaResponse.getQASuggestedResponse()==null){
             throw new ServerException("1","GetQABotResponse error",1);
         }
@@ -76,7 +76,7 @@ public class TestMsg {
         GetTaskBotResponse getTaskBotResponse =new GetTaskBotResponse();
         getTaskBotResponse.setUserId(userId);
         getTaskBotResponse.setMsgBody(new MsgBody(new Text("hi")));
-        TaskResponse taskResponse=getTaskBotResponse.request(defaultClient);
+        TaskResponse taskResponse=getTaskBotResponse.request(wulaiClient);
         if (taskResponse.getMsgId()==null){
             throw  new ServerException("","getTaskBotResponse error",1);
         }
@@ -85,7 +85,7 @@ public class TestMsg {
         queryMsgHistory.setUserId(userId);
         queryMsgHistory.setDirection(QueryMsgHistory.Direction.BACKWARD);
         queryMsgHistory.setNum(4);
-        MsgHistory msgHistory=queryMsgHistory.request(defaultClient);
+        MsgHistory msgHistory=queryMsgHistory.request(wulaiClient);
         if (msgHistory.getMsg()==null){
             throw new ServerException("1","QueryMsgHistory error",1);
         }
@@ -94,7 +94,7 @@ public class TestMsg {
         syncMsg.setUserID(userId);
         syncMsg.setMsgBody(new MsgBody(new Text("你好，我是小来")));
         syncMsg.setMsgTs("1577412789000");
-        String sync=syncMsg.request(defaultClient);
+        String sync=syncMsg.request(wulaiClient);
         if (sync==null){
             throw new ServerException("1","sync msg error",1);
         }
@@ -102,7 +102,7 @@ public class TestMsg {
         SendMsg sendMsg=new SendMsg();
         sendMsg.setUserID(userId);
         sendMsg.setMsgBody(new MsgBody(new Text("测试 send msg interface")));
-        String send=sendMsg.request(defaultClient);
+        String send=sendMsg.request(wulaiClient);
         if (send==null) {
             throw new ServerException("1", "send msg error", 1);
         }
@@ -110,14 +110,14 @@ public class TestMsg {
         ReceiveMsg receiveMsg=new ReceiveMsg();
         receiveMsg.setUserId(userId);
         receiveMsg.setMsgBody(new MsgBody(new Text("你好")));
-        String receive=receiveMsg.request(defaultClient);
+        String receive=receiveMsg.request(wulaiClient);
         if (receive == null) {
             throw  new ServerException("1","receive msg error",1);
         }
         GetUserSuggestion getUserSuggestion=new GetUserSuggestion();
         getUserSuggestion.setUserId(userId);
         getUserSuggestion.setQuery("怀孕");
-        List<String> userSuggestions=getUserSuggestion.request(defaultClient);
+        List<String> userSuggestions=getUserSuggestion.request(wulaiClient);
 
         if (userSuggestions.iterator().next()==null){
             throw new ServerException("1","userSuggestions error",1);

@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.dictionary.EnumEntity;
@@ -30,15 +29,15 @@ public class CreateEntityEnumerationValue {
         return value;
     }
 
-    public EnumEntity request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public EnumEntity request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("entity_id", entityId);
         params.put("value", value);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/enumeration/value/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/enumeration/value/create", params);
 
-        return defaultClient.getResponse(httpResponse,EnumEntity.class,"enum_entity");
+        return wulaiClient.getResponse(httpResponse,EnumEntity.class,"enum_entity");
 
 
     }

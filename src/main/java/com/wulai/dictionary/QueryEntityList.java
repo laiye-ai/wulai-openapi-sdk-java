@@ -1,7 +1,6 @@
 package com.wulai.dictionary;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.response.dictionary.Entity;
@@ -9,7 +8,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QueryEntityList {
     private int page;
@@ -31,15 +29,15 @@ public class QueryEntityList {
         return pageSize;
     }
 
-    public List<Entity> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<Entity> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/dictionary/entity/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/list", params);
 
-        return defaultClient.getResponseArray(httpResponse, Entity.class,"entities");
+        return wulaiClient.getResponseArray(httpResponse, Entity.class,"entities");
 
     }
 

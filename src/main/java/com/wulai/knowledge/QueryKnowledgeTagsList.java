@@ -1,10 +1,8 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.response.knowledge.KnowledgeTag;
 import com.module.response.knowledge.KnowledgeTagsList;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -39,15 +37,15 @@ public class QueryKnowledgeTagsList {
         return parentKTagId;
     }
 
-    public KnowledgeTagsList request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public KnowledgeTagsList request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("page", page);
         params.put("page_size", pageSize);
         params.put("parent_k_tag_id", parentKTagId);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge-tags/list", params);
-        return defaultClient.getResponse(httpResponse,KnowledgeTagsList.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge-tags/list", params);
+        return wulaiClient.getResponse(httpResponse,KnowledgeTagsList.class);
 
 
     }

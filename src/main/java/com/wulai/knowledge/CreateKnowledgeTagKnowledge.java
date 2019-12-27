@@ -1,7 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.knowledge.KnowledgeTagKnowledge;
@@ -20,13 +19,13 @@ public class CreateKnowledgeTagKnowledge {
         return knowledgeTagKnowledge;
     }
 
-    public KnowledgeTagKnowledge request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public KnowledgeTagKnowledge request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("knowledge_tag_knowledge", knowledgeTagKnowledge);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/knowledge-tag-knowledge/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge-tag-knowledge/create", params);
 
-        return defaultClient.getResponse(httpResponse,KnowledgeTagKnowledge.class,"knowledge_tag_knowledge");
+        return wulaiClient.getResponse(httpResponse,KnowledgeTagKnowledge.class,"knowledge_tag_knowledge");
 
     }
 }

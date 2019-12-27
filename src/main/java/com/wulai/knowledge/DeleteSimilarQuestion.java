@@ -1,6 +1,6 @@
 package com.wulai.knowledge;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,10 +18,10 @@ public class DeleteSimilarQuestion {
         return id;
     }
 
-    public int request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/qa/similar-question/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

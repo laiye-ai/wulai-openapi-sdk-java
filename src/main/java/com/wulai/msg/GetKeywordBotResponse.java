@@ -1,6 +1,6 @@
 package com.wulai.msg;
 
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
 import com.module.request.msg.MsgBody;
@@ -26,7 +26,7 @@ public class GetKeywordBotResponse {
         this.userId = userId;
     }
 
-    public KeywordResponse request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public KeywordResponse request(WulaiClient wulaiClient) throws ServerException, ClientException {
 
         HashMap<String, Object> params = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class GetKeywordBotResponse {
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/msg/bot-response/keyword", params);
-        return defaultClient.getResponse(httpResponse, KeywordResponse.class);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response/keyword", params);
+        return wulaiClient.getResponse(httpResponse, KeywordResponse.class);
     }
 }

@@ -1,7 +1,6 @@
 package com.wulai.scene;
 
-import com.DefaultClient;
-import com.alibaba.fastjson.JSONObject;
+import com.WulaiClient;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -10,7 +9,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QuerySlotList {
     private int sceneId;
@@ -46,15 +44,15 @@ public class QuerySlotList {
         return page;
     }
 
-    public List<Slot> request(DefaultClient defaultClient) throws ServerException, ClientException {
+    public List<Slot> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("scene_id", sceneId);
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = defaultClient.excuteRequest("/scene/slot/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/list", params);
 
-        return defaultClient.getResponseArray(httpResponse,Slot.class,"slots");
+        return wulaiClient.getResponseArray(httpResponse,Slot.class,"slots");
 
     }
 
