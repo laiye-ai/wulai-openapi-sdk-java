@@ -118,7 +118,6 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        System.out.println(body);
         return JSONObject.parseObject(body, JSONObject.class);
     }
 
@@ -131,7 +130,6 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        System.out.println(body);
         return JSONObject.parseObject(body,T);
     }
 
@@ -144,7 +142,6 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
 
         return JSONObject.parseObject(jsonObject.get(key).toString(),T);
@@ -173,7 +170,6 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
         return JSONObject.parseArray(jsonObject.get(params).toString(),T);
 
