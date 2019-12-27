@@ -56,9 +56,9 @@ import com.WulaiClient;public class Test {
 ```
 String name="Tom";
 //设置创建用户请求参数
-String data="{\"user_id\":\"%s\",name}";
+String data="{\"userId\":\"%s\",name}";
 //设置对话内容参数
-String data2=String.format("{\"user_id\":\"%s\",\"msg_body\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
+String data2=String.format("{\"userId\":\"%s\",\"msgBody\":{\"text\":{\"content\":\"%s\"}},\"extra\":\"%s\"}", name, "你是谁", "");
 
 //发起创建用户
 wulaiClient.processCommonRequest("/user/create",data);

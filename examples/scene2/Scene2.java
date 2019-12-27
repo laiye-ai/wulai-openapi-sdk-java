@@ -66,7 +66,7 @@ public class Scene2 {
                 Object[] objects = botResponse.getSuggestedResponse();
                 System.out.println(objects[0].toString());
                 /*Console print
-                 * {"score":1,"is_send":true,"response":[{"enable_evaluate":false,"msg_body":{"text":{"content":"是的，你终于发现了你的本质"}},"delay_ts":0,"similar_response":[]}],"bot":{"qa":{"question":"你是复读机吗？","knowledge_id":887687,"standard_question":"你是复读机吗？"}},"source":"QA_BOT","quick_reply":[]}
+                 * {"score":1,"is_send":true,"dictionary":[{"enable_evaluate":false,"msg_body":{"text":{"content":"是的，你终于发现了你的本质"}},"delay_ts":0,"similar_response":[]}],"bot":{"qa":{"question":"你是复读机吗？","knowledge_id":887687,"standard_question":"你是复读机吗？"}},"source":"QA_BOT","quick_reply":[]}
                  */
             } catch (ClientException e) {
                 logger.severe("getBotResponse params error");

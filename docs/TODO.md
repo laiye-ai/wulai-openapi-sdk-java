@@ -67,7 +67,7 @@
  
  创建意图实体值相似说法 `createIntentEntityValue`
  
- 查询一个实体详情 `getEntity`
+ 查询一个实体详情 `queryEntity`
  
  创建同义词 `createSynonym`
  

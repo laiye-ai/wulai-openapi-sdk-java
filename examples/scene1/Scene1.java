@@ -1,7 +1,6 @@
 import com.DefaultClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.msg.BotResponseRequest;
 import com.module.request.MsgBody;
 import com.module.request.Text;
 import com.wulai.msg.GetBotResponse;
@@ -38,7 +37,7 @@ public class Scene1 {
                 logger.severe("getBotResponse error");
             }
         } else {
-            logger.info("userCreate error, skip getBotResponse ,please check the userCreate response");
+            logger.info("userCreate error, skip getBotResponse ,please check the userCreate dictionary");
         }
     }
 }
