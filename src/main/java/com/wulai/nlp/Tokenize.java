@@ -24,7 +24,7 @@ public class Tokenize {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("query", query);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/nlp/Tokenize", params);
+        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/nlp/tokenize", params);
 
         return wulaiClient.getResponseArray(httpResponse,Token.class,"tokens");
     }
