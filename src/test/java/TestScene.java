@@ -5,18 +5,15 @@ import com.module.request.scene.Block;
 import com.module.request.scene.*;
 import com.module.request.scene.condition.EqualTo;
 import com.module.response.scene.*;
-import com.util.Credentials;
 import com.wulai.scene.*;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 
 public class TestScene {
-    //private static WulaiClient wulaiClient = new WulaiClient();
-    private static WulaiClient wulaiClient = new WulaiClient(URI.create("http://preopenapi.wul.ai/"), new Credentials());
+    private static WulaiClient wulaiClient = new WulaiClient();
     private static int blockId;
     private static int scene_id;
     private static int intent_id;
