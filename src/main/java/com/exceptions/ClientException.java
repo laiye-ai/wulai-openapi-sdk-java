@@ -2,8 +2,6 @@ package com.exceptions;
 
 public class ClientException extends Exception {
 
-    private static final long serialVersionUID = -7312075709491291437L;
-
     private String errCode;
     private ErrorType errorType;
 
