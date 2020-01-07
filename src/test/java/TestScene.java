@@ -1,9 +1,8 @@
 import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.scene.*;
-import com.module.request.scene.Action;
 import com.module.request.scene.Block;
+import com.module.request.scene.*;
 import com.module.request.scene.condition.EqualTo;
 import com.module.response.scene.*;
 import com.util.Credentials;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class TestScene {
     //private static WulaiClient wulaiClient = new WulaiClient();
-    private static WulaiClient wulaiClient = new WulaiClient(URI.create("http://preopenapi.wul.ai/"),new Credentials());
+    private static WulaiClient wulaiClient = new WulaiClient(URI.create("http://preopenapi.wul.ai/"), new Credentials());
     private static int blockId;
     private static int scene_id;
     private static int intent_id;
@@ -141,73 +140,73 @@ public class TestScene {
         }
 
         System.out.println("+++++测试创建消息发送单元++++");
-        CreateInformBlock createInformBlock =new CreateInformBlock();
-        Block informBlock=new Block();
+        CreateInformBlock createInformBlock = new CreateInformBlock();
+        Block informBlock = new Block();
         informBlock.setName("创建消息发送单元");
         informBlock.setIntentID(intent_id);
         informBlock.setMode("RESPONSE_RANDOM");
         informBlock.setDefaultSlotValue("default response");
         createInformBlock.setBlock(informBlock);
-        Block createInformResponse= createInformBlock.request(wulaiClient);
-        informId=createInformResponse.getID();
+        Block createInformResponse = createInformBlock.request(wulaiClient);
+        informId = createInformResponse.getID();
 
         System.out.println("+++++测试更新消息发送单元++++");
-        UpdateInformBlock updateInformBlock =new UpdateInformBlock();
+        UpdateInformBlock updateInformBlock = new UpdateInformBlock();
         createInformResponse.setDefaultSlotValue("hello ,上海天晴");
         createInformResponse.setName("发送天气信息");
         updateInformBlock.setBlock(createInformResponse);
-        Block updateInformResponse= updateInformBlock.request(wulaiClient);
-        if (!updateInformResponse.getName().equals("发送天气信息")){
-            throw new ServerException("1","update BlockInformBlock error",1);
+        Block updateInformResponse = updateInformBlock.request(wulaiClient);
+        if (!updateInformResponse.getName().equals("发送天气信息")) {
+            throw new ServerException("1", "update BlockInformBlock error", 1);
         }
 
         System.out.println("++++++获取单元详情++++++");
-        GetInformBlock getInformBlock =new GetInformBlock();
+        GetInformBlock getInformBlock = new GetInformBlock();
         getInformBlock.setId(informId);
-        Block informBlockdetail= getInformBlock.request(wulaiClient);
-        if (!informBlockdetail.getName().equals("发送天气信息")){
-            throw new ServerException("1","get InformBlock error",1);
+        Block informBlockdetail = getInformBlock.request(wulaiClient);
+        if (!informBlockdetail.getName().equals("发送天气信息")) {
+            throw new ServerException("1", "get InformBlock error", 1);
         }
 
 
-        Condition condition=new Condition();
+        Condition condition = new Condition();
         condition.setEqualTo(new EqualTo("测试condition"));
-        Connection connection=new Connection();
+        Connection connection = new Connection();
         connection.setFromBlockID(blockId);
         connection.setToBlockID(informId);
         connection.setCondition(condition);
-        Relation relation=new Relation();
+        Relation relation = new Relation();
         relation.setConnection(connection);
         relation.setIntentID(intent_id);
 
         System.out.println("+++++测试创建单元关系++++");
-        CreateBlockRelation createBlockRelation=new CreateBlockRelation();
+        CreateBlockRelation createBlockRelation = new CreateBlockRelation();
         createBlockRelation.setRelation(relation);
-        Relation relation1=createBlockRelation.request(wulaiClient);
-        if (relation1.getConnection().getToBlockID()!=informId){
-            throw new ServerException("1","createBlockRelation error",1);
+        Relation relation1 = createBlockRelation.request(wulaiClient);
+        if (relation1.getConnection().getToBlockID() != informId) {
+            throw new ServerException("1", "createBlockRelation error", 1);
         }
 
         System.out.println("+++++测试创建终点单元++++");
-        CreateEndBlock createEndBlock =new CreateEndBlock();
-        Block endblock=new Block();
-        Last last=new Last();
-        Action action =new Action();
+        CreateEndBlock createEndBlock = new CreateEndBlock();
+        Block endblock = new Block();
+        Last last = new Last();
+        Action action = new Action();
         action.setLast(last);
         endblock.setAction(action);
         endblock.setName("测试创建意图终点");
         endblock.setIntentID(intent_id);
         createEndBlock.setBlock(endblock);
-        Block createEndResponse= createEndBlock.request(wulaiClient);
-        endId =createEndResponse.getID();
+        Block createEndResponse = createEndBlock.request(wulaiClient);
+        endId = createEndResponse.getID();
 
         System.out.println("+++++测试更新终点单元++++");
-        UpdateEndBlock updateEndBlock =new UpdateEndBlock();
+        UpdateEndBlock updateEndBlock = new UpdateEndBlock();
         createEndResponse.setName("天气意图结束");
         updateEndBlock.setBlock(createEndResponse);
-        Block endBlockResponse= updateEndBlock.request(wulaiClient);
-        if (!endBlockResponse.getName().equals("天气意图结束")){
-            throw new ServerException("1","create BlockEndBlock error",1);
+        Block endBlockResponse = updateEndBlock.request(wulaiClient);
+        if (!endBlockResponse.getName().equals("天气意图结束")) {
+            throw new ServerException("1", "create BlockEndBlock error", 1);
         }
 
         condition.setEqualTo(new EqualTo("测试condition2"));
@@ -216,93 +215,141 @@ public class TestScene {
         connection.setCondition(condition);
         relation.setConnection(connection);
         createBlockRelation.setRelation(relation);
-        relation1=createBlockRelation.request(wulaiClient);
-        if (relation1.getConnection().getToBlockID()!=endId){
-            throw new ServerException("1","createBlockRelation error",1);
+        relation1 = createBlockRelation.request(wulaiClient);
+        if (relation1.getConnection().getToBlockID() != endId) {
+            throw new ServerException("1", "createBlockRelation error", 1);
         }
 
 //        上线任务机器人
         System.out.println("+++++测试更新意图+++");
-        UpdateIntentStatus updateIntentStatus =new UpdateIntentStatus();
+        UpdateIntentStatus updateIntentStatus = new UpdateIntentStatus();
         updateIntentStatus.setStatus(true);
         updateIntentStatus.setIntentId(intent_id);
         updateIntentStatus.setFirstBlockId(blockId);
-        IntentStatus intentStatus=updateIntentStatus.request(wulaiClient);
-        if (intentStatus.getUpdateTime()==null){
-            throw new ServerException("1","update IntentStatus error",1);
+        IntentStatus intentStatus = updateIntentStatus.request(wulaiClient);
+        if (intentStatus.getUpdateTime() == null) {
+            throw new ServerException("1", "update IntentStatus error", 1);
         }
 
         System.out.println("+++++查询单元列表++++++");
-        QueryBlockList queryBlockList=new QueryBlockList();
+        QueryBlockList queryBlockList = new QueryBlockList();
         queryBlockList.setIntent_id(intent_id);
         queryBlockList.setPage(1);
         queryBlockList.setPageSize(20);
-        List<Block> blockList=queryBlockList.request(wulaiClient);
-        Iterator<Block> blockIterator=blockList.iterator();
-        while (blockIterator.hasNext()){
-            Block b=blockIterator.next();
+        List<Block> blockList = queryBlockList.request(wulaiClient);
+        Iterator<Block> blockIterator = blockList.iterator();
+        while (blockIterator.hasNext()) {
+            Block b = blockIterator.next();
             System.out.println("+++++打印单元信息++++++");
             System.out.println(b.getID());
             System.out.println(b.getName());
         }
 
         System.out.println("+++++获取词槽++++++");
-        GetSlot getSlot=new GetSlot();
+        GetSlot getSlot = new GetSlot();
         getSlot.setId(slot_id);
-        Slot slot0=getSlot.request(wulaiClient);
-        if (slot0.getSceneId()!=scene_id){
-            throw new ServerException("1","1",1);
+        Slot slot0 = getSlot.request(wulaiClient);
+        if (slot0.getSceneId() != scene_id) {
+            throw new ServerException("1", "1", 1);
+        }
+
+        System.out.println("+++++获取询问填槽单元++++++");
+        GetRequestBlock getRequestBlock = new GetRequestBlock();
+        getRequestBlock.setId(blockId);
+        Block requestBlock1 = getRequestBlock.request(wulaiClient);
+        if (!requestBlock1.getName().equals("获取城市信息")) {
+            throw new ServerException("1", "1", 1);
+        }
+
+        System.out.println("+++++获取意图终点单元++++++");
+        GetEndBlock getEndBlock = new GetEndBlock();
+        getEndBlock.setId(endId);
+        Block endBlock = getEndBlock.request(wulaiClient);
+        if (!endBlock.getName().equals("天气意图结束")) {
+            throw new ServerException("1", "1", 1);
         }
 
         System.out.println("+++++查询词槽列表++++++");
-        QuerySlotList querySlotList=new QuerySlotList();
+        QuerySlotList querySlotList = new QuerySlotList();
         querySlotList.setSceneId(scene_id);
         querySlotList.setPage(1);
         querySlotList.setPageSize(20);
-        List<Slot> slotList=querySlotList.request(wulaiClient);
-        Iterator<Slot> slotIterator=slotList.iterator();
-        while (slotIterator.hasNext()){
+        List<Slot> slotList = querySlotList.request(wulaiClient);
+        Iterator<Slot> slotIterator = slotList.iterator();
+        while (slotIterator.hasNext()) {
             Slot s = slotIterator.next();
             System.out.println("+++++打印词槽信息++++++");
             System.out.println(s.getName());
             System.out.println(s.getId());
         }
+
         System.out.println("+++++查询触发器列表++++++");
-        QueryIntentTriggerList queryIntentTriggerList=new QueryIntentTriggerList();
+        QueryIntentTriggerList queryIntentTriggerList = new QueryIntentTriggerList();
         queryIntentTriggerList.setIntentId(intent_id);
         queryIntentTriggerList.setPage(1);
         queryIntentTriggerList.setPage_size(20);
-        List<IntentTrigger> intentTriggerList=queryIntentTriggerList.request(wulaiClient);
-        Iterator<IntentTrigger> intentTriggerIterator=intentTriggerList.iterator();
+        List<IntentTrigger> intentTriggerList = queryIntentTriggerList.request(wulaiClient);
+        Iterator<IntentTrigger> intentTriggerIterator = intentTriggerList.iterator();
 
-        while (intentTriggerIterator.hasNext()){
-            IntentTrigger i=intentTriggerIterator.next();
+        while (intentTriggerIterator.hasNext()) {
+            IntentTrigger i = intentTriggerIterator.next();
             System.out.println("+++++打印触发器信息++++++");
             System.out.println(i.getId());
             System.out.println(i.getText());
         }
+
         System.out.println("+++++查询词槽数据来源++++++");
-        QuerySlotDataSourceList querySlotDataSourceList=new QuerySlotDataSourceList();
+        QuerySlotDataSourceList querySlotDataSourceList = new QuerySlotDataSourceList();
         querySlotDataSourceList.setSlotId(slot_id);
-        List<DataSource> dataSourceList=querySlotDataSourceList.request(wulaiClient);
-        Iterator<DataSource> dataSourceIterator=dataSourceList.iterator();
-        while (dataSourceIterator.hasNext()){
-            DataSource dataSource=dataSourceIterator.next();
+        List<DataSource> dataSourceList = querySlotDataSourceList.request(wulaiClient);
+        Iterator<DataSource> dataSourceIterator = dataSourceList.iterator();
+        while (dataSourceIterator.hasNext()) {
+            DataSource dataSource = dataSourceIterator.next();
             System.out.println("+++++打印词槽来源++++++");
             System.out.println(dataSource.getSlotID());
             System.out.println(dataSource.getEntityID());
         }
 
+        System.out.println("+++++查询场景列表++++++");
+        QuerySceneList querySceneList = new QuerySceneList();
+        List<Scene> sceneList = querySceneList.request(wulaiClient);
+        Iterator<Scene> sceneIterator = sceneList.iterator();
+        while (sceneIterator.hasNext()) {
+            Scene s = sceneIterator.next();
+            System.out.println("+++++打印场景信息++++++");
+            System.out.println(s.getId());
+            System.out.println(s.getName());
+        }
 
+        System.out.println("+++++查询意图列表++++++");
+        QueryIntentList queryIntentList = new QueryIntentList();
+        queryIntentList.setScene_id(scene_id);
+        List<Intent> intentList = queryIntentList.request(wulaiClient);
+        Iterator<Intent> intentIterator=intentList.iterator();
+        while (intentIterator.hasNext()){
+            Intent i=intentIterator.next();
+            System.out.println("+++++打印意图信息++++++");
+            System.out.println(i.getId());
+            System.out.println(i.getName());
+        }
+
+        System.out.println("+++++查询任务待审核消息列表++++++");
+        QueryIntentTriggerLearningList queryIntentTriggerLearningList = new QueryIntentTriggerLearningList();
+        queryIntentTriggerLearningList.setPage(1);
+        queryIntentTriggerLearningList.setPageSize(20);
+        List<QueryItem> queryItems = queryIntentTriggerLearningList.request(wulaiClient);
+        Iterator<QueryItem> queryItemIterator=queryItems.iterator();
+        while (queryItemIterator.hasNext()){
+            QueryItem queryItem =  queryItemIterator.next();
+            System.out.println("+++++打印待审核消息++++++");
+            System.out.println(queryItem.getID());
+            System.out.println(queryItem.getContent());
+        }
 
     }
 
     @Test
-    public void TestQuery() throws ServerException,ClientException{
-        QueryIntentTriggerLearningList queryIntentTriggerLearningList=new QueryIntentTriggerLearningList();
-        queryIntentTriggerLearningList.setPage(1);
-        queryIntentTriggerLearningList.setPageSize(20);
-        List<QueryItem> queryItems=queryIntentTriggerLearningList.request(wulaiClient);
+    public void TestQuery() throws ServerException, ClientException {
 
     }
 
