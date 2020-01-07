@@ -6,7 +6,6 @@ public class Credentials {
     private String secret = System.getenv("secret");
 
     public Credentials() {
-
     }
 
     public Credentials(String pubkey, String secret) {
