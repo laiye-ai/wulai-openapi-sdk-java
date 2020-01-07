@@ -8,7 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
-public class UpdateBlockEndBlock {
+//创建询问填槽单元
+public class CreateRequestBlock {
     private Block block;
 
     public void setBlock(Block block) {
@@ -23,10 +24,11 @@ public class UpdateBlockEndBlock {
         HashMap<String, Object> params = new HashMap<>();
         params.put("block", block);
 
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/request-block/create", params);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/end-block/update", params);
+        return wulaiClient.getResponse(httpResponse, Block.class, "block");
 
-        return wulaiClient.getResponse(httpResponse, Block.class,"block");
+
     }
 
 }

@@ -35,7 +35,7 @@ public class DeleteEntityEnumerationValue {
         params.put("entity_id", entityId);
         params.put("value", value);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/enumeration/value/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/enumeration/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

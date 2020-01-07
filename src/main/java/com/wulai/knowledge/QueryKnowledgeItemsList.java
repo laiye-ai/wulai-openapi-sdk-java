@@ -25,7 +25,7 @@ public class QueryKnowledgeItemsList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge-items/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/knowledge-items/list", params);
         return wulaiClient.getResponse(httpResponse, KnowledgeItemsList.class);
 
     }

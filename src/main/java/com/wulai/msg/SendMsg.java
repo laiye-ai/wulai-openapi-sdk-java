@@ -77,7 +77,7 @@ public class SendMsg {
         params.put("msg_body", msgBody);
 
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/send", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/send", params);
         return wulaiClient.getResponse(httpResponse,String.class,"msg_id");
 
     }

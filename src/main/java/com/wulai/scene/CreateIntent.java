@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
+
+//创建意图
 public class CreateIntent {
     private Intent intent;
 
@@ -23,7 +25,7 @@ public class CreateIntent {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent", intent);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/create", params);
         return wulaiClient.getResponse(httpResponse,Intent.class,"intent");
 
 

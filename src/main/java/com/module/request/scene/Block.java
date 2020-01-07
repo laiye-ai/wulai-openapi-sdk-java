@@ -1,7 +1,6 @@
 package com.module.request.scene;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.module.response.scene.Action;
 import com.module.response.scene.Connection;
 
 import java.util.List;
@@ -23,14 +22,6 @@ public class Block {
     @JSONField(name = "action")
     public void setAction(Action action) {
         this.action = action;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @JSONField(name = "action")

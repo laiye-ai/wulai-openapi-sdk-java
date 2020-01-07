@@ -23,7 +23,7 @@ public class DeleteBlock {
 
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

@@ -19,12 +19,11 @@ public class UpdateScene {
         return scene;
     }
 
-
     public Scene request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("scene", scene);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/update", params);
-        return wulaiClient.getResponse(httpResponse,Scene.class);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/update", params);
+        return wulaiClient.getResponse(httpResponse,Scene.class,"scene");
     }
 }

@@ -24,7 +24,7 @@ public class QueryEntity {
 
 
         params.put("id", id);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/get", params);
         return wulaiClient.getResponse(httpResponse, Entity.class,"entity");
 
     }

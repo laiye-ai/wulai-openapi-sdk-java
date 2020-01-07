@@ -26,7 +26,7 @@ public class QueryUserAttribute {
     public List<UserAttributeUserAttributeValue> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/user-attribute/pair/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user/user-attribute/pair/list", params);
         return wulaiClient.getResponseArray(httpResponse, UserAttributeUserAttributeValue.class, "user_attribute_user_attribute_values");
     }
 }

@@ -47,7 +47,7 @@ public class CreateUserAttribute {
         params.put("user_id", userId);
         params.put("user_attribute_user_attribute_value", userAttributeUserAttributeValues);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/user-attribute/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user/user-attribute/create", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

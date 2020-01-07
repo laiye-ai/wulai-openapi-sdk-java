@@ -25,7 +25,7 @@ public class UpdateTerm {
         HashMap<String, Object> params = new HashMap<>();
         params.put("term_item", termItem);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/term/update", params);
 
         return wulaiClient.getResponse(httpResponse,TermItem.class,"term_item");
 

@@ -47,7 +47,7 @@ public class GetBotResponse {
         params.put("user_id", userId);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/bot-response", params);
 
         return wulaiClient.getResponse(httpResponse, BotResponse.class);
 

@@ -45,7 +45,7 @@ public class GetQABotResponse {
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response/qa", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/bot-response/qa", params);
         return wulaiClient.getResponse(httpResponse, QAResponse.class);
 
 

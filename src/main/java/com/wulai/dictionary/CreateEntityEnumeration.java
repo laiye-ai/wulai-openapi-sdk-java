@@ -25,7 +25,7 @@ public class CreateEntityEnumeration {
 
         params.put("enum_entity", enumEntity);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/enumeration/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/enumeration/create", params);
 
         return wulaiClient.getResponse(httpResponse,EnumEntity.class,"enum_entity");
 

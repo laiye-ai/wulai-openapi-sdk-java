@@ -26,7 +26,7 @@ public class QuerySlotDataSourceList {
 
         params.put("slot_id", slotId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/data-source/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/data-source/list", params);
         return wulaiClient.getResponseArray(httpResponse,DataSource.class,"data_sources");
 
     }

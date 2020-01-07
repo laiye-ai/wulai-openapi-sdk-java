@@ -24,7 +24,7 @@ public class UpdateSimilarQuestion {
         HashMap<String, Object> params = new HashMap<>();
         params.put("similar_question", similarQuestion);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/similar-question/update", params);
 
         return wulaiClient.getResponse(httpResponse, SimilarQuestion.class, "similar_question");
     }

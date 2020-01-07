@@ -22,7 +22,7 @@ public class UpdateKnowledge {
     public Knowledge request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("knowledge", knowledge);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/knowledge/update", params);
 
         return wulaiClient.getResponse(httpResponse,Knowledge.class,"knowledge");
 

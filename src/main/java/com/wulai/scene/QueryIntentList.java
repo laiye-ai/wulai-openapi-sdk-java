@@ -25,7 +25,7 @@ public class QueryIntentList {
 
         params.put("scene_id", scene_id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/list", params);
 
        // return wulaiClient.getResponse(httpResponse,Intent.class,"intents");
         return wulaiClient.getResponseArray(httpResponse,Intent.class,"intents");

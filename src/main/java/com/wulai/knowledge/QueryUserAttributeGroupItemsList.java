@@ -33,7 +33,7 @@ public class QueryUserAttributeGroupItemsList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-items/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-items/list", params);
 
         return wulaiClient.getResponse(httpResponse, UserAttributeGroupItemsList.class);
     }

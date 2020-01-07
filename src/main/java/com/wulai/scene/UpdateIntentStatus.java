@@ -43,7 +43,7 @@ public class UpdateIntentStatus {
         params.put("first_block_id", firstBlockId);
         params.put("intent_id", intentId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/status/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/status/update", params);
         return wulaiClient.getResponse(httpResponse, IntentStatus.class);
 
     }

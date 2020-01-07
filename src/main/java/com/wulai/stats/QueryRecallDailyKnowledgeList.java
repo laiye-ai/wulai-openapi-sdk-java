@@ -54,7 +54,7 @@ public class QueryRecallDailyKnowledgeList {
         params.put("start_date", startDate);
         params.put("end_date", endDate);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/stats/qa/satisfaction/daily/knowledge/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/stats/qa/satisfaction/daily/knowledge/list", params);
 
         return wulaiClient.getResponse(httpResponse, QASatisfactionKnowledgeStats.class);
     }

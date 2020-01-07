@@ -35,7 +35,7 @@ public class QueryEntityList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/list", params);
 
         return wulaiClient.getResponseArray(httpResponse, Entity.class,"entities");
 

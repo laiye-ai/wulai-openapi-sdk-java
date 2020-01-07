@@ -21,7 +21,7 @@ public class DeleteKnowledge {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        return wulaiClient.excuteRequest("/qa/knowledge/delete", params).getStatusLine().getStatusCode();
+        return wulaiClient.executeRequest("/qa/knowledge/delete", params).getStatusLine().getStatusCode();
 
     }
 

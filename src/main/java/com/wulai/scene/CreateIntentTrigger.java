@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
+
+//创建触发器
 public class CreateIntentTrigger {
     private IntentTrigger intentTrigger;
 
@@ -23,7 +25,7 @@ public class CreateIntentTrigger {
     public IntentTrigger request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_trigger", intentTrigger);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger/create", params);
         return wulaiClient.getResponse(httpResponse, IntentTrigger.class,"intent_trigger");
 
 

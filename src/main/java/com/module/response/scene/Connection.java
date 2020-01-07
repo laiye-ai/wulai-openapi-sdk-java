@@ -1,6 +1,7 @@
 package com.module.response.scene;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.module.request.scene.Condition;
 
 public class Connection {
     private int fromBlockID;
@@ -33,7 +34,7 @@ public class Connection {
     }
 
     @JSONField(name = "condition")
-    public void setCondition(Condition value) {
-        this.condition = value;
+    public void setCondition(Condition condition) {
+        this.condition = condition;
     }
 }

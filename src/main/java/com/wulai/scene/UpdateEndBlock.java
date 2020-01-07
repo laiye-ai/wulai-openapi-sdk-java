@@ -8,7 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
-public class UpdateBlockRequestBlock {
+public class UpdateEndBlock {
     private Block block;
 
     public void setBlock(Block block) {
@@ -21,14 +21,12 @@ public class UpdateBlockRequestBlock {
 
     public Block request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-
         params.put("block", block);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/request-block/update", params);
 
-        return wulaiClient.getResponse(httpResponse,Block.class,"block");
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/end-block/update", params);
 
+        return wulaiClient.getResponse(httpResponse, Block.class,"block");
     }
-
 
 }

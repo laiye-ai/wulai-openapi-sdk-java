@@ -89,7 +89,7 @@ public class ReceiveMsg {
         params.put("bot", bot);
         params.put("answer_id", answerID);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/receive", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/receive", params);
         return wulaiClient.getResponse(httpResponse,String.class,"msg_id");
 
     }

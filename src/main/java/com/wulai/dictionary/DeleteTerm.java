@@ -22,7 +22,7 @@ public class DeleteTerm {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/term/delete", params);
 
         return httpResponse.getStatusLine().getStatusCode();
     }

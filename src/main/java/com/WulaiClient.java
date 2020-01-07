@@ -130,6 +130,7 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         return JSONObject.parseObject(body,T);
     }
 
@@ -142,6 +143,7 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
 
         return JSONObject.parseObject(jsonObject.get(key).toString(),T);
@@ -160,7 +162,7 @@ public class WulaiClient {
         return JSONObject.parseArray(body,T);
 
     }
-    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T,String params) throws ClientException{
+    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T,String key) throws ClientException{
 
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
@@ -170,14 +172,15 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
+        System.out.println(body);
         JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
-        return JSONObject.parseArray(jsonObject.get(params).toString(),T);
+        return JSONObject.parseArray(jsonObject.get(key).toString(),T);
 
     }
 
 
 
-    public synchronized CloseableHttpResponse excuteRequest(String action, HashMap<String, Object> data)
+    public synchronized CloseableHttpResponse executeRequest(String action, HashMap<String, Object> data)
             throws ClientException, ServerException {
         HttpEntityEnclosingRequestBase postrequest = null;
         CloseableHttpResponse httpResponse = null;
@@ -237,7 +240,7 @@ public class WulaiClient {
     public synchronized JSONObject processCommonRequest(String action, JSONObject data) throws ClientException, ServerException {
 
         HashMap<String,Object> params=JSONObject.parseObject(data.toString(),HashMap.class);
-        CloseableHttpResponse httpResponse=excuteRequest(action,params);
+        CloseableHttpResponse httpResponse= executeRequest(action,params);
         return getJsonFromResponse(httpResponse);
 
     }

@@ -62,7 +62,7 @@ public class QueryMsgHistory {
         params.put("direction", direction);
         params.put("msg_id", msgId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/history", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/history", params);
         return wulaiClient.getResponse(httpResponse,MsgHistory.class);
 
     }

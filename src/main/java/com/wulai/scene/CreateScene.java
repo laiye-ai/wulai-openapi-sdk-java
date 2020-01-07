@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
+
+//创建场景
 public class CreateScene {
     private Scene scene;
 
@@ -23,7 +25,7 @@ public class CreateScene {
         HashMap<String, Object> params = new HashMap<>();
         params.put("scene", scene);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/create", params);
 
         return wulaiClient.getResponse(httpResponse,Scene.class,"scene");
     }

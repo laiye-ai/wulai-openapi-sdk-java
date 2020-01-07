@@ -48,7 +48,7 @@ public class QueryIntentTriggerList {
         params.put("page", page);
         params.put("page_size", page_size);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger/list", params);
 
         return wulaiClient.getResponseArray(httpResponse,IntentTrigger.class,"intent_triggers");
 

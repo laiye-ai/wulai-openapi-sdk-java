@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
+
+//创建单元内回复
 public class CreateBlockResponse {
     private Response response;
 
@@ -22,7 +24,7 @@ public class CreateBlockResponse {
     public Response request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("dictionary", response);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/response/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/response/create", params);
 
         return wulaiClient.getResponse(httpResponse, Response.class,"response");
 

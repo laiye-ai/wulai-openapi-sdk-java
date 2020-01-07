@@ -53,7 +53,7 @@ public class CreateSatisfaction {
         params.put("satisfaction", satisfaction);
         params.put("bot_id", botId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/satisfaction/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/satisfaction/create", params);
 
         return httpResponse.getStatusLine().getStatusCode();
     }

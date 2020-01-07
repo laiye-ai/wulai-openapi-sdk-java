@@ -23,7 +23,7 @@ public class UpdateIntentTrigger {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_trigger", intent_trigger);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger/update", params);
 
         return wulaiClient.getResponse(httpResponse,IntentTrigger.class,"intent_trigger");
     }

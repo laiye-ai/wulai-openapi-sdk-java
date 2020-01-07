@@ -24,7 +24,7 @@ public class ExtractEntities {
         HashMap<String, Object> params = new HashMap<>();
         params.put("query", query);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/nlp/entities/extract", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/nlp/entities/extract", params);
         return wulaiClient.getResponseArray(httpResponse, EntityElement.class,"entities");
 
     }

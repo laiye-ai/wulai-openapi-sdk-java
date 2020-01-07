@@ -23,7 +23,7 @@ public class UpdateSlot {
         HashMap<String, Object> params = new HashMap<>();
         params.put("slot", slot);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/update", params);
-        return wulaiClient.getResponse(httpResponse,Slot.class);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/update", params);
+        return wulaiClient.getResponse(httpResponse,Slot.class,"slot");
     }
 }

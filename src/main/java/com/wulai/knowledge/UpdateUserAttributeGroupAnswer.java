@@ -24,7 +24,7 @@ public class UpdateUserAttributeGroupAnswer {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_attribute_group_answer", user_attribute_group_answer);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answer/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-answer/update", params);
         return wulaiClient.getResponse(httpResponse, UserAttributeGroupAnswer.class, "user_attribute_group_answer");
 
     }

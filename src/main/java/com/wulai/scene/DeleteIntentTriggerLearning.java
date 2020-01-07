@@ -23,7 +23,7 @@ public class DeleteIntentTriggerLearning {
         params.put("id", id);
 
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger-learning/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger-learning/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

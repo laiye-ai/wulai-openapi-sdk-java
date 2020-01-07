@@ -22,7 +22,7 @@ public class DeleteBlockResponse {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/dictionary/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/dictionary/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

@@ -123,8 +123,5 @@ public class TestMsg {
             throw new ServerException("1","userSuggestions error",1);
         }
 
-
-
-
     }
 }

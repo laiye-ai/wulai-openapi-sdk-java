@@ -35,7 +35,7 @@ public class QueryTermList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/term/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/term/list", params);
         return wulaiClient.getResponse(httpResponse,TermListResponse.class);
 
 

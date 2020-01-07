@@ -39,7 +39,7 @@ public class DeleteEntityIntentValue {
         params.put("entity_id", entityId);
         params.put("synonyms", synonyms);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/intent/value/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/intent/value/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

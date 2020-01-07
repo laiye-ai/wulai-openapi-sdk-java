@@ -39,7 +39,7 @@ public class CreateEntityIntentValue {
         params.put("entity_id", entityId);
         params.put("synonyms", synonyms);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/intent/value/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/intent/value/create", params);
         return wulaiClient.getResponse(httpResponse, IntentResponse.class, "intent_entity");
     }
 

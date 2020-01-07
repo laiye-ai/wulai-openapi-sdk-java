@@ -21,7 +21,7 @@ public class DeleteEntity {
     public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

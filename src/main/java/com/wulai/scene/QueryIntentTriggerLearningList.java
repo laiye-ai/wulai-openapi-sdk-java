@@ -34,7 +34,7 @@ public class QueryIntentTriggerLearningList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger-learning/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger-learning/list", params);
         return wulaiClient.getResponseArray(httpResponse,QueryItem.class,"query_items");
 
     }

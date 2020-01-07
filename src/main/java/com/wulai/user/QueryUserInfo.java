@@ -26,7 +26,7 @@ public class QueryUserInfo {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user/get", params);
 
 
         return wulaiClient.getResponse(httpResponse,UserInfo.class);

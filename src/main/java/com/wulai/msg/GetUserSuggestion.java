@@ -37,7 +37,7 @@ public class GetUserSuggestion {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
         params.put("query", query);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/user-suggestion/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/user-suggestion/get", params);
         return wulaiClient.getResponseArray(httpResponse,String.class,"user_suggestions");
 
     }

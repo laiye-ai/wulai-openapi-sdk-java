@@ -22,7 +22,7 @@ public class DeleteUserAttriButeGroupAnswer {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse closeableHttpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answer/delete", params);
+        CloseableHttpResponse closeableHttpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-answer/delete", params);
         return closeableHttpResponse.getStatusLine().getStatusCode();
 
     }

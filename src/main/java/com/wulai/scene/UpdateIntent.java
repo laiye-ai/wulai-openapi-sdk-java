@@ -24,7 +24,7 @@ public class UpdateIntent {
 
         params.put("intent", intent);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/update", params);
 
         return wulaiClient.getResponse(httpResponse,Intent.class,"intent");
     }

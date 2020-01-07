@@ -22,7 +22,7 @@ public class DeleteSlotDataSource {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/data-source/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/data-source/delete", params);
 
         return httpResponse.getStatusLine().getStatusCode();
 

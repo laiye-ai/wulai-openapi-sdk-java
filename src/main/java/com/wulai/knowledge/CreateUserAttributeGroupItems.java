@@ -23,7 +23,7 @@ public class CreateUserAttributeGroupItems {
         HashMap<String, Object> params = new HashMap<>();
         params.put("user_attribute_group_item", userattributeGroupItem);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-items/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-items/create", params);
         return wulaiClient.getResponse(httpResponse,UserAttributeGroupItem.class,"user_attribute_group_item");
 
 

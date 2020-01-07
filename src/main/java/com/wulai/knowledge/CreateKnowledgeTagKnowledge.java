@@ -23,7 +23,7 @@ public class CreateKnowledgeTagKnowledge {
         HashMap<String, Object> params = new HashMap<>();
         params.put("knowledge_tag_knowledge", knowledgeTagKnowledge);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge-tag-knowledge/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/knowledge-tag-knowledge/create", params);
 
         return wulaiClient.getResponse(httpResponse,KnowledgeTagKnowledge.class,"knowledge_tag_knowledge");
 

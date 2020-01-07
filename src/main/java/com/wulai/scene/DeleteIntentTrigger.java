@@ -22,7 +22,7 @@ public class DeleteIntentTrigger {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/intent/trigger/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/intent/trigger/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

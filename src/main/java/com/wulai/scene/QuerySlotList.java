@@ -50,7 +50,7 @@ public class QuerySlotList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/list", params);
 
         return wulaiClient.getResponseArray(httpResponse,Slot.class,"slots");
 

@@ -47,7 +47,7 @@ public class CreateUser {
         params.put("avatar_url", avatarUrl);
         params.put("nickname", nickname);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user/create", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

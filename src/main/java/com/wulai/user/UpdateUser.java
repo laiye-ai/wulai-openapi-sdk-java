@@ -47,7 +47,7 @@ public class UpdateUser {
         params.put("avatar_url", avatarUrl);
         params.put("nickname", nickname);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user/update", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user/update", params);
         return httpResponse.getStatusLine().getStatusCode();
 
     }

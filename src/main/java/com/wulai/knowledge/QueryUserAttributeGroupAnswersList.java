@@ -36,7 +36,7 @@ public class QueryUserAttributeGroupAnswersList {
         params.put("page_size", pageSize);
         params.put("filter", filter);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answers/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-answers/list", params);
 
         return wulaiClient.getResponse(httpResponse, UserAttributeGroupAnswersList.class);
     }

@@ -53,7 +53,7 @@ public class QuerySatisfactionDailyKnowledgeList {
         params.put("page", page);
         params.put("page_size", pageSize);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/stats/qa/recall/daily/knowledge/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/stats/qa/recall/daily/knowledge/list", params);
         return wulaiClient.getResponse(httpResponse,SatisfactionDailyKnowledgeList.class);
     }
 }

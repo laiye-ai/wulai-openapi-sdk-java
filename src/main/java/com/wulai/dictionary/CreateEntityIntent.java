@@ -26,7 +26,7 @@ public class CreateEntityIntent {
         HashMap<String, Object> params = new HashMap<>();
         params.put("intent_entity", intentEntity);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/dictionary/entity/intent/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/dictionary/entity/intent/create", params);
 
         return wulaiClient.getResponse(httpResponse,IntentResponse.class,"intent_entity");
 

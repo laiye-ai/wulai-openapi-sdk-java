@@ -1,4 +1,8 @@
-package com.module.response.scene;
+package com.module.request.scene;
+
+import com.module.response.scene.End;
+import com.module.response.scene.Last;
+import com.module.response.scene.Specified;
 
 public class Action {
     private Last last;

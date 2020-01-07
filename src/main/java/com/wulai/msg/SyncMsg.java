@@ -88,7 +88,7 @@ public class SyncMsg {
         params.put("extra", extra);
         params.put("msg_ts", msgTs);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/sync", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/sync", params);
         return wulaiClient.getResponse(httpResponse,String.class,"msg_id");
 
     }

@@ -21,7 +21,7 @@ public class DeleteSimilarQuestion {
     public int request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", id);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/delete", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/similar-question/delete", params);
         return httpResponse.getStatusLine().getStatusCode();
     }
 

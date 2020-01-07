@@ -14,7 +14,7 @@ public class QuerySceneList {
     public List<Scene> request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/list", params);
 
         return wulaiClient.getResponseArray(httpResponse,Scene.class,"scenes");
 

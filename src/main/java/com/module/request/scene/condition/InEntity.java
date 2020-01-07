@@ -1,4 +1,4 @@
-package com.module.response.scene;
+package com.module.request.scene.condition;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

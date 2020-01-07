@@ -22,7 +22,7 @@ public class CreateSimilarQuestion {
     public SimilarQuestion request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
         params.put("similar_question", similarQuestion);
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/similar-question/create", params);
 
         return wulaiClient.getResponse(httpResponse, SimilarQuestion.class, "similar_question");
     }

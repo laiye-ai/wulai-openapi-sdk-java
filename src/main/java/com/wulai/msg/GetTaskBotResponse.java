@@ -33,7 +33,7 @@ public class GetTaskBotResponse {
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response/task", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/bot-response/task", params);
         return wulaiClient.getResponse(httpResponse,TaskResponse.class);
 
     }

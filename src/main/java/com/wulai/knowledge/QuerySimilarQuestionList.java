@@ -37,7 +37,7 @@ public class QuerySimilarQuestionList {
         params.put("page_size", pageSize);
         params.put("similar_question_id", similarQuestionId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/similar-question/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/similar-question/list", params);
         return wulaiClient.getResponse(httpResponse,SimilarQuestionList.class);
 
     }

@@ -34,7 +34,7 @@ public class GetKeywordBotResponse {
         params.put("msg_body", msgBody);
         params.put("extra", extra);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/msg/bot-response/keyword", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/msg/bot-response/keyword", params);
         return wulaiClient.getResponse(httpResponse, KeywordResponse.class);
     }
 }

@@ -24,7 +24,7 @@ public class GetSlot {
 
         params.put("id", id);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/get", params);
 
         return wulaiClient.getResponse(httpResponse,Slot.class,"slot");
     }

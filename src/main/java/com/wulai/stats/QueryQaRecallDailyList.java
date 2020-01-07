@@ -34,7 +34,7 @@ public class QueryQaRecallDailyList {
         params.put("start_date", start_date);
         params.put("end_date", end_date);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/stats/qa/recall/daily/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/stats/qa/recall/daily/list", params);
         return wulaiClient.getResponseArray(httpResponse,QARecallDailyStat.class,"qa_recall_daily_stats");
 
     }

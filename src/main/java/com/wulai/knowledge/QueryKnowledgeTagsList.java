@@ -44,7 +44,7 @@ public class QueryKnowledgeTagsList {
         params.put("page_size", pageSize);
         params.put("parent_k_tag_id", parentKTagId);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/knowledge-tags/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/knowledge-tags/list", params);
         return wulaiClient.getResponse(httpResponse,KnowledgeTagsList.class);
 
 

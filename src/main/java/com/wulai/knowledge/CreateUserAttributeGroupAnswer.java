@@ -24,7 +24,7 @@ public class CreateUserAttributeGroupAnswer {
 
         params.put("user_attribute_group_answer", userAttributeGroupAnswer);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/qa/user-attribute-group-answer/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/qa/user-attribute-group-answer/create", params);
 
         return wulaiClient.getResponse(httpResponse, UserAttributeGroupAnswer.class, "user_attribute_group_answer");
 

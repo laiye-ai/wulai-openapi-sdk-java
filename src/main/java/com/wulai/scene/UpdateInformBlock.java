@@ -8,23 +8,22 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
-public class GetBlockEndBlock {
-    private int id;
+public class UpdateInformBlock {
+    private Block block;
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
-    public int getId() {
-        return id;
+    public Block getBlock() {
+        return block;
     }
 
     public Block request(WulaiClient wulaiClient) throws ServerException, ClientException {
-
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        params.put("block", block);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/end-block/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/inform-block/update", params);
 
         return wulaiClient.getResponse(httpResponse,Block.class,"block");
 

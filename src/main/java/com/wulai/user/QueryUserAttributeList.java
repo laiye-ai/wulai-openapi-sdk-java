@@ -47,7 +47,7 @@ public class QueryUserAttributeList {
         params.put("pageSize", pageSize);
         params.put("filter", filter);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/user-attribute/list", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/user-attribute/list", params);
         return wulaiClient.getResponse(httpResponse,UserAttributeList.class);
     }
 }

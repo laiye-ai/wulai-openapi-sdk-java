@@ -8,6 +8,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
+
+//创建词槽
 public class CreateSlot {
     private Slot slot;
 
@@ -23,7 +25,7 @@ public class CreateSlot {
         HashMap<String, Object> params = new HashMap<>();
         params.put("slot", slot);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/slot/create", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/slot/create", params);
 
         return wulaiClient.getResponse(httpResponse,Slot.class,"slot");
 

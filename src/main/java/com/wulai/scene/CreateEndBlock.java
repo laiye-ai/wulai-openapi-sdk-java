@@ -8,24 +8,26 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.util.HashMap;
 
-public class GetBlockInformBlock {
-    private int id;
+//创建意图终点单元
+public class CreateEndBlock {
+    private Block block;
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
-    public int getId() {
-        return id;
+    public Block getBlock() {
+        return block;
     }
 
     public Block request(WulaiClient wulaiClient) throws ServerException, ClientException {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        params.put("block", block);
 
-        CloseableHttpResponse httpResponse = wulaiClient.excuteRequest("/scene/block/inform-block/get", params);
+        CloseableHttpResponse httpResponse = wulaiClient.executeRequest("/scene/block/end-block/create", params);
 
         return wulaiClient.getResponse(httpResponse,Block.class,"block");
     }
+
 
 }
