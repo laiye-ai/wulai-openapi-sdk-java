@@ -10,9 +10,9 @@
 已经在吾来机器人平台搭建并训练了机器人。
 对接步骤：
 
-调用 user/create，传入 user_id， 创建用户；
+调用 user/create，传入 userId， 创建用户；
 
-如果需要个性化回复，在此处调用 user/user-attribute/create 接口，传入 user_id 和该用户的用户属性；
+如果需要个性化回复，在此处调用 user/user-attribute/create 接口，传入 userId 和该用户的用户属性；
 
 调用 msg/receive 将用户的消息传给机器人；
 

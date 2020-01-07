@@ -7,12 +7,12 @@
 |类型|字段名称|长度|是否一定存在|
 | --- | --- | --- | --- |
 |Object[]| suggested_response|-| true |
-|String |user_id|[1..128]|true|
+|String |userId|[1..128]|true|
 |String |extra| [0..1024]||
-|String |msg_id|[1..18]|true|
+|String |msgId|[1..18]|true|
 |Boolean|is_dispatch| - |true|
 |String |msg_ts| [1..]|true|
-|Object |msg_body|-|true|
+|Object |msgBody|-|true|
 |String |nickname|[1..128] |true|
 
 ##### RESPONSE BODY SCHEMA: application/json
@@ -95,18 +95,18 @@ https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/Cal
 ##### REQUEST BODY SCHEMA: application/json
 |类型|字段名称|
 | --- | --- |
-|String|user_id|
+|String|userId|
 |Object|sender_info|
 |string|msg_type|
 |string|extra|
-|string|msg_id|
+|string|msgId|
 |string|msg_ts|
 |string|source|
 |Object|bot|
-|Object|msg_body|
-|Object[]|similar_response|
-|Boolean|enable_evaluate|
-|String[]|quick_reply|
+|Object|msgBody|
+|Object[]|similarResponses|
+|Boolean|enableEvaluate|
+|String[]|quickReply|
 
 附开发者文档链接：
 https://openapi.wul.ai/docs/latest/saas.openapi.v2/openapi.v2.html#operation/CallbackMessage

@@ -12,6 +12,6 @@
 
 1. 调用 UserCreate方法，传入 nickname, avatarURL, userID 创建用户；
 
-2. 调用 BotResponse 接口，传入用户消息和 userID；
+2. 调用 com.wulai.msg.GetBotResponse 接口，传入用户消息和 userID；
 
 机器人会返回1~10条可能的回复，按照置信度从高到低排序。调用方可根据自己业务需要，依据置信度参数 score 的高低或者 is_send 的值，选择一条或多条回复。
