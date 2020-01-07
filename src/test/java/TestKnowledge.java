@@ -12,6 +12,7 @@ import com.wulai.knowledge.*;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class TestKnowledge {
@@ -157,6 +158,12 @@ public class TestKnowledge {
             throw new ServerException("1", "Query UserAttributeGroupItemsList error", 1);
         }
         List<UserAttributeGroupItem> userAttributeGroupItems = userAttributeGroupItemsList.getUserAttributeGroupItems();
+        Iterator<UserAttributeGroupItem> userAttributeGroupItemIterator=userAttributeGroupItems.iterator();
+        while (userAttributeGroupItemIterator.hasNext()){
+            UserAttributeGroupItem userAttributeGroupItem=userAttributeGroupItemIterator.next();
+            System.out.println("+++++打印用户属性组信息++++");
+            System.out.println(userAttributeGroupItem.getUserAttributeGroup().getId());
+        }
         UserAttributeGroupItem userAttributeGroupItem = userAttributeGroupItems.get(0);
         String usergroup_id = userAttributeGroupItem.getUserAttributeGroup().getId();
 

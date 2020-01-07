@@ -348,11 +348,6 @@ public class TestScene {
 
     }
 
-    @Test
-    public void TestQuery() throws ServerException, ClientException {
-
-    }
-
     @AfterClass
     public static void delete() throws ServerException, ClientException {
 
