@@ -1,11 +1,12 @@
-import com.DefaultClient;
+import com.WulaiClient;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
-import com.module.request.MsgBody;
-import com.module.request.Text;
+import com.module.request.msg.MsgBody;
+import com.module.request.msg.Text;
 import com.module.request.user.*;
 import com.module.response.msg.BotResponse;
 import com.wulai.msg.GetBotResponse;
+import com.wulai.user.CreateUser;
 import com.wulai.user.UserAttributeCreate;
 import com.wulai.user.UserCreate;
 
@@ -19,10 +20,10 @@ public class Scene2 {
         String name = "laiye@test";
         int result = 0;
 
-        DefaultClient defaultClient=new DefaultClient();
+        WulaiClient defaultClient=new WulaiClient();
 
         try {
-            UserCreate userCreate=new UserCreate();
+            CreateUser userCreate=new CreateUser();
             userCreate.setUserId(name);
             userCreate.setAvatarUrl("https://www.laiye.com/static/official-website/logo.png");
             result = userCreate.request(defaultClient);
@@ -39,8 +40,8 @@ public class Scene2 {
                 UserAttributeValue userAttributeValue = new UserAttributeValue("yes"); // 设置用户属性"is复读机"为yes
 
                 UserAttributeUserAttributeValue userAttributeUserAttributeValue = new UserAttributeUserAttributeValue();
-                userAttributeUserAttributeValue.setUser_attribute_value(userAttributeValue);
-                userAttributeUserAttributeValue.setUser_attribute(userAttribute);
+                userAttributeUserAttributeValue.setUserAttributeValue(userAttributeValue);
+                userAttributeUserAttributeValue.setUserAttribute(userAttribute);
 
                 UserAttributeCreateRequest userAttributeCreateRequest = new UserAttributeCreateRequest(name);
                 userAttributeCreateRequest.addUserAttributeUserAttributeValue(userAttributeUserAttributeValue);
