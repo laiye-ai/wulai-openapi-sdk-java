@@ -47,6 +47,7 @@ public class Test {
         //默认使用https://openapi.wul.ai ,从环境变量获取 pubkey 和 secret
         WulaiClient wulaiClient=new WulaiClient();
 
+
     }
 }
 
