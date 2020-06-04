@@ -1,5 +1,4 @@
 import com.WulaiClient;
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ServerException;
@@ -15,21 +14,6 @@ public class TestProcessCommonRequest {
 
         JSONObject jsonObject1 = wulaiClient.processCommonRequest("/user/create", jsonObject);
         System.out.println(jsonObject1.toString());
-
-    }
-
-
-    @Test
-    public void Test() throws ClientException{
-        String str= "{\"user_id\",";
-        JSONObject jsonObject;
-        try {
-            jsonObject=JSONObject.parseObject(str);
-        }catch (JSONException e){
-            throw new ClientException("10","JSONException:"+e.getMessage());
-        }
-
-        System.out.println(jsonObject);
 
     }
 }
