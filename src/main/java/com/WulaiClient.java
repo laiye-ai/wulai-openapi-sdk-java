@@ -1,16 +1,12 @@
 package com;
 
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.exceptions.ClientException;
 import com.exceptions.ClientExceptionConstant;
 import com.exceptions.ServerException;
 import com.util.Credentials;
 import com.util.DefaultProfile;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.NoHttpResponseException;
+import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,9 +31,7 @@ import java.io.InterruptedIOException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class WulaiClient {
 
@@ -52,7 +46,7 @@ public class WulaiClient {
     private int timeout = 10;
     private URI endpoint;
 
-    private String ApiVersion = "v2";
+    private String ApiVersion = DefaultProfile.getApiVersion();
 
     static {
         try {
@@ -124,11 +118,10 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-
         return JSONObject.parseObject(body, JSONObject.class);
     }
 
-    public <T> T getResponse(CloseableHttpResponse httpResponse, Class<T> T) throws ClientException, ServerException {
+    public <T> T getResponse(CloseableHttpResponse httpResponse,Class<T> T) throws ClientException,ServerException{
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
         try {
@@ -137,18 +130,11 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        logger.debug(body);
-        T t;
-        try {
-            t = JSONObject.parseObject(body, T);
-        } catch (JSONException e) {
-            throw new ClientException("10", e.getMessage());
-        }
-
-        return t;
+        System.out.println(body);
+        return JSONObject.parseObject(body,T);
     }
 
-    public <T> T getResponse(CloseableHttpResponse httpResponse, Class<T> T, String key) throws ClientException, ServerException {
+    public <T> T getResponse(CloseableHttpResponse httpResponse,Class<T> T,String key) throws ClientException,ServerException{
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
         try {
@@ -157,18 +143,13 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        logger.debug(body);
-        T t;
-        try {
-            JSONObject jsonObject = JSONObject.parseObject(body, JSONObject.class);
-            t = JSONObject.parseObject(jsonObject.get(key).toString(), T);
-        } catch (JSONException e) {
-            throw new ClientException("10", e.getMessage());
-        }
-        return t;
+        System.out.println(body);
+        JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
+
+        return JSONObject.parseObject(jsonObject.get(key).toString(),T);
     }
 
-    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse, Class<T> T) throws ClientException {
+    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T) throws ClientException{
 
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
@@ -178,19 +159,10 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        logger.debug(body);
-
-        List<T> tList;
-        try {
-            tList = JSONObject.parseArray(body, T);
-        } catch (JSONException e) {
-            throw new ClientException("10", e.getMessage());
-        }
-        return tList;
+        return JSONObject.parseArray(body,T);
 
     }
-
-    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse, Class<T> T, String key) throws ClientException {
+    public <T> List<T> getResponseArray(CloseableHttpResponse httpResponse,Class<T> T,String key) throws ClientException{
 
         HttpEntity httpEntity = httpResponse.getEntity();
         String body = null;
@@ -200,18 +172,12 @@ public class WulaiClient {
             logger.error("EntityUtils toString exception");
             throw new ClientException(ClientExceptionConstant.SDK_RESOLVING_ERROR, e.getMessage());
         }
-        logger.debug(body);
-        List<T> tList;
-        try {
-            JSONObject jsonObject = JSONObject.parseObject(body, JSONObject.class);
-            tList = JSONObject.parseArray(jsonObject.get(key).toString(), T);
+        System.out.println(body);
+        JSONObject jsonObject=JSONObject.parseObject(body,JSONObject.class);
+        return JSONObject.parseArray(jsonObject.get(key).toString(),T);
 
-        } catch (JSONException e) {
-            throw new ClientException("10", e.getMessage());
-        }
-
-        return tList;
     }
+
 
 
     public synchronized CloseableHttpResponse executeRequest(String action, HashMap<String, Object> data)
@@ -272,8 +238,8 @@ public class WulaiClient {
 
     public synchronized JSONObject processCommonRequest(String action, JSONObject data) throws ClientException, ServerException {
 
-        HashMap<String, Object> params = JSONObject.parseObject(data.toString(), HashMap.class);
-        CloseableHttpResponse httpResponse = executeRequest(action, params);
+        HashMap<String,Object> params=JSONObject.parseObject(data.toString(),HashMap.class);
+        CloseableHttpResponse httpResponse= executeRequest(action,params);
         return getJsonFromResponse(httpResponse);
 
     }
