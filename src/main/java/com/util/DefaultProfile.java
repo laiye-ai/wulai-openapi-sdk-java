@@ -4,7 +4,7 @@ import java.net.URI;
 
 public class DefaultProfile {
 
-    private static URI endpoint = URI.create("http://openapi.wul.ai/");
+    private static URI endpoint = URI.create("https://openapi.wul.ai/");
 
 
     public static URI getEndpoint() {
