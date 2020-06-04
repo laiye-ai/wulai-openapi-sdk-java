@@ -25,7 +25,7 @@
 <dependencies>
     ...
     <dependency>
-        <groupId>com.com.wulai.laiye.javasdk</groupId>
+        <groupId>com.wulai.laiye.javasdk</groupId>
         <artifactId>wulaiSDK</artifactId>
         <version>1.0.4</version>
     </dependency>
@@ -44,7 +44,7 @@ public class Test {
     public static void main(String[] args) throws ClientException, ServerException {
 
         //为避免泄漏公钥密钥等信息，建议将相关配置写到环境变量后使用System类的getenv方法获取环境变量。
-        WulaiClient wulaiClient=new WulaiClient(URI.create("http://openapi.wul.ai"),new Credentials (System.getenv("pubkey"),System.getenv("secret")));
+        WulaiClient wulaiClient=new WulaiClient(URI.create("https://openapi.wul.ai"),new Credentials (System.getenv("pubkey"),System.getenv("secret")));
 
     }
 }
