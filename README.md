@@ -27,7 +27,7 @@
     <dependency>
         <groupId>com.wulai.laiye.javasdk</groupId>
         <artifactId>wulaiSDK</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.4</version>
     </dependency>
 </dependencies>
 ```
